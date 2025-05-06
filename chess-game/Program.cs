@@ -8,7 +8,7 @@ namespace chess_game
 {
     public partial class Program
     {
-        // Declaration of Pieces
+        // Global Variables Declaration
         public const int _ = 0; // Empty Square
         public const int WP = 1; // White Pawn
         public const int WN = 2; // White Knight
@@ -24,18 +24,15 @@ namespace chess_game
         public const int BK = 12; // Black King
 
         public static bool playerWhite = false;
-
         public static int[,] board = new int[8, 8];
 
         static void Main(string[] args)
         {
-
-
-
             Program.Minimax();
             Program.Evaluation();
             Program.LegalMove();
 
+            // Tests display function
             setupStartPosition();
             Console.WriteLine(getPosition());
         }
@@ -46,7 +43,7 @@ namespace chess_game
         static void setupStartPosition()
         {
             // CASE FOR BLACK:
-            // Assigning to each square the respective piece
+            // Assigning to each square the appropriate piece
             board[0, 0] = BR;
             board[0, 1] = BN;
             board[0, 2] = BB;
@@ -56,12 +53,12 @@ namespace chess_game
             board[0, 6] = BN;
             board[0, 7] = BR;
 
-            // Loop for pawns
+            // Loop to assign pawns
             for (int i = 0; i < 8; i++)
                 board[1, i] = BP;
 
             // CASE FOR WHITE:
-            // Assigning to each square the respective piece
+            // Assigning to each square the appropriate piece
             board[7, 0] = WR;
             board[7, 1] = WN;
             board[7, 2] = WB;
@@ -71,7 +68,7 @@ namespace chess_game
             board[7, 6] = WN;
             board[7, 7] = WR;
 
-            // Loop for pawns
+            // Loop to assign pawns
             for (int i = 0; i < 8; i++)
                 board[6, i] = WP;
         }
@@ -84,16 +81,17 @@ namespace chess_game
         {
             string stringBoard = "";
 
-
-            for (int i = 0; i < 8; i++) // Cycles through rows
+            // Cycles through rows
+            for (int i = 0; i < 8; i++)
             {
                 stringBoard += "---------------------------------\n";
 
-                for (int j = 0; j < 8; j++) // Cycles through columns
+                // Cycles through columns
+                for (int j = 0; j < 8; j++)
                 {
                     stringBoard += "| ";
 
-                    // TODO: Finish the switch case with all the cases both black and white
+                    // Matching the correct piece for each number in the matrix
                     switch (board[i, j])
                     {
                         // White pieces
@@ -137,16 +135,13 @@ namespace chess_game
                         case _:
                             stringBoard += " "; break;
                     }
-
                     stringBoard += " ";
                 }
                 stringBoard += "|\n";
             }
-
             stringBoard += "---------------------------------";
 
             return stringBoard;
-
         }
     }
 }
