@@ -9,32 +9,35 @@ namespace chess_game
     public partial class Program
     {
         // Declaration of Pieces
-        const int _ = 0; // Empty Square
-        const int WP = 1; // White Pawn
-        const int WN = 2; // White Knight
-        const int WB = 3; // White Bishop
-        const int WR = 4; // White Rook
-        const int WQ = 5; // White Queen
-        const int WK = 6; // White King
-        const int BP = 7; // Black Pawn
-        const int BN = 8; // Black Knight
-        const int BB = 9; // Black Bishop
-        const int BR = 10; // Black Rook
-        const int BQ = 11; // Black Queen
-        const int BK = 12; // Black King
+        public const int _ = 0; // Empty Square
+        public const int WP = 1; // White Pawn
+        public const int WN = 2; // White Knight
+        public const int WB = 3; // White Bishop
+        public const int WR = 4; // White Rook
+        public const int WQ = 5; // White Queen
+        public const int WK = 6; // White King
+        public const int BP = 7; // Black Pawn
+        public const int BN = 8; // Black Knight
+        public const int BB = 9; // Black Bishop
+        public const int BR = 10; // Black Rook
+        public const int BQ = 11; // Black Queen
+        public const int BK = 12; // Black King
 
-        bool playerWhite = false;
+        public static bool playerWhite = false;
 
-        int[,] board = new int[8, 8];
+        public static int[,] board = new int[8, 8];
 
         static void Main(string[] args)
         {
 
-            
+
 
             Program.Minimax();
             Program.Evaluation();
             Program.LegalMove();
+
+            setupStartPosition();
+            Console.WriteLine(getPosition());
         }
 
         /// <summary>
@@ -79,32 +82,71 @@ namespace chess_game
         /// <returns>The current board position</returns>
         static string getPosition()
         {
-            stringBoard = "";
+            string stringBoard = "";
 
 
             for (int i = 0; i < 8; i++) // Cycles through rows
             {
-                stringBoard += "-----------------------------------";
+                stringBoard += "---------------------------------\n";
 
-                for(int j = 0; j < 8; j++) // Cycles through columns
+                for (int j = 0; j < 8; j++) // Cycles through columns
                 {
                     stringBoard += "| ";
 
                     // TODO: Finish the switch case with all the cases both black and white
-                    switch(board[i, j])
+                    switch (board[i, j])
                     {
+                        // White pieces
                         case WP:
-                            stringBoard += "♟";
-                            break;
+                            stringBoard += "♙"; break;
 
                         case WN:
-                            stringBoard += "♞";
-                            break;
+                            stringBoard += "♘"; break;
+
+                        case WB:
+                            stringBoard += "♗"; break;
+
+                        case WR:
+                            stringBoard += "♖"; break;
+
+                        case WQ:
+                            stringBoard += "♕"; break;
+
+                        case WK:
+                            stringBoard += "♔"; break;
+
+                        // Black pieces
+                        case BP:
+                            stringBoard += "♟"; break;
+
+                        case BN:
+                            stringBoard += "♞"; break;
+
+                        case BB:
+                            stringBoard += "♝"; break;
+
+                        case BR:
+                            stringBoard += "♜"; break;
+
+                        case BQ:
+                            stringBoard += "♛"; break;
+
+                        case BK:
+                            stringBoard += "♔"; break;
+
+                        case _:
+                            stringBoard += " "; break;
                     }
 
                     stringBoard += " ";
                 }
+                stringBoard += "|\n";
             }
+
+            stringBoard += "---------------------------------";
+
+            return stringBoard;
+
         }
     }
 }
