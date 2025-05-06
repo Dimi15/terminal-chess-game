@@ -1,0 +1,8 @@
+C:\Users\Info45\Source\Repos\Dimi15\chess-game\chess-game\obj\Debug\chess-game.csproj.AssemblyReference.cache
+C:\Users\Info45\Source\Repos\Dimi15\chess-game\chess-game\obj\Debug\chess-game.csproj.SuggestedBindingRedirects.cache
+C:\Users\Info45\Source\Repos\Dimi15\chess-game\chess-game\obj\Debug\chess-game.csproj.CoreCompileInputs.cache
+C:\Users\Info45\Source\Repos\Dimi15\chess-game\chess-game\bin\Debug\chess_game.exe.config
+C:\Users\Info45\Source\Repos\Dimi15\chess-game\chess-game\bin\Debug\chess_game.exe
+C:\Users\Info45\Source\Repos\Dimi15\chess-game\chess-game\bin\Debug\chess_game.pdb
+C:\Users\Info45\Source\Repos\Dimi15\chess-game\chess-game\obj\Debug\chess_game.exe
+C:\Users\Info45\Source\Repos\Dimi15\chess-game\chess-game\obj\Debug\chess_game.pdb
