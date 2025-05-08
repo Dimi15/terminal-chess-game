@@ -28,13 +28,15 @@ namespace chess_game
 
         static void Main(string[] args)
         {
+            Console.OutputEncoding = Encoding.UTF8; // Needed to display the pieces
+
             Program.Minimax();
             Program.Evaluation();
             Program.LegalMove();
 
             // Tests display function
             setupStartPosition();
-            Console.WriteLine(getPosition());
+            getPosition();
         }
 
         /// <summary>
@@ -74,74 +76,88 @@ namespace chess_game
         }
 
         /// <summary>
-        /// Gets the current board
+        /// Prints the current board
         /// </summary>
-        /// <returns>The current board position</returns>
-        static string getPosition()
+        static void getPosition()
         {
-            string stringBoard = "";
+            ConsoleColor defaulBackground = Console.BackgroundColor;
+            ConsoleColor defaulForeground = Console.ForegroundColor;
+
+            Console.ForegroundColor = ConsoleColor.Black;
 
             // Cycles through rows
             for (int i = 0; i < 8; i++)
             {
-                stringBoard += "---------------------------------\n";
-
                 // Cycles through columns
                 for (int j = 0; j < 8; j++)
                 {
-                    stringBoard += "| ";
+                    // Condition to alternate the background of the squares
+                    if (i % 2 == 0)
+                    {
+                        if (j % 2 == 0)
+                            Console.BackgroundColor = ConsoleColor.DarkGreen;
+                        else
+                            Console.BackgroundColor = ConsoleColor.Gray;
+                    }
+                    else
+                    {
+                        if (j % 2 == 0)
+                            Console.BackgroundColor = ConsoleColor.Gray;
+                        else
+                            Console.BackgroundColor = ConsoleColor.DarkGreen;
+                    }
 
                     // Matching the correct piece for each number in the matrix
                     switch (board[i, j])
                     {
                         // White pieces
                         case WP:
-                            stringBoard += "♙"; break;
+                            Console.Write("♙"); break;
 
                         case WN:
-                            stringBoard += "♘"; break;
+                            Console.Write("♘"); break;
 
                         case WB:
-                            stringBoard += "♗"; break;
+                            Console.Write("♗"); break;
 
                         case WR:
-                            stringBoard += "♖"; break;
+                            Console.Write("♖"); break;
 
                         case WQ:
-                            stringBoard += "♕"; break;
+                            Console.Write("♕"); break;
 
                         case WK:
-                            stringBoard += "♔"; break;
+                            Console.Write("♔"); break;
 
                         // Black pieces
                         case BP:
-                            stringBoard += "♟"; break;
+                            Console.Write("♟"); break;
 
                         case BN:
-                            stringBoard += "♞"; break;
+                            Console.Write("♞"); break;
 
                         case BB:
-                            stringBoard += "♝"; break;
+                            Console.Write("♝"); break;
 
                         case BR:
-                            stringBoard += "♜"; break;
+                            Console.Write("♜"); break;
 
                         case BQ:
-                            stringBoard += "♛"; break;
+                            Console.Write("♛"); break;
 
                         case BK:
-                            stringBoard += "♔"; break;
+                            Console.Write("♚"); break;
 
                         case _:
-                            stringBoard += " "; break;
+                            Console.Write(" "); break;
                     }
-                    stringBoard += " ";
+                    Console.Write(' ');
                 }
-                stringBoard += "|\n";
+                Console.Write("\n");
             }
-            stringBoard += "---------------------------------";
 
-            return stringBoard;
+            Console.BackgroundColor = defaulBackground;
+            Console.ForegroundColor = defaulForeground;
         }
     }
 }
