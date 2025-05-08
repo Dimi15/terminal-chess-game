@@ -32,11 +32,30 @@ namespace chess_game
 
             Program.Minimax();
             Program.Evaluation();
-            Program.LegalMove();
 
             // Tests display function
             SetupStartPosition();
             GetPosition();
+
+            // TESTING MOVE FUNCTION
+            int startX = 0;
+            int startY = 0;
+            int endX = 0;
+            int endY = 0;
+
+            Console.WriteLine("Pezzo da muovere:");
+            startX = Convert.ToInt32(Console.ReadLine());
+            startY = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine("Casella destinataria:");
+            endX = Convert.ToInt32(Console.ReadLine());
+            endY = Convert.ToInt32(Console.ReadLine());
+
+            Program.Move(startX, startY, endX, endY);
+
+            Console.Clear();
+            GetPosition();
+            Console.ReadKey();
         }
 
         /// <summary>
@@ -153,11 +172,10 @@ namespace chess_game
                     }
                     Console.Write(' ');
                 }
+                Console.BackgroundColor = defaulBackground;
+                Console.ForegroundColor = defaulForeground;
                 Console.Write("\n");
             }
-
-            Console.BackgroundColor = defaulBackground;
-            Console.ForegroundColor = defaulForeground;
         }
     }
 }
