@@ -32,17 +32,17 @@ namespace chess_game
 
             Program.Minimax();
             Program.Evaluation();
-            Program.LegalMove();
+            Program.Move();
 
             // Tests display function
-            setupStartPosition();
-            getPosition();
+            SetupStartPosition();
+            GetPosition();
         }
 
         /// <summary>
         /// Assigns the variables to the matrix for the start position
         /// </summary>
-        static void setupStartPosition()
+        static void SetupStartPosition()
         {
             // CASE FOR BLACK:
             // Assigning to each square the appropriate piece
@@ -78,7 +78,7 @@ namespace chess_game
         /// <summary>
         /// Prints the current board
         /// </summary>
-        static void getPosition()
+        static void GetPosition()
         {
             ConsoleColor defaulBackground = Console.BackgroundColor;
             ConsoleColor defaulForeground = Console.ForegroundColor;
