@@ -173,9 +173,9 @@ namespace chess_game
                     Console.Write(' ');
                 }
                 Console.BackgroundColor = defaulBackground;
-                Console.ForegroundColor = defaulForeground;
                 Console.Write("\n");
             }
+            Console.ForegroundColor = defaulForeground;
         }
     }
 }
