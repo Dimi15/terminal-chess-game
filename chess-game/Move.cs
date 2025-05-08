@@ -8,7 +8,7 @@ namespace chess_game
 {
     public partial class Program
     {
-        public static void LegalMove()
+        public static void Move()
         {
             Console.WriteLine("Legal Move");
         }
