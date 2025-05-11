@@ -1,0 +1,10 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskLabel": "attività-minimax",
+      "appliesTo": "chess-game/minimax.cs",
+      "type": "launch"
+    }
+  ]
+}
