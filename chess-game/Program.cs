@@ -42,16 +42,25 @@ namespace chess_game
             int startY = 0;
             int endX = 0;
             int endY = 0;
+            bool l = true;
 
-            Console.WriteLine("Pezzo da muovere:");
-            startX = Convert.ToInt32(Console.ReadLine());
-            startY = Convert.ToInt32(Console.ReadLine());
+            //If the move is not legal, the program continues to ask until the move you give is legal
+            do
+            {
+                l = true;
 
-            Console.WriteLine("Casella destinataria:");
-            endX = Convert.ToInt32(Console.ReadLine());
-            endY = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Pezzo da muovere:");
+                startX = Convert.ToInt32(Console.ReadLine());
+                startY = Convert.ToInt32(Console.ReadLine());
 
-            Program.Move(startX, startY, endX, endY);
+                Console.WriteLine("Casella destinataria:");
+                endX = Convert.ToInt32(Console.ReadLine());
+                endY = Convert.ToInt32(Console.ReadLine());
+
+                Program.Move(startX, startY, endX, endY, ref l);
+                
+            }
+            while (l == false);
 
             Console.Clear();
             GetPosition();

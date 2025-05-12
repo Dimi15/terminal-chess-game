@@ -11,10 +11,18 @@ namespace chess_game
         /// <summary>
         /// Move a piece from Start square to End square
         /// </summary>
-        public static void Move(int startX, int startY, int endX, int endY)
+        public static void Move(int startX, int startY, int endX, int endY, ref bool l)
         {
-            board[endX, endY] = board[startX, startY];
-            board[startX, startY] = _;
+            if (LegalMove(startX, startY, endX, endY) == false)
+            {
+                Console.WriteLine("La mossa non è valida\n");
+                l = false;
+            }
+            else
+            {
+                board[endX, endY] = board[startX, startY];
+                board[startX, startY] = _;
+            }
         }
 
         /// <summary>
@@ -38,7 +46,7 @@ namespace chess_game
             //Checks for white pieces if the ending square contains a white piece
             if (board[startX, startX] == WP || board[startX, startX] == WN || board[startX, startX] == WB || board[startX, startX] == WR || board[startX, startX] == WQ || board[startX, startX] == WK)
             {
-                if (board[endX, endY] != WP && board[endX, endY] != WN && board[endX, endY] != WB && board[endX, endY] != WR && board[endX, endY] != WQ && board[endX, endY] != WK)
+                if (board[endX, endY] == WP && board[endX, endY] == WN && board[endX, endY] == WB && board[endX, endY] == WR && board[endX, endY] == WQ && board[endX, endY] == WK)
                 {
                     return false;
                 }
@@ -46,7 +54,7 @@ namespace chess_game
             //Checks for black pieces if the ending square contains a black piece
             else if (board[startX, startX] == BP || board[startX, startX] == BN || board[startX, startX] == BB || board[startX, startX] == BR || board[startX, startX] == BQ || board[startX, startX] == BK)
             {
-                if (board[endX, endY] != BP && board[endX, endY] != BN && board[endX, endY] != BB && board[endX, endY] != BR && board[endX, endY] != BQ && board[endX, endY] != BK)
+                if (board[endX, endY] == BP && board[endX, endY] == BN && board[endX, endY] == BB && board[endX, endY] == BR && board[endX, endY] == BQ && board[endX, endY] == BK)
                 {
                     return false;
                 }
@@ -202,9 +210,6 @@ namespace chess_game
 
             }
             return true;
-
-
-
         }
 
 

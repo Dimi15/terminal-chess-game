@@ -22,3 +22,10 @@ C:\Users\Info45\Desktop\terminal-chess-game\chess-game\obj\Debug\chess-game.cspr
 C:\Users\Info45\Desktop\terminal-chess-game\chess-game\obj\Debug\chess-game.csproj.CoreCompileInputs.cache
 C:\Users\Info45\Desktop\terminal-chess-game\chess-game\obj\Debug\chess_game.exe
 C:\Users\Info45\Desktop\terminal-chess-game\chess-game\obj\Debug\chess_game.pdb
+C:\Users\Leonida\Desktop\terminal-chess-game\chess-game\bin\Debug\chess_game.exe.config
+C:\Users\Leonida\Desktop\terminal-chess-game\chess-game\bin\Debug\chess_game.exe
+C:\Users\Leonida\Desktop\terminal-chess-game\chess-game\bin\Debug\chess_game.pdb
+C:\Users\Leonida\Desktop\terminal-chess-game\chess-game\obj\Debug\chess-game.csproj.AssemblyReference.cache
+C:\Users\Leonida\Desktop\terminal-chess-game\chess-game\obj\Debug\chess-game.csproj.CoreCompileInputs.cache
+C:\Users\Leonida\Desktop\terminal-chess-game\chess-game\obj\Debug\chess_game.exe
+C:\Users\Leonida\Desktop\terminal-chess-game\chess-game\obj\Debug\chess_game.pdb
