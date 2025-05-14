@@ -33,34 +33,62 @@ namespace chess_game
             Program.Minimax();
             Program.Evaluation();
 
-            // Tests display function
-            SetupStartPosition();
-            GetPosition();
-
             // TESTING MOVE FUNCTION
             int startX = 0;
             int startY = 0;
             int endX = 0;
             int endY = 0;
             bool l = true;
+            char c = ' ';
+
+            //Asks the starting
+            do
+            {
+                Console.WriteLine("Con quale colore si desidera iniziare ? B/W");
+                c = Convert.ToChar(Console.ReadKey()); //<-- <System.InvalidCastException: 'Impossibile eseguire il cast di oggetti di tipo 'System.ConsoleKeyInfo' sul tipo 'System.IConvertible'.'>
+            }
+            while (c != 'B' || c != 'b' || c != 'W' || c != 'w');
+
+            // Tests display function
+            SetupStartPosition(c);
+            GetPosition();
 
             //If the move is not legal, the program continues to ask until the move you give is legal
             do
             {
                 l = true;
 
-                Console.WriteLine("Pezzo da muovere:");
+                Console.WriteLine("Pedina da muovere:\nRiga:");
                 startX = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Colonna:");
                 startY = Convert.ToInt32(Console.ReadLine());
 
-                Console.WriteLine("Casella destinataria:");
+                Console.WriteLine("Casella destinataria:\nRiga:");
                 endX = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Colonna:");
                 endY = Convert.ToInt32(Console.ReadLine());
 
                 Program.Move(startX, startY, endX, endY, ref l);
                 
             }
             while (l == false);
+
+
+            Console.Clear();
+            GetPosition();
+            Console.ReadKey();
+
+            l = true;
+            Console.WriteLine("Pedina da muovere:\nRiga:");
+            startX = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Colonna:");
+            startY = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Casella destinataria:\nRiga:");
+            endX = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Colonna:");
+            endY = Convert.ToInt32(Console.ReadLine());
+            Program.Move(startX, startY, endX, endY, ref l);
+            Console.ReadKey();
 
             Console.Clear();
             GetPosition();
@@ -70,37 +98,72 @@ namespace chess_game
         /// <summary>
         /// Assigns the variables to the matrix for the start position
         /// </summary>
-        static void SetupStartPosition()
+        static void SetupStartPosition(char c)
         {
-            // CASE FOR BLACK:
-            // Assigning to each square the appropriate piece
-            board[0, 0] = BR;
-            board[0, 1] = BN;
-            board[0, 2] = BB;
-            board[0, 3] = BQ;
-            board[0, 4] = BK;
-            board[0, 5] = BB;
-            board[0, 6] = BN;
-            board[0, 7] = BR;
+            if (c == 'W' || c == 'w')
+            {
+                // CASE FOR BLACK:
+                // Assigning to each square the appropriate piece
+                board[0, 0] = BR;
+                board[0, 1] = BN;
+                board[0, 2] = BB;
+                board[0, 3] = BQ;
+                board[0, 4] = BK;
+                board[0, 5] = BB;
+                board[0, 6] = BN;
+                board[0, 7] = BR;
 
-            // Loop to assign pawns
-            for (int i = 0; i < 8; i++)
-                board[1, i] = BP;
+                // Loop to assign pawns
+                for (int i = 0; i < 8; i++)
+                    board[1, i] = BP;
 
-            // CASE FOR WHITE:
-            // Assigning to each square the appropriate piece
-            board[7, 0] = WR;
-            board[7, 1] = WN;
-            board[7, 2] = WB;
-            board[7, 3] = WQ;
-            board[7, 4] = WK;
-            board[7, 5] = WB;
-            board[7, 6] = WN;
-            board[7, 7] = WR;
+                // CASE FOR WHITE:
+                // Assigning to each square the appropriate piece
+                board[7, 0] = WR;
+                board[7, 1] = WN;
+                board[7, 2] = WB;
+                board[7, 3] = WQ;
+                board[7, 4] = WK;
+                board[7, 5] = WB;
+                board[7, 6] = WN;
+                board[7, 7] = WR;
 
-            // Loop to assign pawns
-            for (int i = 0; i < 8; i++)
-                board[6, i] = WP;
+                // Loop to assign pawns
+                for (int i = 0; i < 8; i++)
+                    board[6, i] = WP;
+            }
+            else
+            {
+                // CASE FOR BLACK:
+                // Assigning to each square the appropriate piece
+                board[7, 0] = BR;
+                board[7, 1] = BN;
+                board[7, 2] = BB;
+                board[7, 3] = BQ;
+                board[7, 4] = BK;
+                board[7, 5] = BB;
+                board[7, 6] = BN;
+                board[7, 7] = BR;
+
+                // Loop to assign pawns
+                for (int i = 0; i < 8; i++)
+                    board[1, i] = BP;
+
+                // CASE FOR WHITE:
+                // Assigning to each square the appropriate piece
+                board[0, 0] = WR;
+                board[0, 1] = WN;
+                board[0, 2] = WB;
+                board[0, 3] = WQ;
+                board[0, 4] = WK;
+                board[0, 5] = WB;
+                board[0, 6] = WN;
+                board[0, 7] = WR;
+
+                // Loop to assign pawns
+                for (int i = 0; i < 8; i++)
+                    board[6, i] = WP;
+            }
         }
 
         /// <summary>
