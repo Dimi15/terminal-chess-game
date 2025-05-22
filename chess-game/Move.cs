@@ -79,101 +79,82 @@ namespace chess_game
                 //PAWNS
                 //white pawn
                 case WP:
-
-                    // Checks if the pawn is at the limit of the matrix
-                    if (startY == 7 || startY == 0)
+                    //Checks if the pawn is on the limits of the matrix
+                    if (startY == 0)
                     {
-                        if (board[startX - 1, startY] != _ && (endX == startX - 1 && endY == startY - 1))
+                        if (board[startX - 1, startY + 1] != _ && (endX == startX - 1 && endY == startY + 1))
                         { }
-                        else if (board[startX - 1, startY] != _ && (endX == startX - 1 && endY == startY - 1))
-                        { }
-                        else
-                        {
-                            //Checks if the pawn is on the starting square
-                            if ((startX == 1 && board[2, startY] != _ && startX == 1 && board[3, startY] != _) && (endX == 3 && endY == startY))
-                            { }
-                            else
-                            {
-                                //Checks everything else
-                                if (endY != startY || endX >= startX || endX > startX + 1)
-                                {
-                                    return false;
-                                }
-                            }
-                        }
                     }
-                    else
+                    else if (startY == 7)
                     {
-                        //Checks if the pawn can eat a piece
-                        if (board[startX + 1, startY - 1] != _ && (endX == startX + 1 && endY == startY - 1))
-                        { }
-                        else if (board[startX + 1, startY + 1] != _ && (endX == startX + 1 && endY == startY - 1))
-                        { }
-                        else
-                        {
-                            //Checks if the pawn is on the starting square
-                            if ((startX == 6 && board[5, startY] != _ && startX == 6 && board[4, startY] != _) && (endX == 4 && endY == startY))
-                            { }
-                            else
-                            {
-
-                                //Checks everything else
-                                if (endY != startY || endX >= startX || endX < startX - 1)
-                                {
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                    break;
-
-                //black pawn
-                case BP:
-                    
-                    // Checks if the pawn is at the limit of the matrix
-                    if (startY == 7 || startY == 0)
-                    {
-                        if (board[startX - 1, startY] != _ && (endX == startX - 1 && endY == startY - 1))
-                        { }
-                        else if (board[startX - 1, startY] != _ && (endX == startX - 1 && endY == startY - 1))
-                        { }
-                        else
-                        {
-                            //Checks if the pawn is on the starting square
-                            if ((startX == 1 && board[2, startY] != _ && startX == 1 && board[3, startY] != _) && (endX == 3 && endY == startY))
-                            { }
-                            else
-                            {
-                                //Checks everything else
-                                if (endY != startY || endX <= startX || endX > startX + 1)
-                                {
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //Checks if the pawn can eat a piece
                         if (board[startX - 1, startY - 1] != _ && (endX == startX - 1 && endY == startY - 1))
                         { }
-                        else if (board[startX - 1, startY + 1] != _ && (endX == startX - 1 && endY == startY - 1))
+                    }
+                    //Checks if the pawn can eat a piece and if the piece is a white one
+                    if (board[startX - 1, startY - 1] != _ && (endX == startX - 1 && endY == startY - 1))
+                    { }
+                    else if (board[startX - 1, startY + 1] != _ && (endX == startX - 1 && endY == startY + 1))
+                    {
+                        //Checks if the pawn is on the starting square
+                        if ((startX == 6 && board[5, startY] == _ && board[4, startY] == _) && (endX == 4 && endY == startY))
                         { }
+                        //Checks if te piece in front is occupied
+                        else if ((endX == startX -1 && endY==startY) && board[startX-1,endY] != _)
+                        {
+                            return false;
+                        }
                         else
                         {
-                            //Checks if the pawn is on the starting square
-                            if ((startX == 1 && board[2, startY] != _ && startX == 1 && board[3, startY] != _) && (endX == 3 && endY == startY))
-                            { }
-                            else
+                            //Checks everything else
+                            if (endY != startY || endX >= startX || endX < startX - 1)
                             {
-                                //Checks everything else
-                                if (endY != startY || endX <= startX || endX > startX + 1)
-                                {
-                                    return false;
-                                }
+                                return false;
                             }
                         }
                     }
+
+
+                    break;
+
+                //BLACK PAWN
+                //black pawn
+                case BP:
+                    //Checks if the pawn is on the limits of the matrix
+                    if (startY == 0)
+                    {
+                        if (board[startX + 1, startY + 1] != _ && (endX == startX + 1 && endY == startY + 1))
+                        { }
+                    }
+                    else if (startY == 7)
+                    {
+                        if (board[startX + 1, startY - 1] != _ && (endX == startX + 1 && endY == startY - 1))
+                        { }
+                    }
+                    else
+                    {
+                        //Checks if the pawn can eat a piece and if the piece is a white one
+                        if (board[startX + 1, startY - 1] != _ && (endX == startX + 1 && endY == startY - 1))
+                        { }
+                        else if (board[startX + 1, startY + 1] != _ && (endX == startX + 1 && endY == startY + 1))
+                        { }           
+                    }
+                    //Checks if the pawn is on the starting square
+                    if ((startX == 1 && board[2, startY] == _ && board[3, startY] == _) && (endX == 3 && endY == startY))
+                    { }
+                    //Checks if te piece in front is occupied
+                    else if ((endX == startX + 1 && endY == startY) && board[startX + 1, endY] != _)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        //Checks everything else
+                        if (endY != startY || endX <= startX || endX > startX + 1)
+                        {
+                            return false;
+                        }
+                    }
+
                     break;
 
                 //KNIGHTS
@@ -212,9 +193,10 @@ namespace chess_game
                     //Checks if the move is legal
                     if (startX + startY == endX + endY || startX - startY == endX - endY)
                     {
+                        //Checks if there is a piece between 
                         for (int i = 1; i <= Math.Sqrt(((endX - startX) * (endX - startX)) + ((endY - startY) * (endY - startY))); i++)
                         {
-                            if (board[startX + i, startY + i] != 0)
+                            if (board[startX + i, startY + i] != _)
                             {
                                 return false;
                             }
@@ -233,6 +215,7 @@ namespace chess_game
                     //Checks if the move is legal
                     if (startX == endX && startY != endY)
                     {
+                        //Checks if there is a piece between 
                         for (int i = 1; i <= endY - startY; i++)
                         {
                             if (board[endX, i] != 0)
@@ -243,6 +226,7 @@ namespace chess_game
                     }
                     else if (startX != endX && startY == endY)
                     {
+                        //Checks if there is a piece between 
                         for (int i = 1; i <= endX - startX; i++)
                         {
                             if (board[i, endY] != 0)
@@ -261,7 +245,9 @@ namespace chess_game
                 case WQ:
                 case BQ:
                     if ((startX + startY == endX + endY || startX - startY == endX - endY) || (startX == endX && startY != endY) || (startX != endX && startY == endY))
-                    { }
+                    {
+                        
+                    }
                     else
                     {
                         return false;
@@ -810,5 +796,6 @@ namespace chess_game
 
             return false;
         }
+
     }
 }
