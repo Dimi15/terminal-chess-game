@@ -44,6 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
+	<Compile Include="Minimax.cs" />
+	<Compile Include="Move.cs" />
+	<Compile Include="Evaluation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
