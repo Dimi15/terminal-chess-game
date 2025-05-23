@@ -29,10 +29,82 @@ namespace chess_game
         /// Given a move checks its legality
         /// </summary>
         /// <returns>If the move is legal</returns>
-        static bool LegalMove(int startX, int startY, int endX, int endY)
+        static bool LegalMove(int startX, int startY, int endX, int endY, bool blackWhite)
         {
-            bool White = false;
+            int kingX = 0, kingY = 0;
+            int reversMove = 0;
 
+            //finds the playing king's position
+            if (blackWhite == false)
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    for (int j = 0; j < 8; j++)
+                    {
+                        if (board[i, j] == BK)
+                        {
+                            kingX = i;
+                            kingY = j;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    for (int j = 0; j < 8; j++)
+                    {
+                        if (board[i, j] == WK)
+                        {
+                            kingX = i;
+                            kingY = j;
+                        }
+                    }
+                }
+            }
+
+
+            //Simulates the move to check if the king is in check after the move
+            reversMove = board[endX, endY];
+            board[endX, endY] = board[startX, startY];
+            board[startX, startY] = _;
+            if (blackWhite == false)
+            {
+                if (attackedBy(kingX, kingY, true) == true)
+                {
+                    return false;
+                }
+            }
+            else 
+            {
+                if (attackedBy(kingX, kingY, false) == true)
+                {
+                    return false;
+                }
+            }
+            board[startX, startY] = board[endX, endY];
+            board[endX, endY] = reversMove;
+            
+
+
+
+            //Checks if the chosen square contains a piece
+            if (board[startX, startY] == _)
+            {
+                return false;
+            }
+
+
+            //Checks if the piece moved is the right color
+            if (blackWhite == false && (board[startX, startY] != BP && board[startX, startY] != BN && board[startX, startY] != BB && board[startX, startY] != BR && board[startX, startY] != BQ && board[startX, startY] != BK))
+            {
+                return false;
+            }
+            else if (blackWhite == true && (board[startX, startY] != WP && board[startX, startY] != WN && board[startX, startY] != WB && board[startX, startY] != WR && board[startX, startY] != WQ && board[startX, startY] != BK))
+            {
+                return false;
+            }
 
             // Checks if it is inside the matrix
             if (startX < 0 || startX > 7 || startY < 0 || startY > 7)
@@ -69,7 +141,6 @@ namespace chess_game
 
 
             // Checks if the move is legal based on the type of piece
-
             switch (board[startX, startY])
             {
                 case @_:
@@ -99,7 +170,7 @@ namespace chess_game
                         if ((startX == 6 && board[5, startY] == _ && board[4, startY] == _) && (endX == 4 && endY == startY))
                         { }
                         //Checks if te piece in front is occupied
-                        else if ((endX == startX -1 && endY==startY) && board[startX-1,endY] != _)
+                        else if ((endX == startX - 1 && endY == startY) && board[startX - 1, endY] != _)
                         {
                             return false;
                         }
@@ -112,8 +183,6 @@ namespace chess_game
                             }
                         }
                     }
-
-
                     break;
 
                 //BLACK PAWN
@@ -136,7 +205,7 @@ namespace chess_game
                         if (board[startX + 1, startY - 1] != _ && (endX == startX + 1 && endY == startY - 1))
                         { }
                         else if (board[startX + 1, startY + 1] != _ && (endX == startX + 1 && endY == startY + 1))
-                        { }           
+                        { }
                     }
                     //Checks if the pawn is on the starting square
                     if ((startX == 1 && board[2, startY] == _ && board[3, startY] == _) && (endX == 3 && endY == startY))
@@ -154,7 +223,6 @@ namespace chess_game
                             return false;
                         }
                     }
-
                     break;
 
                 //KNIGHTS
@@ -246,7 +314,7 @@ namespace chess_game
                 case BQ:
                     if ((startX + startY == endX + endY || startX - startY == endX - endY) || (startX == endX && startY != endY) || (startX != endX && startY == endY))
                     {
-                        
+
                     }
                     else
                     {
@@ -257,14 +325,14 @@ namespace chess_game
                 //KINGS
                 //white king
                 case WK:
-                    if (attackedBy(endX, endY, true) == true)
+                    if (attackedBy(endX, endY, false) == true)
                     {
                         return false;
                     }
                     break;
                 //black king
                 case BK:
-                    if (attackedBy(endX, endY, false) == true)
+                    if (attackedBy(endX, endY, true) == true)
                     {
                         return false;
                     }
