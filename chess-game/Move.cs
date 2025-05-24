@@ -11,17 +11,19 @@ namespace chess_game
         /// <summary>
         /// Move a piece from Start square to End square
         /// </summary>
-        public static void Move(int startX, int startY, int endX, int endY, ref bool l)
+        /// <returns>If the move is legal</returns>
+        public static bool Move(int startX, int startY, int endX, int endY)
         {
             if (LegalMove(startX, startY, endX, endY) == false)
             {
-                Console.WriteLine("La mossa non è valida\n");
-                l = false;
+                Console.WriteLine("La mossa non Ã¨ valida\n");
+                return false;
             }
             else
             {
                 board[endX, endY] = board[startX, startY];
                 board[startX, startY] = _;
+                return true;
             }
         }
 
