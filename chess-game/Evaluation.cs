@@ -16,7 +16,7 @@ namespace chess_game
         ///         > 0, advantage for white.
         ///         < 0, advantage for black.
         /// </return>
-        public static double Evaluation()
+        static double Evaluation()
         {
             int evaluation = 0;
 
@@ -99,7 +99,7 @@ namespace chess_game
                         {
                             positionGain += -40;
                         }
-                        else if(i < 5 && (j == 3 || j == 4))
+                        else if (i < 5 && (j == 3 || j == 4))
                         {
                             positionGain += -50;
                         }
@@ -107,19 +107,19 @@ namespace chess_game
                         {
                             positionGain += -20;
                         }
-                        else if(i == 6 && (j == 0 || j == 1 || j == 6 || j == 7))
+                        else if (i == 6 && (j == 0 || j == 1 || j == 6 || j == 7))
                         {
                             positionGain += 20;
                         }
-                        else if(i == 7 && (j == 0 || j == 7))
+                        else if (i == 7 && (j == 0 || j == 7))
                         {
                             positionGain += 20;
                         }
-                        else if(i == 7 && (j == 1 || j == 6))
+                        else if (i == 7 && (j == 1 || j == 6))
                         {
                             positionGain += 30;
                         }
-                        else if(i == 7 && (j == 2 || j == 5))
+                        else if (i == 7 && (j == 2 || j == 5))
                         {
                             positionGain += 10;
                         }
@@ -205,23 +205,23 @@ namespace chess_game
                         {
                             positionGain += -50;
                         }
-                        else if((i == 0 || i == 7) || (j == 0 || j == 7))
+                        else if ((i == 0 || i == 7) || (j == 0 || j == 7))
                         {
                             positionGain += -40;
                         }
-                        else if((i == 1 || i == 6) && (j == 1 || j == 6))
+                        else if ((i == 1 || i == 6) && (j == 1 || j == 6))
                         {
                             positionGain += -20;
                         }
-                        else if((i == 2 || i == 5) && (j == 2 || j == 5))
+                        else if ((i == 2 || i == 5) && (j == 2 || j == 5))
                         {
                             positionGain += 10;
                         }
-                        else if((i == 2 || i == 5) || (j == 2 || j == 5))
+                        else if ((i == 2 || i == 5) || (j == 2 || j == 5))
                         {
                             positionGain += 20;
                         }
-                        else if((i == 3 || i == 4) && (j == 3 || j == 4))
+                        else if ((i == 3 || i == 4) && (j == 3 || j == 4))
                         {
                             positionGain += 25;
                         }
@@ -244,9 +244,223 @@ namespace chess_game
         /// <summary>
         /// Check if game ended
         /// </summary>
-        public static void GameEnded(ref bool draw, ref bool whiteWon, ref bool blackWon)
+        static bool Checkmate(ref bool draw, bool white)
         {
+            int kingX = 0, kingY = 0;
+            int attackingPieceX = 0, attackingPieceY = 0;
 
+            if (!UnderCheck(white, ref kingX, ref kingY, ref attackingPieceX, ref attackingPieceY))
+            {
+                return false;
+            }
+
+            int king = board[kingY, kingX];
+            int attackingPiece = board[attackingPieceY, attackingPieceX];
+
+            bool checkmate = true;
+
+            int startPiece = _, endPiece = _;
+            int endX = 0, endY = 0;
+
+            //king can move out of the check
+            startPiece = king;
+
+            //top
+            if (kingY > 0)
+            {
+                //left
+                if (kingX > 0)
+                {
+                    endPiece = board[kingY - 1, kingX - 1];
+
+                    if (Move(kingX, kingY, kingX - 1, kingY - 1))
+                    {
+                        checkmate = UnderCheck(white));
+
+                        board[kingY, kingX] = startPiece;
+                        board[kingY - 1, kingX - 1] = endPiece;
+
+                        if (!checkmate)
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                endPiece = board[kingY - 1, kingX];
+
+                if (Move(kingX, kingY, kingX, kingY - 1))
+                {
+                    checkmate = UnderCheck(white));
+
+                    board[kingY, kingX] = startPiece;
+                    board[kingY - 1, kingX] = endPiece;
+
+                    if (!checkmate)
+                    {
+                        return false;
+                    }
+                }
+
+                //right
+                if (kingX > 0)
+                {
+                    endPiece = board[kingY - 1, kingX + 1];
+
+                    if (Move(kingX, kingY, kingX + 1, kingY - 1))
+                    {
+                        checkmate = UnderCheck(white));
+
+                        board[kingY, kingX] = startPiece;
+                        board[kingY - 1, kingX + 1] = endPiece;
+
+                        if (!checkmate)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            //left
+            if (kingX > 0)
+            {
+                endPiece = board[kingY, kingX - 1];
+
+                if (Move(kingX, kingY, kingX - 1, kingY))
+                {
+                    checkmate = UnderCheck(white));
+
+                    board[kingY, kingX] = startPiece;
+                    board[kingY, kingX - 1] = endPiece;
+
+                    if (!checkmate)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            //right
+            if (kingX < 7)
+            {
+                endPiece = board[kingY, kingX + 1];
+
+                if (Move(kingX, kingY, kingX + 1, kingY))
+                {
+                    checkmate = UnderCheck(white));
+
+                    board[kingY, kingX] = startPiece;
+                    board[kingY, kingX + 1] = endPiece;
+
+                    if (!checkmate)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            //bottom
+            if (kingY < 7)
+            {
+                //left
+                if (kingX > 0)
+                {
+                    endPiece = board[kingY + 1, kingX - 1];
+
+                    if (Move(kingX, kingY, kingX - 1, kingY + 1))
+                    {
+                        checkmate = UnderCheck(white));
+
+                        board[kingY, kingX] = startPiece;
+                        board[kingY + 1, kingX - 1] = endPiece;
+
+                        if (!checkmate)
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                endPiece = board[kingY + 1, kingX];
+
+                if (Move(kingX, kingY, kingX, kingY + 1))
+                {
+                    checkmate = UnderCheck(white));
+
+                    board[kingY, kingX] = startPiece;
+                    board[kingY + 1, kingX] = endPiece;
+
+                    if (!checkmate)
+                    {
+                        return false;
+                    }
+                }
+
+                //right
+                if (kingX > 0)
+                {
+                    endPiece = board[kingY + 1, kingX + 1];
+
+                    if (Move(kingX, kingY, kingX + 1, kingY + 1))
+                    {
+                        checkmate = UnderCheck(white));
+
+                        board[kingY, kingX] = startPiece;
+                        board[kingY + 1, kingX + 1] = endPiece;
+
+                        if (!checkmate)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            int incrementX = 0, incrementY = 0;
+
+            if (attackingPieceX != kingX)
+            {
+                if (attackingPieceX < kingX)
+                {
+                    incrementX = 1;
+                }
+                else
+                {
+                    incrementY = -1;
+                }
+            }
+
+            if (attackingPieceY != kingY)
+            {
+                if (attackingPieceY < kingY)
+                {
+                    incrementY = 1;
+                }
+                else
+                {
+                    incrementY = -1;
+                }
+            }
+
+            int currentX = attackingPieceX, currentY = attackingPieceY;
+
+            do
+            {
+                //TODO: move pieces to current square
+
+                checkmate = UnderCheck(white);
+
+                if(!checkmate)
+                {
+                    return false;
+                }
+
+                currentX += incrementX;
+                currentY += incrementY;
+            } while (currentX != kingX || currentY != kingY);
+
+            return checkmate;
         }
 
         /// <summary>
@@ -254,7 +468,22 @@ namespace chess_game
         /// </summary>
         /// <param name="white">if it is the white king</param>
         /// <returns>if the king is under check</returns>
-        public static bool UnderCheck(bool white)
+        static bool UnderCheck(bool white)
+        {
+            int kingX = 0, kingY = 0, pieceX = 0, pieceY = 0;
+            return UnderCheck(white, ref kingX, ref kingY, ref pieceX, ref pieceY);
+        }
+
+        /// <summary>
+        /// Check if the king is under check
+        /// </summary>
+        /// <param name="white">if it is the white king</param>
+        /// <param name="kingX">The X of the king</param>
+        /// <param name="kingY">The Y of the king</param>
+        /// <param name="pieceX">The X of the first piece found that's giving the check</param>
+        /// <param name="pieceY">The Y of the first piece found that's giving the check</param>
+        /// <returns>if the king is under check</returns>
+        static bool UnderCheck(bool white, ref int kingX, ref int kingY, ref int pieceX, ref int pieceY)
         {
             //find king location
             for (int i = 0; i < 8; i++)
@@ -265,7 +494,10 @@ namespace chess_game
                     {
                         if (board[i, j] == WK)
                         {
-                            if (AttachedBy(j, i, false))
+                            kingX = j;
+                            kingY = i;
+
+                            if (AttachedBy(j, i, false, ref pieceX, ref pieceY))
                             {
                                 return true;
                             }
@@ -279,7 +511,10 @@ namespace chess_game
                     {
                         if (board[i, j] == BK)
                         {
-                            if (AttachedBy(j, i, true))
+                            kingX = j;
+                            kingY = i;
+
+                            if (AttachedBy(j, i, true, ref pieceX, ref pieceY))
                             {
                                 return true;
                             }
@@ -302,6 +537,20 @@ namespace chess_game
         /// <returns>true if the square is attacked</returns>
         static bool AttachedBy(int x, int y, bool white)
         {
+            int fromX = 0, fromY = 0;
+
+            return AttachedBy(x, y, white, ref fromX, ref fromY);
+        }
+
+        /// <summary>
+        /// Check if a square is under attack
+        /// </summary>
+        /// <param name="white">The square is attacked by white</param>
+        /// <param name="fromX">The X of the first piece found able to attack the given square</param>
+        /// <param name="fromY">The Y of the first piece found able to attack the given square</param>
+        /// <returns>true if the square is attacked</returns>
+        static bool AttachedBy(int x, int y, bool white, ref int fromX, ref int fromY)
+        {
             //BY PAWN
 
             //left
@@ -311,6 +560,8 @@ namespace chess_game
                 {
                     if (board[y + 1, x - 1] == WP)
                     {
+                        fromX = x - 1;
+                        fromY = y + 1;
                         return true;
                     }
                 }
@@ -321,6 +572,8 @@ namespace chess_game
                 {
                     if (board[y - 1, x - 1] == BP)
                     {
+                        fromX = x - 1;
+                        fromY = y - 1;
                         return true;
                     }
                 }
@@ -333,6 +586,8 @@ namespace chess_game
                 {
                     if (board[y + 1, x + 1] == WP)
                     {
+                        fromX = x + 1;
+                        fromY = y + 1;
                         return true;
                     }
                 }
@@ -343,6 +598,8 @@ namespace chess_game
                 {
                     if (board[y - 1, x + 1] == BP)
                     {
+                        fromX = x + 1;
+                        fromY = y - 1;
                         return true;
                     }
                 }
@@ -360,6 +617,8 @@ namespace chess_game
                     {
                         if (board[y - 2, x - 1] == WN)
                         {
+                            fromX = x - 1;
+                            fromY = y - 2;
                             return true;
                         }
                     }
@@ -367,6 +626,8 @@ namespace chess_game
                     {
                         if (board[y - 2, x - 1] == BN)
                         {
+                            fromX = x - 1;
+                            fromY = y - 2;
                             return true;
                         }
                     }
@@ -379,6 +640,8 @@ namespace chess_game
                     {
                         if (board[y - 2, x + 1] == WN)
                         {
+                            fromX = x + 1;
+                            fromY = y - 2;
                             return true;
                         }
                     }
@@ -386,6 +649,8 @@ namespace chess_game
                     {
                         if (board[y - 2, x + 1] == BN)
                         {
+                            fromX = x + 1;
+                            fromY = y - 2;
                             return true;
                         }
                     }
@@ -402,6 +667,8 @@ namespace chess_game
                     {
                         if (board[y + 2, x - 1] == WN)
                         {
+                            fromX = x - 1;
+                            fromY = y + 2;
                             return true;
                         }
                     }
@@ -409,6 +676,8 @@ namespace chess_game
                     {
                         if (board[y + 2, x - 1] == BN)
                         {
+                            fromX = x + 1;
+                            fromY = y + 2;
                             return true;
                         }
                     }
@@ -421,6 +690,8 @@ namespace chess_game
                     {
                         if (board[y + 2, x + 1] == WN)
                         {
+                            fromX = x + 1;
+                            fromY = y + 2;
                             return true;
                         }
                     }
@@ -428,6 +699,8 @@ namespace chess_game
                     {
                         if (board[y + 2, x + 1] == BN)
                         {
+                            fromX = x + 1;
+                            fromY = y + 2;
                             return true;
                         }
                     }
@@ -444,6 +717,8 @@ namespace chess_game
                     {
                         if (board[y - 1, x - 2] == WN)
                         {
+                            fromX = x - 2;
+                            fromY = y - 1;
                             return true;
                         }
                     }
@@ -451,6 +726,8 @@ namespace chess_game
                     {
                         if (board[y - 1, x - 2] == BN)
                         {
+                            fromX = x - 2;
+                            fromY = y - 1;
                             return true;
                         }
                     }
@@ -463,6 +740,8 @@ namespace chess_game
                     {
                         if (board[y + 1, x - 2] == WN)
                         {
+                            fromX = x - 2;
+                            fromY = y + 1;
                             return true;
                         }
                     }
@@ -470,6 +749,8 @@ namespace chess_game
                     {
                         if (board[y + 1, x - 2] == BN)
                         {
+                            fromX = x - 2;
+                            fromY = y + 1;
                             return true;
                         }
                     }
@@ -486,6 +767,8 @@ namespace chess_game
                     {
                         if (board[y - 1, x + 2] == WN)
                         {
+                            fromX = x + 2;
+                            fromY = y - 1;
                             return true;
                         }
                     }
@@ -493,6 +776,8 @@ namespace chess_game
                     {
                         if (board[y - 1, x + 2] == BN)
                         {
+                            fromX = x + 2;
+                            fromY = y - 1;
                             return true;
                         }
                     }
@@ -505,6 +790,8 @@ namespace chess_game
                     {
                         if (board[y + 1, x + 2] == WN)
                         {
+                            fromX = x + 2;
+                            fromY = y + 1;
                             return true;
                         }
                     }
@@ -512,6 +799,196 @@ namespace chess_game
                     {
                         if (board[y + 1, x + 2] == BN)
                         {
+                            fromX = x + 2;
+                            fromY = y + 1;
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            //BY KING
+
+            //top
+            if (y > 0)
+            {
+                //left
+                if (x > 0)
+                {
+                    if (white)
+                    {
+                        if (board[y - 1, x - 1] == WK)
+                        {
+                            fromX = x - 1;
+                            fromY = y - 1;
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        if (board[y - 1, x - 1] == BK)
+                        {
+                            fromX = x - 1;
+                            fromY = y - 1;
+                            return true;
+                        }
+                    }
+                }
+
+                //midle
+                if (white)
+                {
+                    if (board[y - 1, x] == WK)
+                    {
+                        fromX = x;
+                        fromY = y - 1;
+                        return true;
+                    }
+                }
+                else
+                {
+                    if (board[y - 1, x] == BK)
+                    {
+                        fromX = x;
+                        fromY = y - 1;
+                        return true;
+                    }
+                }
+
+                //right
+                if (x < 7)
+                {
+                    if (white)
+                    {
+                        if (board[y - 1, x + 1] == WK)
+                        {
+                            fromX = x + 1;
+                            fromY = y - 1;
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        if (board[y - 1, x + 1] == BK)
+                        {
+                            fromX = x + 1;
+                            fromY = y - 1;
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            //left
+            if (x > 0)
+            {
+                if (white)
+                {
+                    if (board[y, x - 1] == WK)
+                    {
+                        fromX = x - 1;
+                        fromY = y;
+                        return true;
+                    }
+                }
+                else
+                {
+                    if (board[y, x - 1] == BK)
+                    {
+                        fromX = x - 1;
+                        fromY = y;
+                        return true;
+                    }
+                }
+            }
+
+            //right
+            if (x < 7)
+            {
+                if (white)
+                {
+                    if (board[y, x + 1] == WK)
+                    {
+                        fromX = x + 1;
+                        fromY = y;
+                        return true;
+                    }
+                }
+                else
+                {
+                    if (board[y, x + 1] == BK)
+                    {
+                        fromX = x + 1;
+                        fromY = y;
+                        return true;
+                    }
+                }
+            }
+
+            //bottom
+            if (y < 7)
+            {
+                //left
+                if (x > 0)
+                {
+                    if (white)
+                    {
+                        if (board[y + 1, x - 1] == WK)
+                        {
+                            fromX = x - 1;
+                            fromY = y + 1;
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        if (board[y + 1, x - 1] == BK)
+                        {
+                            fromX = x - 1;
+                            fromY = y + 1;
+                            return true;
+                        }
+                    }
+                }
+
+                //midle
+                if (white)
+                {
+                    if (board[y + 1, x] == WK)
+                    {
+                        fromX = x;
+                        fromY = y + 1;
+                        return true;
+                    }
+                }
+                else
+                {
+                    if (board[y + 1, x] == BK)
+                    {
+                        fromX = x;
+                        fromY = y + 1;
+                        return true;
+                    }
+                }
+
+                //right
+                if (x < 7)
+                {
+                    if (white)
+                    {
+                        if (board[y + 1, x + 1] == WK)
+                        {
+                            fromX = x + 1;
+                            fromY = y + 1;
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        if (board[y + 1, x + 1] == BK)
+                        {
+                            fromX = x + 1;
+                            fromY = y + 1;
                             return true;
                         }
                     }
@@ -521,19 +998,19 @@ namespace chess_game
             //VERTICALLY
             int pieceFound = _;
 
-            int currentX = x;
-            int currentY = y;
+            fromX = x;
+            fromY = y;
 
             //top
             do
             {
-                currentY--;
-                if (currentY < 0)
+                fromY--;
+                if (fromY < 0)
                 {
                     break;
                 }
 
-                pieceFound = board[currentY, currentX];
+                pieceFound = board[fromY, fromX];
             } while (pieceFound == _);
 
             if (pieceFound != _)
@@ -557,18 +1034,18 @@ namespace chess_game
             //bottom
             pieceFound = _;
 
-            currentX = x;
-            currentY = y;
+            fromX = x;
+            fromY = y;
 
             do
             {
-                currentY++;
-                if (currentY >= 8)
+                fromY++;
+                if (fromY >= 8)
                 {
                     break;
                 }
 
-                pieceFound = board[currentY, currentX];
+                pieceFound = board[fromY, fromX];
             } while (pieceFound == _);
 
             if (pieceFound != _)
@@ -594,18 +1071,18 @@ namespace chess_game
             //left
             pieceFound = _;
 
-            currentX = x;
-            currentY = y;
+            fromX = x;
+            fromY = y;
 
             do
             {
-                currentX--;
-                if (currentX < 0)
+                fromX--;
+                if (fromX < 0)
                 {
                     break;
                 }
 
-                pieceFound = board[currentY, currentX];
+                pieceFound = board[fromY, fromX];
             } while (pieceFound == _);
 
             if (pieceFound != _)
@@ -629,18 +1106,18 @@ namespace chess_game
             //right
             pieceFound = _;
 
-            currentX = x;
-            currentY = y;
+            fromX = x;
+            fromY = y;
 
             do
             {
-                currentX++;
-                if (currentX >= 8)
+                fromX++;
+                if (fromX >= 8)
                 {
                     break;
                 }
 
-                pieceFound = board[currentY, currentX];
+                pieceFound = board[fromY, fromX];
             } while (pieceFound == _);
 
             if (pieceFound != _)
@@ -666,19 +1143,19 @@ namespace chess_game
             //top left
             pieceFound = _;
 
-            currentX = x;
-            currentY = y;
+            fromX = x;
+            fromY = y;
 
             do
             {
-                currentX--;
-                currentY--;
-                if (currentX < 0 || currentY < 0)
+                fromX--;
+                fromY--;
+                if (fromX < 0 || fromY < 0)
                 {
                     break;
                 }
 
-                pieceFound = board[currentY, currentX];
+                pieceFound = board[fromY, fromX];
             } while (pieceFound == _);
 
             if (pieceFound != _)
@@ -702,19 +1179,19 @@ namespace chess_game
             //top right
             pieceFound = _;
 
-            currentX = x;
-            currentY = y;
+            fromX = x;
+            fromY = y;
 
             do
             {
-                currentX++;
-                currentY--;
-                if (currentX >= 8 || currentY < 0)
+                fromX++;
+                fromY--;
+                if (fromX >= 8 || fromY < 0)
                 {
                     break;
                 }
 
-                pieceFound = board[currentY, currentX];
+                pieceFound = board[fromY, fromX];
             } while (pieceFound == _);
 
             if (pieceFound != _)
@@ -738,19 +1215,19 @@ namespace chess_game
             //bottom left
             pieceFound = _;
 
-            currentX = x;
-            currentY = y;
+            fromX = x;
+            fromY = y;
 
             do
             {
-                currentX--;
-                currentY++;
-                if (currentX < 0 || currentY >= 8)
+                fromX--;
+                fromY++;
+                if (fromX < 0 || fromY >= 8)
                 {
                     break;
                 }
 
-                pieceFound = board[currentY, currentX];
+                pieceFound = board[fromY, fromX];
             } while (pieceFound == _);
 
             if (pieceFound != _)
@@ -774,19 +1251,19 @@ namespace chess_game
             //bottom right
             pieceFound = _;
 
-            currentX = x;
-            currentY = y;
+            fromX = x;
+            fromY = y;
 
             do
             {
-                currentX++;
-                currentY++;
-                if (currentX >= 8 || currentY >= 8)
+                fromX++;
+                fromY++;
+                if (fromX >= 8 || fromY >= 8)
                 {
                     break;
                 }
 
-                pieceFound = board[currentY, currentX];
+                pieceFound = board[fromY, fromX];
             } while (pieceFound == _);
 
             if (pieceFound != _)
