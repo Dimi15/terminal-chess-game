@@ -275,7 +275,7 @@ namespace chess_game
 
                     if (Move(kingX, kingY, kingX - 1, kingY - 1))
                     {
-                        checkmate = UnderCheck(white));
+                        checkmate = UnderCheck(white);
 
                         board[kingY, kingX] = startPiece;
                         board[kingY - 1, kingX - 1] = endPiece;
@@ -291,7 +291,7 @@ namespace chess_game
 
                 if (Move(kingX, kingY, kingX, kingY - 1))
                 {
-                    checkmate = UnderCheck(white));
+                    checkmate = UnderCheck(white);
 
                     board[kingY, kingX] = startPiece;
                     board[kingY - 1, kingX] = endPiece;
@@ -309,7 +309,7 @@ namespace chess_game
 
                     if (Move(kingX, kingY, kingX + 1, kingY - 1))
                     {
-                        checkmate = UnderCheck(white));
+                        checkmate = UnderCheck(white);
 
                         board[kingY, kingX] = startPiece;
                         board[kingY - 1, kingX + 1] = endPiece;
@@ -329,7 +329,7 @@ namespace chess_game
 
                 if (Move(kingX, kingY, kingX - 1, kingY))
                 {
-                    checkmate = UnderCheck(white));
+                    checkmate = UnderCheck(white);
 
                     board[kingY, kingX] = startPiece;
                     board[kingY, kingX - 1] = endPiece;
@@ -348,7 +348,7 @@ namespace chess_game
 
                 if (Move(kingX, kingY, kingX + 1, kingY))
                 {
-                    checkmate = UnderCheck(white));
+                    checkmate = UnderCheck(white);
 
                     board[kingY, kingX] = startPiece;
                     board[kingY, kingX + 1] = endPiece;
@@ -370,7 +370,7 @@ namespace chess_game
 
                     if (Move(kingX, kingY, kingX - 1, kingY + 1))
                     {
-                        checkmate = UnderCheck(white));
+                        checkmate = UnderCheck(white);
 
                         board[kingY, kingX] = startPiece;
                         board[kingY + 1, kingX - 1] = endPiece;
@@ -386,7 +386,7 @@ namespace chess_game
 
                 if (Move(kingX, kingY, kingX, kingY + 1))
                 {
-                    checkmate = UnderCheck(white));
+                    checkmate = UnderCheck(white);
 
                     board[kingY, kingX] = startPiece;
                     board[kingY + 1, kingX] = endPiece;
@@ -404,7 +404,7 @@ namespace chess_game
 
                     if (Move(kingX, kingY, kingX + 1, kingY + 1))
                     {
-                        checkmate = UnderCheck(white));
+                        checkmate = UnderCheck(white);
 
                         board[kingY, kingX] = startPiece;
                         board[kingY + 1, kingX + 1] = endPiece;
@@ -419,27 +419,35 @@ namespace chess_game
 
             int incrementX = 0, incrementY = 0;
 
-            if (attackingPieceX != kingX)
+            if (attackingPiece == WN || attackingPiece == BN)
             {
-                if (attackingPieceX < kingX)
-                {
-                    incrementX = 1;
-                }
-                else
-                {
-                    incrementY = -1;
-                }
+                incrementX = kingX - attackingPieceX;
+                incrementY = kingY - attackingPieceY;
             }
-
-            if (attackingPieceY != kingY)
+            else
             {
-                if (attackingPieceY < kingY)
+                if (attackingPieceX != kingX)
                 {
-                    incrementY = 1;
+                    if (attackingPieceX < kingX)
+                    {
+                        incrementX = 1;
+                    }
+                    else
+                    {
+                        incrementY = -1;
+                    }
                 }
-                else
+
+                if (attackingPieceY != kingY)
                 {
-                    incrementY = -1;
+                    if (attackingPieceY < kingY)
+                    {
+                        incrementY = 1;
+                    }
+                    else
+                    {
+                        incrementY = -1;
+                    }
                 }
             }
 
@@ -448,6 +456,8 @@ namespace chess_game
             do
             {
                 //TODO: move pieces to current square
+
+                
 
                 checkmate = UnderCheck(white);
 
@@ -530,29 +540,8 @@ namespace chess_game
             return false;   //king not found
         }
 
-        /// <summary>
-        /// Check if a square is under attack
-        /// </summary>
-        /// <param name="white">The square is attacked by white</param>
-        /// <returns>true if the square is attacked</returns>
-        static bool AttachedBy(int x, int y, bool white)
+        static bool AttackedByPawn(int x, int y, bool white, ref int fromX, ref int fromY)
         {
-            int fromX = 0, fromY = 0;
-
-            return AttachedBy(x, y, white, ref fromX, ref fromY);
-        }
-
-        /// <summary>
-        /// Check if a square is under attack
-        /// </summary>
-        /// <param name="white">The square is attacked by white</param>
-        /// <param name="fromX">The X of the first piece found able to attack the given square</param>
-        /// <param name="fromY">The Y of the first piece found able to attack the given square</param>
-        /// <returns>true if the square is attacked</returns>
-        static bool AttachedBy(int x, int y, bool white, ref int fromX, ref int fromY)
-        {
-            //BY PAWN
-
             //left
             if (white)
             {
@@ -605,8 +594,11 @@ namespace chess_game
                 }
             }
 
-            //BY KNIGHT
+            return false;
+        }
 
+        static bool AttackedByKnight(int x, int y, bool white, ref int fromX, ref int fromY)
+        {
             //top
             if (y > 1)
             {
@@ -807,8 +799,11 @@ namespace chess_game
                 }
             }
 
-            //BY KING
+            return false;
+        }
 
+        static bool AttackedByKing(int x, int y, bool white, ref int fromX, ref int fromY)
+        {
             //top
             if (y > 0)
             {
@@ -995,7 +990,11 @@ namespace chess_game
                 }
             }
 
-            //VERTICALLY
+            return false;
+        }
+
+        static bool AttackedVerticallyTop(int x, int y, bool white, ref int fromX, ref int fromY)
+        {
             int pieceFound = _;
 
             fromX = x;
@@ -1031,8 +1030,13 @@ namespace chess_game
                 }
             }
 
+            return false;
+        }
+
+        static bool AttackedVerticallyBottom(int x, int y, bool white, ref int fromX, ref int fromY)
+        {
             //bottom
-            pieceFound = _;
+            int pieceFound = _;
 
             fromX = x;
             fromY = y;
@@ -1066,10 +1070,28 @@ namespace chess_game
                 }
             }
 
-            //HORIZONTALLY
+            return false;
+        }
 
+        static bool AttackedVertically(int x, int y, bool white, ref int fromX, ref int fromY)
+        {
+            if(AttackedVerticallyTop(x, y, white, ref fromX, ref fromY))
+            {
+                return true;
+            }
+
+            if(AttackedVerticallyBottom(x, y, white, ref fromX, ref fromY))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        static bool AttackedHorizzontallyLeft(int x, int y, bool white, ref int fromX, ref int fromY)
+        {
             //left
-            pieceFound = _;
+            int pieceFound = _;
 
             fromX = x;
             fromY = y;
@@ -1103,8 +1125,13 @@ namespace chess_game
                 }
             }
 
+            return false;
+        }
+
+        static bool AttackedHorizzontallyRight(int x, int y, bool white, ref int fromX, ref int fromY)
+        {
             //right
-            pieceFound = _;
+            int pieceFound = _;
 
             fromX = x;
             fromY = y;
@@ -1138,10 +1165,28 @@ namespace chess_game
                 }
             }
 
-            //DIAGONALLY
+            return false;
+        }
 
+        static bool AttackedHorizzontally(int x, int y, bool white, ref int fromX, ref int fromY)
+        {
+            if(AttackedHorizzontallyLeft(x, y, white, ref fromX, ref fromY))
+            {
+                return true;
+            }
+
+            if(AttackedHorizzontallyRight(x, y, white, ref fromX, ref fromY))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        static bool AttackedDiagonallyTopLeft(int x, int y, bool white, ref int fromX, ref int fromY)
+        {
             //top left
-            pieceFound = _;
+            int pieceFound = _;
 
             fromX = x;
             fromY = y;
@@ -1176,8 +1221,13 @@ namespace chess_game
                 }
             }
 
+            return false;
+        }
+
+        static bool AttackedDiagonallyTopRight(int x, int y, bool white, ref int fromX, ref int fromY)
+        {
             //top right
-            pieceFound = _;
+            int pieceFound = _;
 
             fromX = x;
             fromY = y;
@@ -1212,8 +1262,13 @@ namespace chess_game
                 }
             }
 
+            return false;
+        }
+
+        static bool AttackedDiagonallyBottomLeft(int x, int y, bool white, ref int fromX, ref int fromY)
+        {
             //bottom left
-            pieceFound = _;
+            int pieceFound = _;
 
             fromX = x;
             fromY = y;
@@ -1248,8 +1303,13 @@ namespace chess_game
                 }
             }
 
+            return false;
+        }
+
+        static bool AttackedDiagonallyBottomRight(int x, int y, bool white, ref int fromX, ref int fromY)
+        {
             //bottom right
-            pieceFound = _;
+            int pieceFound = _;
 
             fromX = x;
             fromY = y;
@@ -1282,6 +1342,91 @@ namespace chess_game
                         return true;
                     }
                 }
+            }
+
+            return false;
+        }
+
+        static bool AttackedDiagonally(int x, int y, bool white, ref int fromX, ref int fromY)
+        {
+            if(AttackedDiagonallyTopLeft(x, y, white, ref fromX, ref fromY))
+            {
+                return true;
+            }
+
+            if (AttackedDiagonallyTopRight(x, y, white, ref fromX, ref fromY))
+            {
+                return true;
+            }
+
+            if (AttackedDiagonallyBottomLeft(x, y, white, ref fromX, ref fromY))
+            {
+                return true;
+            }
+
+            if (AttackedDiagonallyBottomRight(x, y, white, ref fromX, ref fromY))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Check if a square is under attack
+        /// </summary>
+        /// <param name="white">The square is attacked by white</param>
+        /// <returns>true if the square is attacked</returns>
+        static bool AttachedBy(int x, int y, bool white)
+        {
+            int fromX = 0, fromY = 0;
+
+            return AttachedBy(x, y, white, ref fromX, ref fromY);
+        }
+
+        /// <summary>
+        /// Check if a square is under attack
+        /// </summary>
+        /// <param name="white">The square is attacked by white</param>
+        /// <param name="fromX">The X of the first piece found able to attack the given square</param>
+        /// <param name="fromY">The Y of the first piece found able to attack the given square</param>
+        /// <returns>true if the square is attacked</returns>
+        static bool AttachedBy(int x, int y, bool white, ref int fromX, ref int fromY)
+        {
+            //BY PAWN
+            if(AttackedByPawn(x, y, white, ref fromX, ref fromY))
+            {
+                return true;
+            }
+
+            //BY KNIGHT
+            if (AttackedByKnight(x, y, white, ref fromX, ref fromY))
+            {
+                return true;
+            }
+
+            //BY KING
+            if(AttackedByKing(x, y, white, ref fromX, ref fromY))
+            {
+                return true;
+            }
+
+            //VERTICALLY
+            if(AttackedVertically(x, y, white, ref fromX, ref fromY))
+            {
+                return true;
+            }
+
+            //HORIZONTALLY
+            if(AttackedHorizzontally(x, y, white, ref fromX, ref fromY))
+            {
+                return true;
+            }                     
+
+            //DIAGONALLY
+            if(AttackedDiagonally(x, y, white, ref fromX, ref fromY))
+            {
+                return true;
             }
 
             return false;
