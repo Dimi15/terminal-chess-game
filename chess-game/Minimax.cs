@@ -8,9 +8,6 @@ namespace chess_game
 {
     public partial class Program
     {
-        public static void Minimax()
-        {
-            Console.WriteLine("Minimax");
-        }
+        
     }
 }

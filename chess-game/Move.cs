@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace chess_game
@@ -12,17 +13,22 @@ namespace chess_game
         /// Move a piece from Start square to End square
         /// </summary>
         /// <returns>If the move is legal</returns>
-        public static bool Move(int startX, int startY, int endX, int endY)
+        public static bool Move(int startX, int startY, int endX, int endY, bool blackWhite, ref bool whiteCheck, ref bool blackCheck,ref bool whiteCheckmate, ref bool blackCheckmate,ref bool legal)
         {
-            if (LegalMove(startX, startY, endX, endY, blackWhite) == false)
+            if (LegalMove(startX, startY, endX, endY, blackWhite, ref whiteCheck, ref blackCheck,ref whiteCheckmate,ref blackCheckmate) == false)
             {
-                Console.WriteLine("La mossa non è valida\n");
+                if (whiteCheck == false && blackCheck == false)
+                {
+                    Console.WriteLine("La mossa non è valida\n");
+                    legal = false;
+                }
                 return false;
             }
             else
             {
                 board[endX, endY] = board[startX, startY];
                 board[startX, startY] = _;
+                legal = true;
                 return true;
             }
         }
@@ -37,8 +43,12 @@ namespace chess_game
         /// <param name="endX">ending x position</param>
         /// <param name="endY">ending y position</param>
         /// <param name="blackWhite">False if the current move is made by black and True if it is made by white</param>
+        /// <param name="whiteCheck">true if the white king is under check</param>
+        /// <param name="blackCheck">true if the black king is under check</param>
+        /// <param name="whiteCheckmate">true if the white king is under checkmate</param>
+        /// <param name="blackCheckmate">true if the black king is under checkmate</param>
         /// <returns>if the move is legal</returns>
-        static bool LegalMove(int startX, int startY, int endX, int endY, bool blackWhite)
+        static bool LegalMove(int startX, int startY, int endX, int endY, bool blackWhite, ref bool whiteCheck, ref bool blackCheck,ref bool whiteCheckmate,ref bool blackCheckmate)
         {
             int kingX = 0, kingY = 0;
             int reversMove = 0;
@@ -51,10 +61,12 @@ namespace chess_game
             reversMove = board[endX, endY];
             board[endX, endY] = board[startX, startY];
             board[startX, startY] = _;
+
             if (blackWhite == false)
             {
                 if (attackedBy(kingX, kingY, true) == true)
                 {
+                    blackCheck = true;
                     return false;
                 }
             }
@@ -62,6 +74,7 @@ namespace chess_game
             {
                 if (attackedBy(kingX, kingY, false) == true)
                 {
+                    whiteCheck = true;
                     return false;
                 }
             }
@@ -119,12 +132,13 @@ namespace chess_game
             {
                 case _:
                     return false;
+                    break;
 
 
                 //PAWNS
                 //white pawn
                 case WP:
-                    return WhitePawn(startX, startY, endX, endY);
+                      return WhitePawn(startX, startY, endX, endY);
                     break;
 
                 //BLACK PAWN
@@ -168,6 +182,7 @@ namespace chess_game
                     return false;
                     break;
             }
+
         }
 
 
@@ -235,28 +250,32 @@ namespace chess_game
                 if (board[startX - 1, startY - 1] != _ && (endX == startX - 1 && endY == startY - 1))
                 { }
             }
-            //Checks if the pawn can eat a piece and if the piece is a white one
-            if (board[startX - 1, startY - 1] != _ && (endX == startX - 1 && endY == startY - 1))
-            { }
-            else if (board[startX - 1, startY + 1] != _ && (endX == startX - 1 && endY == startY + 1))
+            else
             {
-                //Checks if the pawn is on the starting square
-                if ((startX == 6 && board[5, startY] == _ && board[4, startY] == _) && (endX == 4 && endY == startY))
+                //Checks if the pawn can eat a piece and if the piece is a white one
+                if (board[startX - 1, startY - 1] != _ && (endX == startX - 1 && endY == startY - 1))
                 { }
-                //Checks if te piece in front is occupied
-                else if ((endX == startX - 1 && endY == startY) && board[startX - 1, endY] != _)
+                else if (board[startX - 1, startY + 1] != _ && (endX == startX - 1 && endY == startY + 1))
                 {
-                    return false;
-                }
-                else
-                {
-                    //Checks everything else
-                    if (endY != startY || endX >= startX || endX < startX - 1)
+                    //Checks if the pawn is on the starting square
+                    if ((startX == 6 && board[5, startY] == _ && board[4, startY] == _) && (endX == 4 && endY == startY))
+                    { }
+                    //Checks if te piece in front is occupied
+                    else if ((endX == startX - 1 && endY == startY) && board[startX - 1, endY] != _)
                     {
                         return false;
                     }
+                    else
+                    {
+                        //Checks everything else
+                        if (endY != startY || endX >= startX || endX < startX - 1)
+                        {
+                            return false;
+                        }
+                    }
                 }
             }
+
             return true;
         }
 
@@ -549,7 +568,7 @@ namespace chess_game
             else
             {
                 return false;
-            }          
+            }
         }
 
 
@@ -1088,4 +1107,5 @@ namespace chess_game
             return false;
         }
     }
+
 }

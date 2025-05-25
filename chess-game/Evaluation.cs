@@ -8,7 +8,8 @@ namespace chess_game
 {
     public partial class Program
     {
-        public static void Evaluation()
+
+        static void Evaluation()
         {
             Console.WriteLine("Evaluation");
         }
