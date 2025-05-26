@@ -243,234 +243,65 @@ namespace chess_game
 
         /// <summary>
         /// Check if game ended
+        /// <param name="white">if it is white to be under checkmate</param>
+        /// <param name="draw">game ended by draw</param>
         /// </summary>
-        static bool Checkmate(ref bool draw, bool white)
+        /// <returns>if the king is under checkmate</returns>
+        static bool Checkmate(bool white, ref bool draw)
         {
-            int kingX = 0, kingY = 0;
-            int attackingPieceX = 0, attackingPieceY = 0;
-
-            if (!UnderCheck(white, ref kingX, ref kingY, ref attackingPieceX, ref attackingPieceY))
+            draw = false;
+        
+            bool correctPlayer = false;
+        
+            for (int i = 0; i < 8; i++)
             {
-                return false;
-            }
-
-            int king = board[kingY, kingX];
-            int attackingPiece = board[attackingPieceY, attackingPieceX];
-
-            bool checkmate = true;
-
-            int startPiece = _, endPiece = _;
-            int endX = 0, endY = 0;
-
-            //king can move out of the check
-            startPiece = king;
-
-            //top
-            if (kingY > 0)
-            {
-                //left
-                if (kingX > 0)
+                for(int j = 0; j < 8; j++)
                 {
-                    endPiece = board[kingY - 1, kingX - 1];
-
-                    if (Move(kingX, kingY, kingX - 1, kingY - 1))
+                    if (board[i, j] != _)
                     {
-                        checkmate = UnderCheck(white);
-
-                        board[kingY, kingX] = startPiece;
-                        board[kingY - 1, kingX - 1] = endPiece;
-
-                        if (!checkmate)
+                        correctPlayer = false;
+        
+                        if (white)
                         {
-                            return false;
+                            if (board[i, j] < BP)
+                            {
+                                correctPlayer = true;
+                            }
                         }
-                    }
-                }
-
-                endPiece = board[kingY - 1, kingX];
-
-                if (Move(kingX, kingY, kingX, kingY - 1))
-                {
-                    checkmate = UnderCheck(white);
-
-                    board[kingY, kingX] = startPiece;
-                    board[kingY - 1, kingX] = endPiece;
-
-                    if (!checkmate)
-                    {
-                        return false;
-                    }
-                }
-
-                //right
-                if (kingX > 0)
-                {
-                    endPiece = board[kingY - 1, kingX + 1];
-
-                    if (Move(kingX, kingY, kingX + 1, kingY - 1))
-                    {
-                        checkmate = UnderCheck(white);
-
-                        board[kingY, kingX] = startPiece;
-                        board[kingY - 1, kingX + 1] = endPiece;
-
-                        if (!checkmate)
+                        else
                         {
-                            return false;
+                            if (board[i, j] >= BP)
+                            {
+                                correctPlayer = true;
+                            }
+                        }
+        
+                        if (correctPlayer)
+                        {
+                            for (int k = 0; k < 8; k++)
+                            {
+                                for (int l = 0; l < 8; l++)
+                                {
+                                    if(LegalMove(j, i, l, k, white))
+                                    {
+                                        return false;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
-
-            //left
-            if (kingX > 0)
+        
+            if (UnderCheck(white))
             {
-                endPiece = board[kingY, kingX - 1];
-
-                if (Move(kingX, kingY, kingX - 1, kingY))
-                {
-                    checkmate = UnderCheck(white);
-
-                    board[kingY, kingX] = startPiece;
-                    board[kingY, kingX - 1] = endPiece;
-
-                    if (!checkmate)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            //right
-            if (kingX < 7)
-            {
-                endPiece = board[kingY, kingX + 1];
-
-                if (Move(kingX, kingY, kingX + 1, kingY))
-                {
-                    checkmate = UnderCheck(white);
-
-                    board[kingY, kingX] = startPiece;
-                    board[kingY, kingX + 1] = endPiece;
-
-                    if (!checkmate)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            //bottom
-            if (kingY < 7)
-            {
-                //left
-                if (kingX > 0)
-                {
-                    endPiece = board[kingY + 1, kingX - 1];
-
-                    if (Move(kingX, kingY, kingX - 1, kingY + 1))
-                    {
-                        checkmate = UnderCheck(white);
-
-                        board[kingY, kingX] = startPiece;
-                        board[kingY + 1, kingX - 1] = endPiece;
-
-                        if (!checkmate)
-                        {
-                            return false;
-                        }
-                    }
-                }
-
-                endPiece = board[kingY + 1, kingX];
-
-                if (Move(kingX, kingY, kingX, kingY + 1))
-                {
-                    checkmate = UnderCheck(white);
-
-                    board[kingY, kingX] = startPiece;
-                    board[kingY + 1, kingX] = endPiece;
-
-                    if (!checkmate)
-                    {
-                        return false;
-                    }
-                }
-
-                //right
-                if (kingX > 0)
-                {
-                    endPiece = board[kingY + 1, kingX + 1];
-
-                    if (Move(kingX, kingY, kingX + 1, kingY + 1))
-                    {
-                        checkmate = UnderCheck(white);
-
-                        board[kingY, kingX] = startPiece;
-                        board[kingY + 1, kingX + 1] = endPiece;
-
-                        if (!checkmate)
-                        {
-                            return false;
-                        }
-                    }
-                }
-            }
-
-            int incrementX = 0, incrementY = 0;
-
-            if (attackingPiece == WN || attackingPiece == BN)
-            {
-                incrementX = kingX - attackingPieceX;
-                incrementY = kingY - attackingPieceY;
+                return true;
             }
             else
             {
-                if (attackingPieceX != kingX)
-                {
-                    if (attackingPieceX < kingX)
-                    {
-                        incrementX = 1;
-                    }
-                    else
-                    {
-                        incrementY = -1;
-                    }
-                }
-
-                if (attackingPieceY != kingY)
-                {
-                    if (attackingPieceY < kingY)
-                    {
-                        incrementY = 1;
-                    }
-                    else
-                    {
-                        incrementY = -1;
-                    }
-                }
+                draw = true;
+                return false;
             }
-
-            int currentX = attackingPieceX, currentY = attackingPieceY;
-
-            do
-            {
-                //TODO: move pieces to current square
-
-                
-
-                checkmate = UnderCheck(white);
-
-                if(!checkmate)
-                {
-                    return false;
-                }
-
-                currentX += incrementX;
-                currentY += incrementY;
-            } while (currentX != kingX || currentY != kingY);
-
-            return checkmate;
         }
 
         /// <summary>
