@@ -1208,11 +1208,11 @@ namespace chess_game
         /// </summary>
         /// <param name="white">The square is attacked by white</param>
         /// <returns>true if the square is attacked</returns>
-        static bool AttachedBy(int x, int y, bool white)
+        static bool AttackedBy(int x, int y, bool white)
         {
             int fromX = 0, fromY = 0;
 
-            return AttachedBy(x, y, white, ref fromX, ref fromY);
+            return AttackedBy(x, y, white, ref fromX, ref fromY);
         }
 
         /// <summary>
