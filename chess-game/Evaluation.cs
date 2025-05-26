@@ -1391,7 +1391,7 @@ namespace chess_game
         /// <param name="fromX">The X of the first piece found able to attack the given square</param>
         /// <param name="fromY">The Y of the first piece found able to attack the given square</param>
         /// <returns>true if the square is attacked</returns>
-        static bool AttachedBy(int x, int y, bool white, ref int fromX, ref int fromY)
+        static bool AttackedBy(int x, int y, bool white, ref int fromX, ref int fromY)
         {
             //BY PAWN
             if(AttackedByPawn(x, y, white, ref fromX, ref fromY))
