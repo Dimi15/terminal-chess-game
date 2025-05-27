@@ -63,7 +63,7 @@ namespace chess_game
 
             // Shows starting board depending on the color of the player
             SetupStartPosition();
-            GetPosition();
+            GetPosition(playerWhite);
 
             // Exits the loop when the game ends
             do
@@ -74,7 +74,7 @@ namespace chess_game
                 do
                 {
                     Console.Clear();
-                    GetPosition();
+                    GetPosition(playerWhite);
 
                     Console.WriteLine("Piece to move:\nRow:");
                     startX = Convert.ToInt32(Console.ReadLine());
@@ -98,7 +98,7 @@ namespace chess_game
                 }
 
                 Console.Clear();
-                GetPosition();
+                GetPosition(true);
 
                 // Turn of the computer
                 Program.Minimax(2, ref bestStartX, ref bestStartY, ref bestEndX, ref bestEndY);
@@ -115,7 +115,7 @@ namespace chess_game
                 }
 
                 Console.Clear();
-                GetPosition();
+                GetPosition(true);
             } while (true);
 
             Console.ReadKey();
@@ -162,73 +162,122 @@ namespace chess_game
         }
 
         /// <summary>
+        /// Prints one square of the current board
+        /// </summary>
+        static void WriteSquare(int x, int y)
+        {
+            // Condition to alternate the background of the squares
+            if (y % 2 == 0)
+            {
+                if (x % 2 == 0)
+                {
+                    Console.BackgroundColor = ConsoleColor.DarkGreen;
+                }
+                else
+                {
+                    Console.BackgroundColor = ConsoleColor.Gray;
+                }
+            }
+            else
+            {
+                if (x % 2 == 0)
+                {
+                    Console.BackgroundColor = ConsoleColor.Gray;
+                }
+                else
+                {
+                    Console.BackgroundColor = ConsoleColor.DarkGreen;
+                }
+            }
+
+            // Matching the correct piece for each number in the matrix
+            switch (board[y, x])
+            {
+                // White pieces
+                case WP: Console.Write("♙"); break;
+                case WN: Console.Write("♘"); break;
+                case WB: Console.Write("♗"); break;
+                case WR: Console.Write("♖"); break;
+                case WQ: Console.Write("♕"); break;
+                case WK: Console.Write("♔"); break;
+
+                // Black pieces
+                case BP: Console.Write("♟"); break;
+                case BN: Console.Write("♞"); break;
+                case BB: Console.Write("♝"); break;
+                case BR: Console.Write("♜"); break;
+                case BQ: Console.Write("♛"); break;
+                case BK: Console.Write("♚"); break;
+                case _: Console.Write(" "); break;
+            }
+
+            Console.Write(' ');
+        }
+
+        /// <summary>
         /// Prints the current board
         /// </summary>
-        static void GetPosition()
+        static void GetPosition(bool white)
         {
             ConsoleColor defaulBackground = Console.BackgroundColor;
             ConsoleColor defaulForeground = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Black;
 
-            // Iterates through rows
-            for (int i = 0; i < 8; i++)
+            if (white)
             {
-                // Iterates through columns
-                for (int j = 0; j < 8; j++)
+                // Iterates through rows
+                for (int i = 0; i < 8; i++)
                 {
-                    // Condition to alternate the background of the squares
-                    if (i % 2 == 0)
+                    Console.Write(i);
+
+                    // Iterates through columns
+                    for (int j = 0; j < 8; j++)
                     {
-                        if (j % 2 == 0)
-                        {
-                            Console.BackgroundColor = ConsoleColor.DarkGreen;
-                        }
-                        else
-                        {
-                            Console.BackgroundColor = ConsoleColor.Gray;
-                        }
-                    }
-                    else
-                    {
-                        if (j % 2 == 0)
-                        {
-                            Console.BackgroundColor = ConsoleColor.Gray;
-                        }
-                        else
-                        {
-                            Console.BackgroundColor = ConsoleColor.DarkGreen;
-                        }
+                        Console.ForegroundColor = ConsoleColor.Black;
+
+                        WriteSquare(j, i);
                     }
 
-                    // Matching the correct piece for each number in the matrix
-                    switch (board[i, j])
-                    {
-                        // White pieces
-                        case WP: Console.Write("♙"); break;
-                        case WN: Console.Write("♘"); break;
-                        case WB: Console.Write("♗"); break;
-                        case WR: Console.Write("♖"); break;
-                        case WQ: Console.Write("♕"); break;
-                        case WK: Console.Write("♔"); break;
-
-                        // Black pieces
-                        case BP: Console.Write("♟"); break;
-                        case BN: Console.Write("♞"); break;
-                        case BB: Console.Write("♝"); break;
-                        case BR: Console.Write("♜"); break;
-                        case BQ: Console.Write("♛"); break;
-                        case BK: Console.Write("♚"); break;
-                        case _: Console.Write(" "); break;
-                    }
-
-                    Console.Write(' ');
+                    Console.ForegroundColor = defaulForeground;
+                    Console.BackgroundColor = defaulBackground;
+                    Console.Write("\n");
                 }
 
-                Console.BackgroundColor = defaulBackground;
+                Console.Write(' ');
+
+                for (int i = 0; i < 8; i++)
+                {
+                    Console.Write(Convert.ToString(i) + ' ');
+                }
                 Console.Write("\n");
             }
+            else
+            {
+                // Iterates through rows
+                for (int i = 7; i >= 0; i--)
+                {
+                    Console.Write(i);
 
-            Console.ForegroundColor = defaulForeground;
+                    // Iterates through columns
+                    for (int j = 7; j >= 0; j--)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Black;
+
+                        WriteSquare(j, i);
+                    }
+
+                    Console.ForegroundColor = defaulForeground;
+                    Console.BackgroundColor = defaulBackground;
+                    Console.Write("\n");
+                }
+
+                Console.Write(' ');
+
+                for (int i = 0; i < 8; i++)
+                {
+                    Console.Write(Convert.ToString(i) + ' ');
+                }
+                Console.Write("\n");
+            }
         }
     }
 }
