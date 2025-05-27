@@ -171,22 +171,22 @@ namespace chess_game
             {
                 if (x % 2 == 0)
                 {
-                    Console.BackgroundColor = ConsoleColor.DarkGreen;
+                    Console.BackgroundColor = ConsoleColor.Gray;
                 }
                 else
                 {
-                    Console.BackgroundColor = ConsoleColor.Gray;
+                    Console.BackgroundColor = ConsoleColor.DarkGreen;
                 }
             }
             else
             {
                 if (x % 2 == 0)
                 {
-                    Console.BackgroundColor = ConsoleColor.Gray;
+                    Console.BackgroundColor = ConsoleColor.DarkGreen;
                 }
                 else
                 {
-                    Console.BackgroundColor = ConsoleColor.DarkGreen;
+                    Console.BackgroundColor = ConsoleColor.Gray;
                 }
             }
 
