@@ -19,7 +19,6 @@ namespace chess_game
             {
                 if (whiteCheck == false && blackCheck == false)
                 {
-                    Console.WriteLine("La mossa non è valida\n");
                     legal = false;
                 }
                 return false;
