@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace chess_game
 {
     public partial class Program
@@ -23,7 +17,7 @@ namespace chess_game
             int currentPiece = _;
 
             if (depth == 0)
-                return Program.Evaluation();
+                return Evaluation();
 
             // Cycle through all moves for each piece in the matrix
             for (int i = 0; i < 8; i++) // Rows of the matrix
@@ -38,7 +32,7 @@ namespace chess_game
                             for (int l = 0; l < 8; l++) // Columns of the single piece
                             {
                                 // Plays the move if it is legal
-                                if (Program.Move(j, i, l, k, true))
+                                if (Move(j, i, l, k, true))
                                 {
                                     currentPiece = board[k,l]; // Saves the end position of the piece
                                     lastPiece = board[i, j]; // Saves the start position of the piece
