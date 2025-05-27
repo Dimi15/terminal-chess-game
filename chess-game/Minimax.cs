@@ -22,7 +22,7 @@ namespace chess_game
             int lastPiece = _;
             int currentPiece = _;
 
-            if (depth = 0)
+            if (depth == 0)
                 return Program.Evaluation();
 
             // Cycle through all moves for each piece in the matrix
@@ -38,7 +38,7 @@ namespace chess_game
                             for (int l = 0; l < 8; l++) // Columns of the single piece
                             {
                                 // Plays the move if it is legal
-                                if (Program.Move(j, i, l, k))
+                                if (Program.Move(j, i, l, k, true))
                                 {
                                     currentPiece = board[k,l]; // Saves the end position of the piece
                                     lastPiece = board[i, j]; // Saves the start position of the piece
@@ -64,9 +64,9 @@ namespace chess_game
                     }
 
                 }
-
-                return bestEvaluation;
             }
+            
+            return bestEvaluation;
         }
     }
 }

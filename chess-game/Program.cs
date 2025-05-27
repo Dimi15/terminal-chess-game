@@ -35,7 +35,12 @@ namespace chess_game
             int startY = 0;
             int endX = 0;
             int endY = 0;
-            char c = ' ';
+            int bestStartX = 0;
+            int bestStartY = 0;
+            int bestEndX = 0;
+            int bestEndY = 0;
+            
+            char pickedColor = ' ';
             bool blackWhite = false;
             bool whiteCheck = false;
             bool blackCheck = false;
@@ -43,36 +48,24 @@ namespace chess_game
             bool blackCheckmate = false;
             bool playerWhite = false;
             bool legal = true;
+            bool draw = false;
 
             // Asks the color of the player
-
             do
             {
-                Console.WriteLine("Colore : W, B");
-                c = Convert.ToChar(Console.ReadLine());
+                Console.WriteLine("Pick a color: W, B");
+                pickedColor = Convert.ToChar(Console.ReadLine().ToLower());
             }
-            while ((c != 'w' && c != 'W') && (c != 'b' && c != 'b'));
+            while (pickedColor != 'w' && pickedColor != 'b');
 
-
-
-            if (c == 'W' || c == 'w')
+            if (pickedColor == 'w')
             {
                 playerWhite = true;
             }
-
-
+            
             // Shows starting board depending on the color of the player
-            SetupStartPosition(c);
+            SetupStartPosition();
             GetPosition();
-
-
-            // If the the player is white the var "blackWhite" is update for further check in the Move function
-            if (playerWhite == true)
-            { }
-            else
-            {
-                blackWhite = true;
-            }
 
             //The outer loop loops until one king is under checkmate
             //The inner loop loops until the player doesn't input a valid move
@@ -82,12 +75,8 @@ namespace chess_game
                 
                 do
                 {
-
-                    if (whiteCheck == true && playerWhite == true || blackCheck == true && playerWhite == false)
-                    {
-                        Console.WriteLine("Il tuo re è sotto scacco, fai una mossa per salvarlo");
-                    }
-
+                    Console.Clear();
+                    GetPosition();
                     Console.WriteLine("Pedina da muovere:\nRiga:");
                     startX = Convert.ToInt32(Console.ReadLine());
                     Console.WriteLine("Colonna:");
@@ -97,38 +86,38 @@ namespace chess_game
                     endX = Convert.ToInt32(Console.ReadLine());
                     Console.WriteLine("Colonna:");
                     endY = Convert.ToInt32(Console.ReadLine());
-
-                    Program.Move(startX, startY, endX, endY, blackWhite, ref whiteCheck, ref blackCheck, ref whiteCheckmate, ref blackCheckmate, ref legal);
-                    Console.ReadKey();
                 }
-                while (legal == false);
+                while (!Program.Move(startX, startY, endX, endY, blackWhite));
 
+                // Check if the game has finished
+                if (Program.Checkmate(!playerWhite, ref draw))
+                {
+                    break;
+                } else if (draw)
+                {
+                    break;
+                }
+                
                 Console.Clear();
                 GetPosition();
-                Console.ReadKey();
-
-                //Turno Bot
-                /*
-                Program.Minimax();
-                Console.ReadKey();               
-                */
-
+                
+                // Turno Bot
+                Program.Minimax(2, ref bestStartX, ref bestStartY, ref bestEndX, ref bestEndY);
+                Program.Move(bestStartX, bestStartY, bestEndX, bestEndY, blackWhite);
+                
+                // Check if the game has finished
+                if (Program.Checkmate(playerWhite, ref draw))
+                {
+                    break;
+                } else if (draw)
+                {
+                    break;
+                }
+                
                 Console.Clear();
                 GetPosition();
-                Console.ReadKey();
-
             }
-            while (whiteCheckmate == false && blackCheckmate == false);
-
-
-            if ((whiteCheckmate == true && playerWhite == true) || (blackCheckmate == true && playerWhite == false))
-            {
-                Console.WriteLine("Il tuo re è sotto scacco matto, hai perso");
-            }
-            else
-            {
-                Console.WriteLine("Il re avversario è sotto scacco matto, hai vinto !");
-            }
+            while (true);
 
             Console.ReadKey();
         }
@@ -136,78 +125,43 @@ namespace chess_game
         /// <summary>
         /// Assigns the variables to the matrix for the start position
         /// </summary>
-        static void SetupStartPosition(char c)
+        static void SetupStartPosition()
         {
-            if (c == 'W' || c == 'w')
-            {
-                // CASE FOR BLACK:
-                // Assigning to each square the appropriate piece
-                board[0, 0] = BR;
-                board[0, 1] = BN;
-                board[0, 2] = BB;
-                board[0, 3] = BQ;
-                board[0, 4] = BK;
-                board[0, 5] = BB;
-                board[0, 6] = BN;
-                board[0, 7] = BR;
+            // CASE FOR BLACK:
+            // Assigning to each square the appropriate piece
+            board[0, 0] = BR;
+            board[0, 1] = BN;
+            board[0, 2] = BB;
+            board[0, 3] = BQ;
+            board[0, 4] = BK;
+            board[0, 5] = BB;
+            board[0, 6] = BN;
+            board[0, 7] = BR;
 
-                // Loop to assign pawns
-                for (int i = 0; i < 8; i++)
-                    board[1, i] = BP;
+            // Loop to assign pawns
+            for (int i = 0; i < 8; i++)
+                board[1, i] = BP;
 
-                // CASE FOR WHITE:
-                // Assigning to each square the appropriate piece
-                board[7, 0] = WR;
-                board[7, 1] = WN;
-                board[7, 2] = WB;
-                board[7, 3] = WQ;
-                board[7, 4] = WK;
-                board[7, 5] = WB;
-                board[7, 6] = WN;
-                board[7, 7] = WR;
+            // CASE FOR WHITE:
+            // Assigning to each square the appropriate piece
+            board[7, 0] = WR;
+            board[7, 1] = WN;
+            board[7, 2] = WB;
+            board[7, 3] = WQ;
+            board[7, 4] = WK;
+            board[7, 5] = WB;
+            board[7, 6] = WN;
+            board[7, 7] = WR;
 
-                // Loop to assign pawns
-                for (int i = 0; i < 8; i++)
-                    board[6, i] = WP;
-            }
-            else
-            {
-                // CASE FOR BLACK:
-                // Assigning to each square the appropriate piece
-                board[7, 0] = BR;
-                board[7, 1] = BN;
-                board[7, 2] = BB;
-                board[7, 3] = BQ;
-                board[7, 4] = BK;
-                board[7, 5] = BB;
-                board[7, 6] = BN;
-                board[7, 7] = BR;
-
-                // Loop to assign pawns
-                for (int i = 0; i < 8; i++)
-                    board[1, i] = BP;
-
-                // CASE FOR WHITE:
-                // Assigning to each square the appropriate piece
-                board[0, 0] = WR;
-                board[0, 1] = WN;
-                board[0, 2] = WB;
-                board[0, 3] = WQ;
-                board[0, 4] = WK;
-                board[0, 5] = WB;
-                board[0, 6] = WN;
-                board[0, 7] = WR;
-
-                // Loop to assign pawns
-                for (int i = 0; i < 8; i++)
-                    board[6, i] = WP;
-            }
+            // Loop to assign pawns
+            for (int i = 0; i < 8; i++)
+                board[6, i] = WP;
         }
 
         /// <summary>
         /// Prints the current board
         /// </summary>
-        static void getPosition()
+        static void GetPosition()
         {
             ConsoleColor defaulBackground = Console.BackgroundColor;
             ConsoleColor defaulForeground = Console.ForegroundColor;

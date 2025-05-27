@@ -338,7 +338,7 @@ namespace chess_game
                             kingX = j;
                             kingY = i;
 
-                            if (AttachedBy(j, i, false, ref pieceX, ref pieceY))
+                            if (AttackedBy(j, i, false, ref pieceX, ref pieceY))
                             {
                                 return true;
                             }
@@ -355,7 +355,7 @@ namespace chess_game
                             kingX = j;
                             kingY = i;
 
-                            if (AttachedBy(j, i, true, ref pieceX, ref pieceY))
+                            if (AttackedBy(j, i, true, ref pieceX, ref pieceY))
                             {
                                 return true;
                             }
