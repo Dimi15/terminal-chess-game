@@ -23,62 +23,191 @@ namespace chess_game
         public const int BQ = 11; // Black Queen
         public const int BK = 12; // Black King
 
-        public static bool playerWhite = false;
         public static int[,] board = new int[8, 8];
 
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8; // Needed to display the pieces
 
-            Program.Minimax();
-            Program.Evaluation();
-            Program.Move();
 
-            // Tests display function
-            SetupStartPosition();
+            // TESTING MOVE FUNCTION
+            int startX = 0;
+            int startY = 0;
+            int endX = 0;
+            int endY = 0;
+            char c = ' ';
+            bool blackWhite = false;
+            bool whiteCheck = false;
+            bool blackCheck = false;
+            bool whiteCheckmate = false;
+            bool blackCheckmate = false;
+            bool playerWhite = false;
+            bool legal = true;
+
+            // Asks the color of the player
+
+            do
+            {
+                Console.WriteLine("Colore : W, B");
+                c = Convert.ToChar(Console.ReadLine());
+            }
+            while ((c != 'w' && c != 'W') && (c != 'b' && c != 'b'));
+
+
+
+            if (c == 'W' || c == 'w')
+            {
+                playerWhite = true;
+            }
+
+
+            // Shows starting board depending on the color of the player
+            SetupStartPosition(c);
             GetPosition();
+
+
+            // If the the player is white the var "blackWhite" is update for further check in the Move function
+            if (playerWhite == true)
+            { }
+            else
+            {
+                blackWhite = true;
+            }
+
+            //The outer loop loops until one king is under checkmate
+            //The inner loop loops until the player doesn't input a valid move
+            do
+            {
+                blackWhite = !blackWhite;
+                
+                do
+                {
+
+                    if (whiteCheck == true && playerWhite == true || blackCheck == true && playerWhite == false)
+                    {
+                        Console.WriteLine("Il tuo re è sotto scacco, fai una mossa per salvarlo");
+                    }
+
+                    Console.WriteLine("Pedina da muovere:\nRiga:");
+                    startX = Convert.ToInt32(Console.ReadLine());
+                    Console.WriteLine("Colonna:");
+                    startY = Convert.ToInt32(Console.ReadLine());
+
+                    Console.WriteLine("Casella destinataria:\nRiga:");
+                    endX = Convert.ToInt32(Console.ReadLine());
+                    Console.WriteLine("Colonna:");
+                    endY = Convert.ToInt32(Console.ReadLine());
+
+                    Program.Move(startX, startY, endX, endY, blackWhite, ref whiteCheck, ref blackCheck, ref whiteCheckmate, ref blackCheckmate, ref legal);
+                    Console.ReadKey();
+                }
+                while (legal == false);
+
+                Console.Clear();
+                GetPosition();
+                Console.ReadKey();
+
+                //Turno Bot
+                /*
+                Program.Minimax();
+                Console.ReadKey();               
+                */
+
+                Console.Clear();
+                GetPosition();
+                Console.ReadKey();
+
+            }
+            while (whiteCheckmate == false && blackCheckmate == false);
+
+
+            if ((whiteCheckmate == true && playerWhite == true) || (blackCheckmate == true && playerWhite == false))
+            {
+                Console.WriteLine("Il tuo re è sotto scacco matto, hai perso");
+            }
+            else
+            {
+                Console.WriteLine("Il re avversario è sotto scacco matto, hai vinto !");
+            }
+
+            Console.ReadKey();
         }
 
         /// <summary>
         /// Assigns the variables to the matrix for the start position
         /// </summary>
-        static void SetupStartPosition()
+        static void SetupStartPosition(char c)
         {
-            // CASE FOR BLACK:
-            // Assigning to each square the appropriate piece
-            board[0, 0] = BR;
-            board[0, 1] = BN;
-            board[0, 2] = BB;
-            board[0, 3] = BQ;
-            board[0, 4] = BK;
-            board[0, 5] = BB;
-            board[0, 6] = BN;
-            board[0, 7] = BR;
+            if (c == 'W' || c == 'w')
+            {
+                // CASE FOR BLACK:
+                // Assigning to each square the appropriate piece
+                board[0, 0] = BR;
+                board[0, 1] = BN;
+                board[0, 2] = BB;
+                board[0, 3] = BQ;
+                board[0, 4] = BK;
+                board[0, 5] = BB;
+                board[0, 6] = BN;
+                board[0, 7] = BR;
 
-            // Loop to assign pawns
-            for (int i = 0; i < 8; i++)
-                board[1, i] = BP;
+                // Loop to assign pawns
+                for (int i = 0; i < 8; i++)
+                    board[1, i] = BP;
 
-            // CASE FOR WHITE:
-            // Assigning to each square the appropriate piece
-            board[7, 0] = WR;
-            board[7, 1] = WN;
-            board[7, 2] = WB;
-            board[7, 3] = WQ;
-            board[7, 4] = WK;
-            board[7, 5] = WB;
-            board[7, 6] = WN;
-            board[7, 7] = WR;
+                // CASE FOR WHITE:
+                // Assigning to each square the appropriate piece
+                board[7, 0] = WR;
+                board[7, 1] = WN;
+                board[7, 2] = WB;
+                board[7, 3] = WQ;
+                board[7, 4] = WK;
+                board[7, 5] = WB;
+                board[7, 6] = WN;
+                board[7, 7] = WR;
 
-            // Loop to assign pawns
-            for (int i = 0; i < 8; i++)
-                board[6, i] = WP;
+                // Loop to assign pawns
+                for (int i = 0; i < 8; i++)
+                    board[6, i] = WP;
+            }
+            else
+            {
+                // CASE FOR BLACK:
+                // Assigning to each square the appropriate piece
+                board[7, 0] = BR;
+                board[7, 1] = BN;
+                board[7, 2] = BB;
+                board[7, 3] = BQ;
+                board[7, 4] = BK;
+                board[7, 5] = BB;
+                board[7, 6] = BN;
+                board[7, 7] = BR;
+
+                // Loop to assign pawns
+                for (int i = 0; i < 8; i++)
+                    board[1, i] = BP;
+
+                // CASE FOR WHITE:
+                // Assigning to each square the appropriate piece
+                board[0, 0] = WR;
+                board[0, 1] = WN;
+                board[0, 2] = WB;
+                board[0, 3] = WQ;
+                board[0, 4] = WK;
+                board[0, 5] = WB;
+                board[0, 6] = WN;
+                board[0, 7] = WR;
+
+                // Loop to assign pawns
+                for (int i = 0; i < 8; i++)
+                    board[6, i] = WP;
+            }
         }
 
         /// <summary>
         /// Prints the current board
         /// </summary>
-        static void GetPosition()
+        static void getPosition()
         {
             ConsoleColor defaulBackground = Console.BackgroundColor;
             ConsoleColor defaulForeground = Console.ForegroundColor;
@@ -153,10 +282,9 @@ namespace chess_game
                     }
                     Console.Write(' ');
                 }
+                Console.BackgroundColor = defaulBackground;
                 Console.Write("\n");
             }
-
-            Console.BackgroundColor = defaulBackground;
             Console.ForegroundColor = defaulForeground;
         }
     }
