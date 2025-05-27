@@ -29,8 +29,6 @@ namespace chess_game
         {
             Console.OutputEncoding = Encoding.UTF8; // Needed to display the pieces
 
-
-            // TESTING MOVE FUNCTION
             int startX = 0;
             int startY = 0;
             int endX = 0;
@@ -39,8 +37,7 @@ namespace chess_game
             int bestStartY = 0;
             int bestEndX = 0;
             int bestEndY = 0;
-            
-            char pickedColor = ' ';
+
             bool blackWhite = false;
             bool whiteCheck = false;
             bool blackCheck = false;
@@ -50,74 +47,76 @@ namespace chess_game
             bool legal = true;
             bool draw = false;
 
+            char pickedColor = ' ';
+
             // Asks the color of the player
             do
             {
-                Console.WriteLine("Pick a color: W, B");
+                Console.WriteLine("Do you want to play Black or White? (B/W)");
                 pickedColor = Convert.ToChar(Console.ReadLine().ToLower());
-            }
-            while (pickedColor != 'w' && pickedColor != 'b');
+            } while (pickedColor != 'w' && pickedColor != 'b');
 
             if (pickedColor == 'w')
             {
                 playerWhite = true;
             }
-            
+
             // Shows starting board depending on the color of the player
             SetupStartPosition();
             GetPosition();
 
-            //The outer loop loops until one king is under checkmate
-            //The inner loop loops until the player doesn't input a valid move
+            // Exits the loop when the game ends
             do
             {
                 blackWhite = !blackWhite;
-                
+
+                // Iterates until the player hasn't chosen a legal move
                 do
                 {
                     Console.Clear();
                     GetPosition();
-                    Console.WriteLine("Pedina da muovere:\nRiga:");
+
+                    Console.WriteLine("Piece to move:\nRow:");
                     startX = Convert.ToInt32(Console.ReadLine());
-                    Console.WriteLine("Colonna:");
+                    Console.WriteLine("Column:");
                     startY = Convert.ToInt32(Console.ReadLine());
 
-                    Console.WriteLine("Casella destinataria:\nRiga:");
+                    Console.WriteLine("Square to move:\nRow:");
                     endX = Convert.ToInt32(Console.ReadLine());
-                    Console.WriteLine("Colonna:");
+                    Console.WriteLine("Column:");
                     endY = Convert.ToInt32(Console.ReadLine());
-                }
-                while (!Program.Move(startX, startY, endX, endY, blackWhite));
+                } while (!Program.Move(startX, startY, endX, endY, blackWhite));
 
-                // Check if the game has finished
+                // Check if the game has ended
                 if (Program.Checkmate(!playerWhite, ref draw))
                 {
                     break;
-                } else if (draw)
+                }
+                else if (draw)
                 {
                     break;
                 }
-                
+
                 Console.Clear();
                 GetPosition();
-                
-                // Turno Bot
+
+                // Turn of the computer
                 Program.Minimax(2, ref bestStartX, ref bestStartY, ref bestEndX, ref bestEndY);
                 Program.Move(bestStartX, bestStartY, bestEndX, bestEndY, blackWhite);
-                
-                // Check if the game has finished
+
+                // Check if the game has ended
                 if (Program.Checkmate(playerWhite, ref draw))
                 {
                     break;
-                } else if (draw)
+                }
+                else if (draw)
                 {
                     break;
                 }
-                
+
                 Console.Clear();
                 GetPosition();
-            }
-            while (true);
+            } while (true);
 
             Console.ReadKey();
         }
@@ -140,7 +139,9 @@ namespace chess_game
 
             // Loop to assign pawns
             for (int i = 0; i < 8; i++)
+            {
                 board[1, i] = BP;
+            }
 
             // CASE FOR WHITE:
             // Assigning to each square the appropriate piece
@@ -155,7 +156,9 @@ namespace chess_game
 
             // Loop to assign pawns
             for (int i = 0; i < 8; i++)
+            {
                 board[6, i] = WP;
+            }
         }
 
         /// <summary>
@@ -165,80 +168,66 @@ namespace chess_game
         {
             ConsoleColor defaulBackground = Console.BackgroundColor;
             ConsoleColor defaulForeground = Console.ForegroundColor;
-
             Console.ForegroundColor = ConsoleColor.Black;
 
-            // Cycles through rows
+            // Iterates through rows
             for (int i = 0; i < 8; i++)
             {
-                // Cycles through columns
+                // Iterates through columns
                 for (int j = 0; j < 8; j++)
                 {
                     // Condition to alternate the background of the squares
                     if (i % 2 == 0)
                     {
                         if (j % 2 == 0)
+                        {
                             Console.BackgroundColor = ConsoleColor.DarkGreen;
+                        }
                         else
+                        {
                             Console.BackgroundColor = ConsoleColor.Gray;
+                        }
                     }
                     else
                     {
                         if (j % 2 == 0)
+                        {
                             Console.BackgroundColor = ConsoleColor.Gray;
+                        }
                         else
+                        {
                             Console.BackgroundColor = ConsoleColor.DarkGreen;
+                        }
                     }
 
                     // Matching the correct piece for each number in the matrix
                     switch (board[i, j])
                     {
                         // White pieces
-                        case WP:
-                            Console.Write("♙"); break;
-
-                        case WN:
-                            Console.Write("♘"); break;
-
-                        case WB:
-                            Console.Write("♗"); break;
-
-                        case WR:
-                            Console.Write("♖"); break;
-
-                        case WQ:
-                            Console.Write("♕"); break;
-
-                        case WK:
-                            Console.Write("♔"); break;
+                        case WP: Console.Write("♙"); break;
+                        case WN: Console.Write("♘"); break;
+                        case WB: Console.Write("♗"); break;
+                        case WR: Console.Write("♖"); break;
+                        case WQ: Console.Write("♕"); break;
+                        case WK: Console.Write("♔"); break;
 
                         // Black pieces
-                        case BP:
-                            Console.Write("♟"); break;
-
-                        case BN:
-                            Console.Write("♞"); break;
-
-                        case BB:
-                            Console.Write("♝"); break;
-
-                        case BR:
-                            Console.Write("♜"); break;
-
-                        case BQ:
-                            Console.Write("♛"); break;
-
-                        case BK:
-                            Console.Write("♚"); break;
-
-                        case _:
-                            Console.Write(" "); break;
+                        case BP: Console.Write("♟"); break;
+                        case BN: Console.Write("♞"); break;
+                        case BB: Console.Write("♝"); break;
+                        case BR: Console.Write("♜"); break;
+                        case BQ: Console.Write("♛"); break;
+                        case BK: Console.Write("♚"); break;
+                        case _: Console.Write(" "); break;
                     }
+
                     Console.Write(' ');
                 }
+
                 Console.BackgroundColor = defaulBackground;
                 Console.Write("\n");
             }
+
             Console.ForegroundColor = defaulForeground;
         }
     }

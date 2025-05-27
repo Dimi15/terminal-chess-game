@@ -26,7 +26,7 @@ namespace chess_game
                 return false;
             }
         }
-        
+
         /// <summary>
         /// Given a move checks its legality
         /// </summary>
@@ -41,25 +41,24 @@ namespace chess_game
             int kingX = 0, kingY = 0;
             int reversMove = 0;
 
-
-            //GENERAL CONTROLS
-            //Finds the king
+            // GENERAL CONTROLS
+            // Finds the king
             FindKing(ref kingX, ref kingY, blackWhite);
-            //Simulates the move to check if the king would be in check after the move
+            // Simulates the move to check if the king would be in check after the move
             reversMove = board[endX, endY];
             board[endX, endY] = board[startY, startX];
             board[startY, startX] = _;
 
             if (blackWhite == false)
             {
-                if (Program.AttackedBy(kingX, kingY, true) == true)
+                if (Program.AttackedBy(kingX, kingY, true))
                 {
                     return false;
                 }
             }
             else
             {
-                if (Program.AttackedBy(kingX, kingY, false) == true)
+                if (Program.AttackedBy(kingX, kingY, false))
                 {
                     return false;
                 }
@@ -68,16 +67,16 @@ namespace chess_game
             board[startY, startX] = board[endX, endY];
             board[endX, endY] = reversMove;
 
-            //Checks if the piece moved is the right color
+            // Checks if the piece moved is the right color
             if (blackWhite == false && (board[startY, startX] != BP && board[startY, startX] != BN &&
                                         board[startY, startX] != BB && board[startY, startX] != BR &&
                                         board[startY, startX] != BQ && board[startY, startX] != BK))
             {
                 return false;
             }
-            else if (blackWhite == true && (board[startY, startX] != WP && board[startY, startX] != WN &&
-                                            board[startY, startX] != WB && board[startY, startX] != WR &&
-                                            board[startY, startX] != WQ && board[startY, startX] != BK))
+            else if (blackWhite && (board[startY, startX] != WP && board[startY, startX] != WN &&
+                                    board[startY, startX] != WB && board[startY, startX] != WR &&
+                                    board[startY, startX] != WQ && board[startY, startX] != BK))
             {
                 return false;
             }
@@ -93,8 +92,8 @@ namespace chess_game
                 return false;
             }
 
-            //Checks if the moved piece is capturing a piece of the same color
-            //Checks for white pieces if the ending square contains a white piece
+            // Checks if the moved piece is capturing a piece of the same color
+            // Checks for white pieces if the ending square contains a white piece
             if (board[startY, startY] == WP || board[startY, startY] == WN || board[startY, startY] == WB ||
                 board[startY, startY] == WR || board[startY, startY] == WQ || board[startY, startY] == WK)
             {
@@ -104,7 +103,7 @@ namespace chess_game
                     return false;
                 }
             }
-            //Checks for black pieces if the ending square contains a black piece
+            // Checks for black pieces if the ending square contains a black piece
             else if (board[startY, startY] == BP || board[startY, startY] == BN || board[startY, startY] == BB ||
                      board[startY, startY] == BR || board[startY, startY] == BQ || board[startY, startY] == BK)
             {
@@ -115,71 +114,47 @@ namespace chess_game
                 }
             }
 
-            //Checks if the piece has been moved
+            // Checks if the piece has been moved
             if (startY == endX && startX == endY)
             {
                 return false;
             }
 
-
-
             // Checks if the move is legal based on the type of piece
             switch (board[startY, startX])
             {
-                case _:
-                    return false;
-                    break;
-                
-                //PAWNS
-                //white pawn
-                case WP:
-                    return WhitePawn(startY, startX, endX, endY);
-                    break;
+                // EMPTY
+                case _: return false;
 
-                //BLACK PAWN
-                //black pawn
-                case BP:
-                    return BlackPawn(startY, startX, endX, endY);
-                    break;
+                // PAWNS
+                case WP: return WhitePawn(startY, startX, endX, endY);
+                case BP: return BlackPawn(startY, startX, endX, endY);
 
-                //KNIGHTS
+                // KNIGHTS
                 case WN:
-                case BN:
-                    return Knights(startY, startX, endX, endY);
-                    break;
+                case BN: return Knights(startY, startX, endX, endY);
 
-                //BISHOPS
+                // BISHOPS
                 case WB:
-                case BB:
-                    return Bishops(startY, startX, endX, endY);
-                    break;
+                case BB: return Bishops(startY, startX, endX, endY);
 
-                //ROOKS
+                // ROOKS
                 case WR:
-                case BR:
-                    return Rooks(startY, startX, endX, endY);
-                    break;
+                case BR: return Rooks(startY, startX, endX, endY);
 
-                //QUEENS
+                // QUEENS
                 case WQ:
-                case BQ:
-                    return Queens(startY, startX, endX, endY);
-                    break;
+                case BQ: return Queens(startY, startX, endX, endY);
 
-                //KINGS
+                // KINGS
                 case WK:
-                case BK:
-                    return Kings(startY, startX, endX, endY);
-                    break;
+                case BK: return Kings(startY, startX, endX, endY);
 
-                //NOTHING
-                default:
-                    return false;
-                    break;
+                // NOTHING
+                default: return false;
             }
-
         }
-        
+
         /// <summary>
         /// Finds the x and y of the king desired
         /// </summary>
@@ -188,7 +163,7 @@ namespace chess_game
         /// <param name="blackWhite">False if the king is black and true if it is white</param>
         static void FindKing(ref int X, ref int Y, bool blackWhite)
         {
-            //finds the playing king's position
+            // Finds the playing king's position
             if (blackWhite == false)
             {
                 for (int i = 0; i < 8; i++)
@@ -218,7 +193,7 @@ namespace chess_game
                 }
             }
         }
-        
+
         /// <summary>
         /// Checks the legality of a move made by a white pawn
         /// </summary>
@@ -229,7 +204,7 @@ namespace chess_game
         /// <returns>if the move is legal</returns>
         static bool WhitePawn(int startX, int startY, int endX, int endY)
         {
-            //Checks if the pawn is on the limits of the matrix
+            // Checks if the pawn is on the limits of the matrix
             if (startX == 0)
             {
                 if (board[startY - 1, startX + 1] != _ && (endX == startY - 1 && endY == startX + 1))
@@ -246,27 +221,27 @@ namespace chess_game
             }
             else
             {
-                //Checks if the pawn can eat a piece and if the piece is a white one
+                // Checks if the pawn can eat a piece and if the piece is a white one
                 if (board[startY - 1, startX - 1] != _ && (endX == startY - 1 && endY == startX - 1))
                 {
                     return true;
                 }
                 else if (board[startY - 1, startX + 1] != _ && (endX == startY - 1 && endY == startX + 1))
                 {
-                    //Checks if the pawn is on the starting square
+                    // Checks if the pawn is on the starting square
                     if ((startY == 6 && board[5, startX] == _ && board[4, startX] == _) &&
                         (endX == 4 && endY == startX))
                     {
                         return true;
                     }
-                    //Checks if te piece in front is occupied
+                    // Checks if te piece in front is occupied
                     else if ((endX == startY - 1 && endY == startX) && board[startY - 1, endY] != _)
                     {
                         return false;
                     }
                     else
                     {
-                        //Checks everything else
+                        // Checks everything else
                         if (endY != startX || endX >= startY || endX < startY - 1)
                         {
                             return false;
@@ -288,8 +263,7 @@ namespace chess_game
         /// <returns>if the move is legal</returns>
         static bool BlackPawn(int startX, int startY, int endX, int endY)
         {
-
-            //Checks if the pawn is on the limits of the matrix
+            // Checks if the pawn is on the limits of the matrix
             if (startX == 0)
             {
                 if (board[startY + 1, startX + 1] != _ && (endX == startY + 1 && endY == startX + 1))
@@ -306,7 +280,7 @@ namespace chess_game
             }
             else
             {
-                //Checks if the pawn can eat a piece and if the piece is a white one
+                // Checks if the pawn can capture a piece and if the piece is a white one
                 if (board[startY + 1, startX - 1] != _ && (endX == startY + 1 && endY == startX - 1))
                 {
                     return true;
@@ -317,19 +291,19 @@ namespace chess_game
                 }
             }
 
-            //Checks if the pawn is on the starting square
+            // Checks if the pawn is on the starting square
             if ((startY == 1 && board[2, startX] == _ && board[3, startX] == _) && (endX == 3 && endY == startX))
             {
                 return true;
             }
-            //Checks if te piece in front is occupied
+            // Checks if the square in front is occupied
             else if ((endX == startY + 1 && endY == startX) && board[startY + 1, endY] != _)
             {
                 return false;
             }
             else
             {
-                //Checks everything else
+                // Checks everything else
                 if (endY != startX || endX <= startY || endX > startY + 1)
                 {
                     return false;
@@ -349,11 +323,11 @@ namespace chess_game
         /// <returns>if the move is legal</returns>
         static bool Knights(int startX, int startY, int endX, int endY)
         {
-            //Checks if the knight is at the limits of the matrix
-            //Checks the first row
+            // Checks if the knight is at the limits of the matrix
+            // Checks the first row
             if (startY == 0)
             {
-                //Checks the first column
+                // Checks the first column
                 if (startX == 0)
                 {
                     if ((endX == startY + 2 && endY == startX + 1) || (endX == startY + 1 && endY == startX + 2))
@@ -361,7 +335,7 @@ namespace chess_game
                         return true;
                     }
                 }
-                //Checks the last column
+                // Checks the last column
                 else if (startX == 7)
                 {
                     if ((endX == startY + 2 && endY == startX - 1) || (endX == startY + 1 && endY == startX - 2))
@@ -369,7 +343,7 @@ namespace chess_game
                         return true;
                     }
                 }
-                //Checks the second column
+                // Checks the second column
                 else if (startX == 1)
                 {
                     if ((endX == startY + 2 && (endY == startX + 1 || endY == startX - 1)) ||
@@ -378,7 +352,7 @@ namespace chess_game
                         return true;
                     }
                 }
-                //Checks the penultimate column
+                // Checks the penultimate column
                 else if (startX == 6)
                 {
                     if ((endX == startY + 2 && (endY == startX - 1 || endY == startX + 1)) ||
@@ -388,10 +362,10 @@ namespace chess_game
                     }
                 }
             }
-            //Checks the bottom row
+            // Checks the bottom row
             else if (startY == 7)
             {
-                //Checks the first column
+                // Checks the first column
                 if (startX == 0)
                 {
                     if ((endX == startY - 2 && endY == startX + 1) || (endX == startY - 1 && endY == startX + 2))
@@ -399,7 +373,7 @@ namespace chess_game
                         return true;
                     }
                 }
-                //Checks the last column
+                // Checks the last column
                 else if (startX == 7)
                 {
                     if ((endX == startY - 2 && endY == startX - 1) || (endX == startY - 1 && endY == startX - 2))
@@ -407,7 +381,7 @@ namespace chess_game
                         return true;
                     }
                 }
-                //Checks the second column
+                // Checks the second column
                 else if (startX == 1)
                 {
                     if ((endX == startY - 2 && (endY == startX + 1 || endY == startX - 1)) ||
@@ -416,7 +390,7 @@ namespace chess_game
                         return true;
                     }
                 }
-                //Checks the penultimate column
+                // Checks the penultimate column
                 else if (startX == 6)
                 {
                     if ((endX == startY - 2 && (endY == startX - 1 || endY == startX + 1)) ||
@@ -426,10 +400,10 @@ namespace chess_game
                     }
                 }
             }
-            //Checks the second row
+            // Checks the second row
             else if (startY == 1)
             {
-                //Checks the first column
+                // Checks the first column
                 if (startX == 0)
                 {
                     if ((endX == startY + 2 && endY == startX + 1) || (endX == startY + 1 && endY == startX + 2) ||
@@ -438,7 +412,7 @@ namespace chess_game
                         return true;
                     }
                 }
-                //Checks the last column
+                // Checks the last column
                 else if (startX == 7)
                 {
                     if ((endX == startY + 2 && endY == startX - 1) || (endX == startY + 1 && endY == startX - 2) ||
@@ -447,7 +421,7 @@ namespace chess_game
                         return true;
                     }
                 }
-                //Checks the second column
+                // Checks the second column
                 else if (startX == 1)
                 {
                     if ((endX == startY + 2 && (endY == startX + 1 || endY == startX - 1)) ||
@@ -456,7 +430,7 @@ namespace chess_game
                         return true;
                     }
                 }
-                //Checks the penultimate column
+                // Checks the penultimate column
                 else if (startX == 6)
                 {
                     if ((endX == startY + 2 && (endY == startX - 1 || endY == startX + 1)) ||
@@ -466,10 +440,10 @@ namespace chess_game
                     }
                 }
             }
-            //Checks the penultimate row
+            // Checks the penultimate row
             else if (startY == 6)
             {
-                //Checks the first column
+                // Checks the first column
                 if (startX == 0)
                 {
                     if ((endX == startY - 2 && endY == startX + 1) || (endX == startY - 1 && endY == startX + 2) ||
@@ -478,7 +452,7 @@ namespace chess_game
                         return true;
                     }
                 }
-                //Checks the last column
+                // Checks the last column
                 else if (startX == 7)
                 {
                     if ((endX == startY - 2 && endY == startX - 1) || (endX == startY - 1 && endY == startX - 2) ||
@@ -487,7 +461,7 @@ namespace chess_game
                         return true;
                     }
                 }
-                //Checks the second column
+                // Checks the second column
                 else if (startX == 1)
                 {
                     if ((endX == startY - 2 && (endY == startX + 1 || endY == startX - 1)) ||
@@ -496,7 +470,7 @@ namespace chess_game
                         return true;
                     }
                 }
-                //Checks the penultimate column
+                // Checks the penultimate column
                 else if (startX == 6)
                 {
                     if ((endX == startY - 2 && (endY == startX - 1 || endY == startX + 1)) ||
@@ -506,7 +480,7 @@ namespace chess_game
                     }
                 }
             }
-            //Checks for knights that aren't at the limits
+            // Checks for knights that aren't at the limits
             else
             {
                 if (endX == startY - 2 && (endY == startX - 1 || endY == startX + 1))
@@ -544,10 +518,10 @@ namespace chess_game
         /// <returns>if the move is legal</returns>
         static bool Bishops(int startX, int startY, int endX, int endY)
         {
-            //Checks if the move is legal
+            // Checks if the move is legal
             if (startY + startX == endX + endY || startY - startX == endX - endY)
             {
-                //Checks if there is a piece between 
+                // Checks if there is a piece between 
                 for (int i = 1;
                      i <= Math.Sqrt(((endX - startY) * (endX - startY)) + ((endY - startX) * (endY - startX)));
                      i++)
