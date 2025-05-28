@@ -38,7 +38,7 @@ namespace chess_game
             int bestEndX = 0;
             int bestEndY = 0;
 
-            bool blackWhite = false;
+            bool blackWhite = false; // If false it's black turn
             bool whiteCheck = false;
             bool blackCheck = false;
             bool whiteCheckmate = false;
@@ -85,34 +85,29 @@ namespace chess_game
                     endX = Convert.ToInt32(Console.ReadLine());
                     Console.WriteLine("Column:");
                     endY = Convert.ToInt32(Console.ReadLine());
-                } while (!Program.Move(startX, startY, endX, endY, blackWhite));
+                } while (!Move(startX, startY, endX, endY, blackWhite));
 
-                // Check if the game has ended
-                if (Program.Checkmate(!playerWhite, ref draw))
-                {
-                    break;
-                }
-                else if (draw)
-                {
-                    break;
-                }
+                // Checks if Pawn Promotion is available
+                CheckPromotion(endX, endY, playerWhite, blackWhite);
+
+                // Checks if the game has ended
+                if (Checkmate(!playerWhite, ref draw)) break;
+                if (draw) break;
+
 
                 Console.Clear();
                 GetPosition(true);
 
                 // Turn of the computer
-                Program.Minimax(2, ref bestStartX, ref bestStartY, ref bestEndX, ref bestEndY);
-                Program.Move(bestStartX, bestStartY, bestEndX, bestEndY, blackWhite);
+                Minimax(2, ref bestStartX, ref bestStartY, ref bestEndX, ref bestEndY);
+                Move(bestStartX, bestStartY, bestEndX, bestEndY, blackWhite);
 
-                // Check if the game has ended
-                if (Program.Checkmate(playerWhite, ref draw))
-                {
-                    break;
-                }
-                else if (draw)
-                {
-                    break;
-                }
+                // Checks if Pawn Promotion is available
+                CheckPromotion(endX, endY, playerWhite, blackWhite);
+
+                // Checks if the game has ended
+                if (Checkmate(!playerWhite, ref draw)) break;
+                if (draw) break;
 
                 Console.Clear();
                 GetPosition(true);

@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace chess_game
 {
     public partial class Program
@@ -51,14 +44,14 @@ namespace chess_game
 
             if (blackWhite == false)
             {
-                if (Program.AttackedBy(kingX, kingY, true))
+                if (AttackedBy(kingX, kingY, true))
                 {
                     return false;
                 }
             }
             else
             {
-                if (Program.AttackedBy(kingX, kingY, false))
+                if (AttackedBy(kingX, kingY, false))
                 {
                     return false;
                 }
@@ -618,6 +611,73 @@ namespace chess_game
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Checks if a Pawn promotion is available and plays it
+        /// </summary>
+        /// <param name="endX">ending x position</param>
+        /// <param name="endY">ending y position</param>
+        /// <param name="playerWhite">true if the player has white pieces</param>
+        /// <param name="blackWhite">if the turn is of white or black</param>
+        static void CheckPromotion(int endX, int endY, bool playerWhite, bool blackWhite)
+        {
+            // Checks both if the piece is a pawn and if it is on the last square
+            if (((endY == 0) && board[endX, endY] == WP) || ((endY == 7) && board[endX, endY] == BP))
+            {
+                bool isPlayerMove = (playerWhite == blackWhite);
+                int promotionPiece = 0;
+
+                if (isPlayerMove)
+                {
+                    char choice;
+                    do
+                    {
+                        Console.Write("Promote pawn to (R/N/B/Q): ");
+                        // Converts the value of a Unicode character to its lowercase equivalent
+                        choice = char.ToLowerInvariant(Console.ReadKey().KeyChar);
+                        Console.WriteLine();
+                    } while (choice != 'r' && choice != 'n' && choice != 'b' && choice != 'q');
+
+                    switch (choice)
+                    {
+                        case 'r':
+                            if (blackWhite)
+                                promotionPiece = WR;
+                            else
+                                promotionPiece = BR;
+                            break;
+                        case 'n':
+                            if (blackWhite)
+                                promotionPiece = WN;
+                            else
+                                promotionPiece = BN;
+                            break;
+                        case 'b':
+                            if (blackWhite)
+                                promotionPiece = WB;
+                            else
+                                promotionPiece = BB;
+                            break;
+                        case 'q':
+                            if (blackWhite)
+                                promotionPiece = WQ;
+                            else
+                                promotionPiece = BQ;
+                            break;
+                    }
+                }
+                else
+                {
+                    // The computer always picks the queen
+                    if (blackWhite)
+                        promotionPiece = BQ;
+                    else
+                        promotionPiece = WQ;
+                }
+
+                board[endX, endY] = promotionPiece; // Plays the move
+            }
         }
     }
 }
