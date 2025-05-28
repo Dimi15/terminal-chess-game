@@ -8,22 +8,62 @@ namespace chess_game
 {
     public partial class Program
     {
+        static bool hasWhiteCastled = false;
+        static bool hasBlackCastled = false;
+        static int enPassantTargetX = -1; // The row that can be captured en passant
+        static int enPassantTargetY = -1; // The column that can be captured
+
         /// <summary>
-        /// Move a piece from Start square to End square
+        /// Moves a piece from the start square to the end square, including handling en passant.
         /// </summary>
-        /// <returns>If the move is legal</returns>
+        /// <param name="startX">Start row</param>
+        /// <param name="startY">Start column</param>
+        /// <param name="endX">End row</param>
+        /// <param name="endY">End column</param>
+        /// <param name="blackWhite">True if white's turn, false if black's</param>
+        /// <returns>True if the move is legal and performed</returns>
         public static bool Move(int startX, int startY, int endX, int endY, bool blackWhite)
         {
-            if (LegalMove(startY, startX, endX, endY, blackWhite))
+            int movingPiece = board[startX, startY];
+
+            // Handle Castling
+            if (IsCastlingMove(startX, startY, endX, endY, blackWhite))
             {
-                board[endX, endY] = board[startY, startX];
-                board[startY, startX] = _;
+                PerformCastling(startX, startY, endX, endY, blackWhite);
                 return true;
             }
-            else
+
+            // Handle En Passant
+            if (IsEnPassantMove(startX, startY, endX, endY, blackWhite))
             {
-                return false;
+                PerformEnPassant(startX, startY, endX, endY, blackWhite);
+                return true;
             }
+
+            // Handle Normal move
+            if (LegalMove(startX, startY, endX, endY, blackWhite))
+            {
+                board[endX, endY] = board[startX, startY];
+                board[startX, startY] = _;
+                return true;
+            }
+
+            return false;
+        }
+        
+        
+        /// <summary>
+        /// Undoes a move on the board by restoring the pieces to their original positions.
+        /// </summary>
+        /// <param name="startX">Start row</param>
+        /// <param name="startY">Start column</param>
+        /// <param name="endX">End row</param>
+        /// <param name="endY">End column</param>
+        /// <param name="capturedPiece">The piece that was captured (or empty) to restore</param>
+        static void UndoMove(int startX, int startY, int endX, int endY, int capturedPiece)
+        {
+            board[startX, startY] = board[endX, endY];
+            board[endX, endY] = capturedPiece;
         }
 
         /// <summary>
@@ -639,7 +679,7 @@ namespace chess_game
                     char choice;
                     do
                     {
-                        Console.Write("Promote pawn to (R/N/B/Q): ");
+                        Console.WriteLine("Promote pawn to (R/N/B/Q): ");
                         // Converts the value of a Unicode character to its lowercase equivalent
                         choice = char.ToLowerInvariant(Console.ReadKey().KeyChar);
                         Console.WriteLine();
@@ -683,6 +723,179 @@ namespace chess_game
 
                 board[endX, endY] = promotionPiece; // Plays the move
             }
+        }
+
+        /// <summary>
+        /// Checks and performs castling if a valid castling move is made.
+        /// </summary>
+        /// <param name="startX">Start row</param>
+        /// <param name="startY">Start column</param>
+        /// <param name="endX">End row</param>
+        /// <param name="endY">End column</param>
+        /// <param name="blackWhite">True if white's turn, false if black's</param>
+        /// <param name="hasWhiteCastled">Indicates if white has already castled</param>
+        /// <param name="hasBlackCastled">Indicates if black has already castled</param>
+        static bool IsCastlingMove(int startX, int startY, int endX, int endY, bool blackWhite)
+        {
+            // WHITE CASTLING
+            if (blackWhite && board[startX, startY] == WK)
+            {
+                if (startX == 7 && startY == 4)
+                {
+                    // Kingside
+                    if (endX == 7 && endY == 6 &&
+                        board[7, 5] == _ && board[7, 6] == _ &&
+                        board[7, 7] == WR && !hasWhiteCastled)
+                        return true;
+
+                    // Queenside
+                    if (endX == 7 && endY == 2 &&
+                        board[7, 1] == _ && board[7, 2] == _ && board[7, 3] == _ &&
+                        board[7, 0] == WR && !hasWhiteCastled)
+                        return true;
+                }
+            }
+
+            // BLACK CASTLING
+            if (!blackWhite && board[startX, startY] == BK)
+            {
+                if (startX == 0 && startY == 3)
+                {
+                    // Kingside
+                    if (endX == 0 && endY == 1 &&
+                        board[0, 1] == _ && board[0, 2] == _ &&
+                        board[0, 0] == BR && !hasBlackCastled)
+                        return true;
+
+                    // Queenside
+                    if (endX == 0 && endY == 5 &&
+                        board[0, 4] == _ && board[0, 5] == _ && board[0, 6] == _ &&
+                        board[0, 7] == BR && !hasBlackCastled)
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Executes the castling move by moving the king and rook to their castled positions on the board.
+        /// Assumes all legality checks (such as clear path, no checks, and castling rights) have been performed prior.
+        /// Updates the board state accordingly and sets the castling flag for the respective color.
+        /// </summary>
+        /// <param name="kingStartX">The starting row of the king.</param>
+        /// <param name="kingStartY">The starting column of the king.</param>
+        /// <param name="kingEndX">The ending row of the king (castled position).</param>
+        /// <param name="kingEndY">The ending column of the king (castled position).</param>
+        /// <param name="blackWhite">True if it is white's turn; false if black's.</param>
+        /// <param name="hasWhiteCastled">Reference to the white castling flag to update.</param>
+        /// <param name="hasBlackCastled">Reference to the black castling flag to update.</param>
+        static void PerformCastling(int startX, int startY, int endX, int endY, bool blackWhite)
+        {
+            // WHITE
+            if (blackWhite && board[startX, startY] == WK)
+            {
+                // Kingside
+                if (endX == 7 && endY == 6)
+                {
+                    board[7, 4] = _; // Clear King
+                    board[7, 7] = _; // Clear Rook
+                    board[7, 6] = WK;
+                    board[7, 5] = WR;
+                    hasWhiteCastled = true;
+                }
+                // Queenside
+                else if (endX == 7 && endY == 2)
+                {
+                    board[7, 4] = _;
+                    board[7, 0] = _;
+                    board[7, 2] = WK;
+                    board[7, 3] = WR;
+                    hasWhiteCastled = true;
+                }
+            }
+
+            // BLACK
+            else if (!blackWhite && board[startX, startY] == BK)
+            {
+                // Kingside
+                if (endX == 0 && endY == 1)
+                {
+                    board[0, 3] = _;
+                    board[0, 0] = _;
+                    board[0, 1] = BK;
+                    board[0, 2] = BR;
+                    hasBlackCastled = true;
+                }
+                // Queenside
+                else if (endX == 0 && endY == 5)
+                {
+                    board[0, 3] = _;
+                    board[0, 7] = _;
+                    board[0, 5] = BK;
+                    board[0, 4] = BR;
+                    hasBlackCastled = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks if the current move is a valid en passant capture.
+        /// </summary>
+        /// <param name="startX">Start row</param>
+        /// <param name="startY">Start column</param>
+        /// <param name="endX">End row</param>
+        /// <param name="endY">End column</param>
+        /// <param name="blackWhite">True if white's turn, false if black's</param>
+        /// <returns>True if the move is a valid en passant</returns>
+        static bool IsEnPassantMove(int startX, int startY, int endX, int endY, bool blackWhite)
+        {
+            if (blackWhite)
+            {
+                // White pawn must move diagonally to en passant target square
+                if (board[startX, startY] == WP && startX == 3 && endX == 2 && Math.Abs(endY - startY) == 1)
+                {
+                    return endX == enPassantTargetX && endY == enPassantTargetY;
+                }
+            }
+            else
+            {
+                // Black pawn must move diagonally to en passant target square
+                if (board[startX, startY] == BP && startX == 4 && endX == 5 && Math.Abs(endY - startY) == 1)
+                {
+                    return endX == enPassantTargetX && endY == enPassantTargetY;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Performs the en passant capture.
+        /// </summary>
+        /// <param name="startX">Start row</param>
+        /// <param name="startY">Start column</param>
+        /// <param name="endX">End row (target pawn square)</param>
+        /// <param name="endY">End column</param>
+        /// <param name="blackWhite">True if white's turn, false if black's</param>
+        static void PerformEnPassant(int startX, int startY, int endX, int endY, bool blackWhite)
+        {
+            if (blackWhite)
+            {
+                // Capture black pawn
+                board[endX + 1, endY] = _;
+                board[endX, endY] = WP;
+            }
+            else
+            {
+                // Capture white pawn
+                board[endX - 1, endY] = _;
+                board[endX, endY] = BP;
+            }
+
+            board[startX, startY] = _;
+            enPassantTargetX = -1;
+            enPassantTargetY = -1;
         }
     }
 }
