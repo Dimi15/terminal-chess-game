@@ -1,3 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 namespace chess_game
 {
     public partial class Program
@@ -638,7 +644,6 @@ namespace chess_game
                         choice = char.ToLowerInvariant(Console.ReadKey().KeyChar);
                         Console.WriteLine();
                     } while (choice != 'r' && choice != 'n' && choice != 'b' && choice != 'q');
-
                     switch (choice)
                     {
                         case 'r':
