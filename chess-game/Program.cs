@@ -99,7 +99,7 @@ namespace chess_game
                 GetPosition(true);
 
                 // Turn of the computer
-                Minimax(2, ref bestStartX, ref bestStartY, ref bestEndX, ref bestEndY);
+                Minimax(2, double.NegativeInfinity, double.PositiveInfinity, ref bestStartX, ref bestStartY, ref bestEndX, ref bestEndY, true, playerWhite);
                 Move(bestStartX, bestStartY, bestEndX, bestEndY, blackWhite);
 
                 // Checks if Pawn Promotion is available
