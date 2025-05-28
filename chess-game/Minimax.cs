@@ -38,7 +38,7 @@ namespace chess_game
                             for (int l = 0; l < 8; l++) // Columns of the single piece
                             {
                                 // Plays the move if it is legal
-                                if (Program.Move(j, i, l, k, true))
+                                if (Program.Move(j, i, j, k, true))
                                 {
                                     currentPiece = board[k,l]; // Saves the end position of the piece
                                     lastPiece = board[i, j]; // Saves the start position of the piece

@@ -71,21 +71,25 @@ namespace chess_game
                 blackWhite = !blackWhite;
 
                 // Iterates until the player hasn't chosen a legal move
-                do
+                if (blackWhite)
                 {
-                    Console.Clear();
-                    GetPosition();
+                    do
+                    {
+                        Console.Clear();
+                        GetPosition();
 
-                    Console.WriteLine("Piece to move:\nRow:");
-                    startX = Convert.ToInt32(Console.ReadLine());
-                    Console.WriteLine("Column:");
-                    startY = Convert.ToInt32(Console.ReadLine());
+                        Console.WriteLine("Piece to move:\nRow:");
+                        startY = Convert.ToInt32(Console.ReadLine());
+                        Console.WriteLine("Column:");
+                        startX = Convert.ToInt32(Console.ReadLine());
 
-                    Console.WriteLine("Square to move:\nRow:");
-                    endX = Convert.ToInt32(Console.ReadLine());
-                    Console.WriteLine("Column:");
-                    endY = Convert.ToInt32(Console.ReadLine());
-                } while (!Program.Move(startX, startY, endX, endY, blackWhite));
+                        Console.WriteLine("Square to move:\nRow:");
+                        endY = Convert.ToInt32(Console.ReadLine());
+                        Console.WriteLine("Column:");
+                        endX = Convert.ToInt32(Console.ReadLine());
+
+                    } while (!Program.Move(startX, startY, endX, endY, blackWhite));
+                }
 
                 // Check if the game has ended
                 if (Program.Checkmate(!playerWhite, ref draw))
@@ -97,12 +101,14 @@ namespace chess_game
                     break;
                 }
 
+                /*
                 Console.Clear();
                 GetPosition();
 
-                // Turn of the computer
+                 Turn of the computer
                 Program.Minimax(2, ref bestStartX, ref bestStartY, ref bestEndX, ref bestEndY);
                 Program.Move(bestStartX, bestStartY, bestEndX, bestEndY, blackWhite);
+                */
 
                 // Check if the game has ended
                 if (Program.Checkmate(playerWhite, ref draw))
