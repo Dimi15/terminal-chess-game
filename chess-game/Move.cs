@@ -77,7 +77,7 @@ namespace chess_game
             }
             else if (blackWhite && (board[startY, startX] == BP || board[startY, startX] == BN ||
                                     board[startY, startX] == BB || board[startY, startX] == BR ||
-                                    board[startY, startX] == BQ || board[startY, startX] == BK))           
+                                    board[startY, startX] == BQ || board[startY, startX] == BK))
             {
                 return false;
             }
@@ -93,7 +93,7 @@ namespace chess_game
                 return false;
             }
 
-                
+
 
             // Checks if the moved piece is capturing a piece of the same color
             // Checks for white pieces if the ending square contains a white piece
@@ -510,7 +510,7 @@ namespace chess_game
 
             return true;
         }
-
+        
         /// <summary>
         /// Checks the legality of a move made by a bishop
         /// </summary>
@@ -524,18 +524,51 @@ namespace chess_game
             // Checks if the move is legal
             if (startY + startX == endY + endX || startY - startX == endY - endX)
             {
-                // Checks if there is a piece between 
-                for (int i = 1; i <= Math.Sqrt(((endY - startY) * (endY - startY)) + ((endX - startX) * (endX - startX))); i++)
+                if (endX > startX && endY > startY)
                 {
-                    if (startY + i == 7 || startX + 1 == 7 || startY + i == 0 || startX + 1 == 0)
+                    // Checks if there is a piece between bottom right
+                    for (int i = 1; i < Math.Sqrt(((endY - startY) * (endY - startY)) + ((endX - startX) * (endX - startX))); i++)
                     {
-                        break;
-                    }
-                    if (board[startY + i, startX + i] != _)
-                    {
-                        return false;
+                        if (board[startY + i, startX + i] != _)
+                        {
+                            return false;
+                        }
                     }
                 }
+                else if (endX < startX && endY > startY)
+                {
+                    // Checks if there is a piece between bottom left
+                    for (int i = 1; i < Math.Sqrt(((endY - startY) * (endY - startY)) + ((endX - startX) * (endX - startX))); i++)
+                    {
+                        if (board[startY + i, startX - i] != _)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else if (endX > startX && endY < startY)
+                {
+                    // Checks if there is a piece between top right
+                    for (int i = 1; i < Math.Sqrt(((endY - startY) * (endY - startY)) + ((endX - startX) * (endX - startX))); i++)
+                    {
+                        if (board[startY - i, startX + i] != _)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else if (endX < startX && endY < startY)
+                {
+                    // Checks if there is a piece between top left
+                    for (int i = 1; i < Math.Sqrt(((endY - startY) * (endY - startY)) + ((endX - startX) * (endX - startX))); i++)
+                    {
+                        if (board[startY - i, startX - i] != _)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                    
             }
             else
             {
@@ -561,9 +594,9 @@ namespace chess_game
                 if (endX < startX)
                 {
                     //Checks if there's a piece in between (backward)
-                    for(int i = startX - endX; i > 0; i--)
+                    for (int i = endX; i < startX; i++)
                     {
-                        if (board[i, endX] != 0)
+                        if (board[endY, i] != 0)
                         {
                             return false;
                         }
@@ -572,9 +605,9 @@ namespace chess_game
                 else
                 {
                     //Checks if there is a piece between (forward)
-                    for (int i = 1; i <= endX - startX; i++)
+                    for (int i = startX; i < endX; i++)
                     {
-                        if (board[i, endX] != 0)
+                        if (board[endY, i] != 0)
                         {
                             return false;
                         }
@@ -586,9 +619,10 @@ namespace chess_game
             {
                 if (endY < startY)
                 {
-                    for(int i = startY; i > startY - endY; i--)
+                    //Checks if there's a piece in between (backward)
+                    for (int i = endY; i < startY; i++)
                     {
-                        if (board[endX,i] != 0)
+                        if (board[i, endX] != 0)
                         {
                             return false;
                         }
@@ -596,10 +630,10 @@ namespace chess_game
                 }
                 else
                 {
-                    //Checks if there is a piece between 
-                    for (int i = 1; i <= endY - startY; i++)
+                    //Checks if there is a piece between (forward)
+                    for (int i = startY; i < endY; i++)
                     {
-                        if (board[endY, i] != 0)
+                        if (board[i, endX] != 0)
                         {
                             return false;
                         }
@@ -624,8 +658,7 @@ namespace chess_game
         /// <returns>if the move is legal</returns>
         static bool Queens(int startX, int startY, int endX, int endY)
         {
-            if ((startY + startX == endY + endX || startY - startX == endY - endX) ||
-                (startY == endY && startX != endX) || (startY != endY && startX == endX))
+            if(Bishops(startX,startY,endX,endY) || Rooks(startX,startY,endX,endY))
             {
                 return true;
             }
