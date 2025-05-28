@@ -1089,12 +1089,14 @@ namespace chess_game
             {
                 fromX--;
                 fromY++;
+
                 if (fromX < 0 || fromY >= 8)
                 {
                     break;
                 }
 
                 pieceFound = board[fromY, fromX];
+
             } while (pieceFound == _);
 
             if (pieceFound != _)
@@ -1130,12 +1132,14 @@ namespace chess_game
             {
                 fromX++;
                 fromY++;
+
                 if (fromX >= 8 || fromY >= 8)
                 {
                     break;
                 }
 
                 pieceFound = board[fromY, fromX];
+
             } while (pieceFound == _);
 
             if (pieceFound != _)

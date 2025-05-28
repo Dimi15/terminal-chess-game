@@ -71,29 +71,36 @@ namespace chess_game
                 blackWhite = !blackWhite;
 
                 // Iterates until the player hasn't chosen a legal move
-                do
+                if (blackWhite)
                 {
-                    Console.Clear();
-                    GetPosition(playerWhite);
+                    do
+                    {
+                        Console.Clear();
+                        GetPosition(true);
 
-                    Console.WriteLine("Piece to move:\nRow:");
-                    startX = Convert.ToInt32(Console.ReadLine());
-                    Console.WriteLine("Column:");
-                    startY = Convert.ToInt32(Console.ReadLine());
+                        Console.WriteLine("Piece to move:\nRow:");
+                        startY = Convert.ToInt32(Console.ReadLine());
+                        Console.WriteLine("Column:");
+                        startX = Convert.ToInt32(Console.ReadLine());
 
-                    Console.WriteLine("Square to move:\nRow:");
-                    endX = Convert.ToInt32(Console.ReadLine());
-                    Console.WriteLine("Column:");
-                    endY = Convert.ToInt32(Console.ReadLine());
-                } while (!Move(startX, startY, endX, endY, blackWhite));
+                        Console.WriteLine("Square to move:\nRow:");
+                        endY = Convert.ToInt32(Console.ReadLine());
+                        Console.WriteLine("Column:");
+                        endX = Convert.ToInt32(Console.ReadLine());
 
-                // Checks if Pawn Promotion is available
-                CheckPromotion(endX, endY, playerWhite, blackWhite);
+                    } while (!Program.Move(startX, startY, endX, endY, blackWhite));
+                }
 
-                // Checks if the game has ended
-                if (Checkmate(!playerWhite, ref draw)) break;
-                if (draw) break;
-
+                //Check if the game has ended
+                if (Program.Checkmate(!playerWhite, ref draw))
+                {
+                    break;
+                }
+                else if (draw)
+                {
+                    break;
+                }
+                
 
                 Console.Clear();
                 GetPosition(true);

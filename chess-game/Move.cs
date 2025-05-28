@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace chess_game
@@ -90,14 +91,14 @@ namespace chess_game
 
             if (blackWhite == false)
             {
-                if (AttackedBy(kingX, kingY, true))
+                if (Program.AttackedBy(kingX, kingY, true))
                 {
                     return false;
                 }
             }
             else
             {
-                if (AttackedBy(kingX, kingY, false))
+                if (Program.AttackedBy(kingX, kingY, false))
                 {
                     return false;
                 }
@@ -107,15 +108,15 @@ namespace chess_game
             board[endX, endY] = reversMove;
 
             // Checks if the piece moved is the right color
-            if (blackWhite == false && (board[startY, startX] != BP && board[startY, startX] != BN &&
-                                        board[startY, startX] != BB && board[startY, startX] != BR &&
-                                        board[startY, startX] != BQ && board[startY, startX] != BK))
+            if (!blackWhite && (board[startY, startX] == WP || board[startY, startX] == WN ||
+                                        board[startY, startX] == WB || board[startY, startX] == WR ||
+                                        board[startY, startX] == WQ || board[startY, startX] == WK))
             {
                 return false;
             }
-            else if (blackWhite && (board[startY, startX] != WP && board[startY, startX] != WN &&
-                                    board[startY, startX] != WB && board[startY, startX] != WR &&
-                                    board[startY, startX] != WQ && board[startY, startX] != BK))
+            else if (blackWhite && (board[startY, startX] == BP || board[startY, startX] == BN ||
+                                    board[startY, startX] == BB || board[startY, startX] == BR ||
+                                    board[startY, startX] == BQ || board[startY, startX] == BK))
             {
                 return false;
             }
@@ -126,18 +127,20 @@ namespace chess_game
                 return false;
             }
 
-            if (endX < 0 || endX > 7 || endY < 0 || endY > 7)
+            if (endY < 0 || endY > 7 || endX < 0 || endX > 7)
             {
                 return false;
             }
+
+
 
             // Checks if the moved piece is capturing a piece of the same color
             // Checks for white pieces if the ending square contains a white piece
             if (board[startY, startY] == WP || board[startY, startY] == WN || board[startY, startY] == WB ||
                 board[startY, startY] == WR || board[startY, startY] == WQ || board[startY, startY] == WK)
             {
-                if (board[endX, endY] == WP && board[endX, endY] == WN && board[endX, endY] == WB &&
-                    board[endX, endY] == WR && board[endX, endY] == WQ && board[endX, endY] == WK)
+                if (board[endY, endX] == WP && board[endY, endX] == WN && board[endY, endX] == WB &&
+                    board[endY, endX] == WR && board[endY, endX] == WQ && board[endY, endX] == WK)
                 {
                     return false;
                 }
@@ -146,15 +149,15 @@ namespace chess_game
             else if (board[startY, startY] == BP || board[startY, startY] == BN || board[startY, startY] == BB ||
                      board[startY, startY] == BR || board[startY, startY] == BQ || board[startY, startY] == BK)
             {
-                if (board[endX, endY] == BP && board[endX, endY] == BN && board[endX, endY] == BB &&
-                    board[endX, endY] == BR && board[endX, endY] == BQ && board[endX, endY] == BK)
+                if (board[endY, endX] == BP && board[endY, endX] == BN && board[endY, endX] == BB &&
+                    board[endY, endX] == BR && board[endY, endX] == BQ && board[endY, endX] == BK)
                 {
                     return false;
                 }
             }
 
             // Checks if the piece has been moved
-            if (startY == endX && startX == endY)
+            if (startY == endY && startX == endX)
             {
                 return false;
             }
@@ -166,28 +169,28 @@ namespace chess_game
                 case _: return false;
 
                 // PAWNS
-                case WP: return WhitePawn(startY, startX, endX, endY);
-                case BP: return BlackPawn(startY, startX, endX, endY);
+                case WP: return WhitePawn(startX, startY, endX, endY);
+                case BP: return BlackPawn(startX, startY, endX, endY);
 
                 // KNIGHTS
                 case WN:
-                case BN: return Knights(startY, startX, endX, endY);
+                case BN: return Knights(startX, startY, endX, endY);
 
                 // BISHOPS
                 case WB:
-                case BB: return Bishops(startY, startX, endX, endY);
+                case BB: return Bishops(startX, startY, endX, endY);
 
                 // ROOKS
                 case WR:
-                case BR: return Rooks(startY, startX, endX, endY);
+                case BR: return Rooks(startX, startY, endX, endY);
 
                 // QUEENS
                 case WQ:
-                case BQ: return Queens(startY, startX, endX, endY);
+                case BQ: return Queens(startX, startY, endX, endY);
 
                 // KINGS
                 case WK:
-                case BK: return Kings(startY, startX, endX, endY);
+                case BK: return Kings(startX, startY, endX, endY);
 
                 // NOTHING
                 default: return false;
@@ -238,22 +241,22 @@ namespace chess_game
         /// </summary>
         /// <param name="startY">starting x position</param>
         /// <param name="startX">starting y position</param>
-        /// <param name="endX">ending x position</param>
-        /// <param name="endY">ending y position</param>
+        /// <param name="endY">ending x position</param>
+        /// <param name="endX">ending y position</param>
         /// <returns>if the move is legal</returns>
         static bool WhitePawn(int startX, int startY, int endX, int endY)
         {
             // Checks if the pawn is on the limits of the matrix
             if (startX == 0)
             {
-                if (board[startY - 1, startX + 1] != _ && (endX == startY - 1 && endY == startX + 1))
+                if (board[startY - 1, startX + 1] != _ && (endY == startY - 1 && endX == startX + 1))
                 {
                     return true;
                 }
             }
             else if (startX == 7)
             {
-                if (board[startY - 1, startX - 1] != _ && (endX == startY - 1 && endY == startX - 1))
+                if (board[startY - 1, startX - 1] != _ && (endY == startY - 1 && endX == startX - 1))
                 {
                     return true;
                 }
@@ -261,31 +264,32 @@ namespace chess_game
             else
             {
                 // Checks if the pawn can eat a piece and if the piece is a white one
-                if (board[startY - 1, startX - 1] != _ && (endX == startY - 1 && endY == startX - 1))
+                if (board[startY, startX - 1] != _ && (endY == startY - 1 && endX == startX - 1))
                 {
                     return true;
                 }
-                else if (board[startY - 1, startX + 1] != _ && (endX == startY - 1 && endY == startX + 1))
+                else if (board[startY, startX + 1] != _ && (endY == startY - 1 && endX == startX + 1))
                 {
-                    // Checks if the pawn is on the starting square
-                    if ((startY == 6 && board[5, startX] == _ && board[4, startX] == _) &&
-                        (endX == 4 && endY == startX))
-                    {
-                        return true;
-                    }
-                    // Checks if te piece in front is occupied
-                    else if ((endX == startY - 1 && endY == startX) && board[startY - 1, endY] != _)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        // Checks everything else
-                        if (endY != startX || endX >= startY || endX < startY - 1)
-                        {
-                            return false;
-                        }
-                    }
+                    return true;
+                }
+            }
+
+            // Checks if the pawn is on the starting square
+            if ((startY == 6 && board[5, startX] == _ && board[4, startX] == _) && (endY == 4 && endX == startX))
+            {
+                return true;
+            }
+            // Checks if the piece in front is occupied
+            else if ((endY == startY - 1 && endX == startX) && board[startY - 1, endX] != _)
+            {
+                return false;
+            }
+            else
+            {
+                //
+                if (endX != startX)
+                {
+                    return false;
                 }
             }
 
@@ -297,22 +301,22 @@ namespace chess_game
         /// </summary>
         /// <param name="startY">starting x position</param>
         /// <param name="startX">starting y position</param>
-        /// <param name="endX">ending x position</param>
-        /// <param name="endY">ending y position</param>
+        /// <param name="endY">ending x position</param>
+        /// <param name="endX">ending y position</param>
         /// <returns>if the move is legal</returns>
         static bool BlackPawn(int startX, int startY, int endX, int endY)
         {
             // Checks if the pawn is on the limits of the matrix
             if (startX == 0)
             {
-                if (board[startY + 1, startX + 1] != _ && (endX == startY + 1 && endY == startX + 1))
+                if (board[startY + 1, startX + 1] != _ && (endY == startY + 1 && endX == startX + 1))
                 {
                     return true;
                 }
             }
             else if (startX == 7)
             {
-                if (board[startY + 1, startX - 1] != _ && (endX == startY + 1 && endY == startX - 1))
+                if (board[startY + 1, startX - 1] != _ && (endY == startY + 1 && endX == startX - 1))
                 {
                     return true;
                 }
@@ -320,30 +324,30 @@ namespace chess_game
             else
             {
                 // Checks if the pawn can capture a piece and if the piece is a white one
-                if (board[startY + 1, startX - 1] != _ && (endX == startY + 1 && endY == startX - 1))
+                if (board[startY + 1, startX - 1] != _ && (endY == startY + 1 && endX == startX - 1))
                 {
                     return true;
                 }
-                else if (board[startY + 1, startX + 1] != _ && (endX == startY + 1 && endY == startX + 1))
+                else if (board[startY + 1, startX + 1] != _ && (endY == startY + 1 && endX == startX + 1))
                 {
                     return true;
                 }
             }
 
             // Checks if the pawn is on the starting square
-            if ((startY == 1 && board[2, startX] == _ && board[3, startX] == _) && (endX == 3 && endY == startX))
+            if ((startY == 1 && board[2, startX] == _ && board[3, startX] == _) && (endY == 3 && endX == startX))
             {
                 return true;
             }
             // Checks if the square in front is occupied
-            else if ((endX == startY + 1 && endY == startX) && board[startY + 1, endY] != _)
+            else if ((endY == startY + 1 && endX == startX) && board[startY + 1, endX] != _)
             {
                 return false;
             }
             else
             {
                 // Checks everything else
-                if (endY != startX || endX <= startY || endX > startY + 1)
+                if (endX != startX || endY <= startY || endY > startY + 1)
                 {
                     return false;
                 }
@@ -357,8 +361,8 @@ namespace chess_game
         /// </summary>
         /// <param name="startY">starting x position</param>
         /// <param name="startX">starting y position</param>
-        /// <param name="endX">ending x position</param>
-        /// <param name="endY">ending y position</param>
+        /// <param name="endY">ending x position</param>
+        /// <param name="endX">ending y position</param>
         /// <returns>if the move is legal</returns>
         static bool Knights(int startX, int startY, int endX, int endY)
         {
@@ -369,7 +373,7 @@ namespace chess_game
                 // Checks the first column
                 if (startX == 0)
                 {
-                    if ((endX == startY + 2 && endY == startX + 1) || (endX == startY + 1 && endY == startX + 2))
+                    if ((endY == startY + 2 && endX == startX + 1) || (endY == startY + 1 && endX == startX + 2))
                     {
                         return true;
                     }
@@ -377,7 +381,7 @@ namespace chess_game
                 // Checks the last column
                 else if (startX == 7)
                 {
-                    if ((endX == startY + 2 && endY == startX - 1) || (endX == startY + 1 && endY == startX - 2))
+                    if ((endY == startY + 2 && endX == startX - 1) || (endY == startY + 1 && endX == startX - 2))
                     {
                         return true;
                     }
@@ -385,8 +389,8 @@ namespace chess_game
                 // Checks the second column
                 else if (startX == 1)
                 {
-                    if ((endX == startY + 2 && (endY == startX + 1 || endY == startX - 1)) ||
-                        (endX == startY + 1 && endY == startX + 2))
+                    if ((endY == startY + 2 && (endX == startX + 1 || endX == startX - 1)) ||
+                        (endY == startY + 1 && endX == startX + 2))
                     {
                         return true;
                     }
@@ -394,8 +398,8 @@ namespace chess_game
                 // Checks the penultimate column
                 else if (startX == 6)
                 {
-                    if ((endX == startY + 2 && (endY == startX - 1 || endY == startX + 1)) ||
-                        (endX == startY + 1 && endY == startX - 2))
+                    if ((endY == startY + 2 && (endX == startX - 1 || endX == startX + 1)) ||
+                        (endY == startY + 1 && endX == startX - 2))
                     {
                         return true;
                     }
@@ -407,7 +411,7 @@ namespace chess_game
                 // Checks the first column
                 if (startX == 0)
                 {
-                    if ((endX == startY - 2 && endY == startX + 1) || (endX == startY - 1 && endY == startX + 2))
+                    if ((endY == startY - 2 && endX == startX + 1) || (endY == startY - 1 && endX == startX + 2))
                     {
                         return true;
                     }
@@ -415,7 +419,7 @@ namespace chess_game
                 // Checks the last column
                 else if (startX == 7)
                 {
-                    if ((endX == startY - 2 && endY == startX - 1) || (endX == startY - 1 && endY == startX - 2))
+                    if ((endY == startY - 2 && endX == startX - 1) || (endY == startY - 1 && endX == startX - 2))
                     {
                         return true;
                     }
@@ -423,8 +427,8 @@ namespace chess_game
                 // Checks the second column
                 else if (startX == 1)
                 {
-                    if ((endX == startY - 2 && (endY == startX + 1 || endY == startX - 1)) ||
-                        (endX == startY - 1 && endY == startX + 2))
+                    if ((endY == startY - 2 && (endX == startX + 1 || endX == startX - 1)) ||
+                        (endY == startY - 1 && endX == startX + 2))
                     {
                         return true;
                     }
@@ -432,8 +436,8 @@ namespace chess_game
                 // Checks the penultimate column
                 else if (startX == 6)
                 {
-                    if ((endX == startY - 2 && (endY == startX - 1 || endY == startX + 1)) ||
-                        (endX == startY - 1 && endY == startX - 2))
+                    if ((endY == startY - 2 && (endX == startX - 1 || endX == startX + 1)) ||
+                        (endY == startY - 1 && endX == startX - 2))
                     {
                         return true;
                     }
@@ -445,8 +449,8 @@ namespace chess_game
                 // Checks the first column
                 if (startX == 0)
                 {
-                    if ((endX == startY + 2 && endY == startX + 1) || (endX == startY + 1 && endY == startX + 2) ||
-                        (endX == startY - 1 && endY == startX + 2))
+                    if ((endY == startY + 2 && endX == startX + 1) || (endY == startY + 1 && endX == startX + 2) ||
+                        (endY == startY - 1 && endX == startX + 2))
                     {
                         return true;
                     }
@@ -454,8 +458,8 @@ namespace chess_game
                 // Checks the last column
                 else if (startX == 7)
                 {
-                    if ((endX == startY + 2 && endY == startX - 1) || (endX == startY + 1 && endY == startX - 2) ||
-                        (endX == startY - 1 && endY == startX - 2))
+                    if ((endY == startY + 2 && endX == startX - 1) || (endY == startY + 1 && endX == startX - 2) ||
+                        (endY == startY - 1 && endX == startX - 2))
                     {
                         return true;
                     }
@@ -463,8 +467,8 @@ namespace chess_game
                 // Checks the second column
                 else if (startX == 1)
                 {
-                    if ((endX == startY + 2 && (endY == startX + 1 || endY == startX - 1)) ||
-                        ((endX == startY + 1 || endX == startY - 1) && endY == startX + 2))
+                    if ((endY == startY + 2 && (endX == startX + 1 || endX == startX - 1)) ||
+                        ((endY == startY + 1 || endY == startY - 1) && endX == startX + 2))
                     {
                         return true;
                     }
@@ -472,8 +476,8 @@ namespace chess_game
                 // Checks the penultimate column
                 else if (startX == 6)
                 {
-                    if ((endX == startY + 2 && (endY == startX - 1 || endY == startX + 1)) ||
-                        ((endX == startY + 1 || endX == startY - 1) && endY == startX - 2))
+                    if ((endY == startY + 2 && (endX == startX - 1 || endX == startX + 1)) ||
+                        ((endY == startY + 1 || endY == startY - 1) && endX == startX - 2))
                     {
                         return true;
                     }
@@ -485,8 +489,8 @@ namespace chess_game
                 // Checks the first column
                 if (startX == 0)
                 {
-                    if ((endX == startY - 2 && endY == startX + 1) || (endX == startY - 1 && endY == startX + 2) ||
-                        (endX == startY + 1 && endY == startX + 2))
+                    if ((endY == startY - 2 && endX == startX + 1) || (endY == startY - 1 && endX == startX + 2) ||
+                        (endY == startY + 1 && endX == startX + 2))
                     {
                         return true;
                     }
@@ -494,8 +498,8 @@ namespace chess_game
                 // Checks the last column
                 else if (startX == 7)
                 {
-                    if ((endX == startY - 2 && endY == startX - 1) || (endX == startY - 1 && endY == startX - 2) ||
-                        (endX == startY + 1 && endY == startX - 2))
+                    if ((endY == startY - 2 && endX == startX - 1) || (endY == startY - 1 && endX == startX - 2) ||
+                        (endY == startY + 1 && endX == startX - 2))
                     {
                         return true;
                     }
@@ -503,8 +507,8 @@ namespace chess_game
                 // Checks the second column
                 else if (startX == 1)
                 {
-                    if ((endX == startY - 2 && (endY == startX + 1 || endY == startX - 1)) ||
-                        ((endX == startY - 1 || endX == startY + 1) && endY == startX + 2))
+                    if ((endY == startY - 2 && (endX == startX + 1 || endX == startX - 1)) ||
+                        ((endY == startY - 1 || endY == startY + 1) && endX == startX + 2))
                     {
                         return true;
                     }
@@ -512,8 +516,8 @@ namespace chess_game
                 // Checks the penultimate column
                 else if (startX == 6)
                 {
-                    if ((endX == startY - 2 && (endY == startX - 1 || endY == startX + 1)) ||
-                        ((endX == startY - 1 || endX == startY + 1) && endY == startX - 2))
+                    if ((endY == startY - 2 && (endX == startX - 1 || endX == startX + 1)) ||
+                        ((endY == startY - 1 || endY == startY + 1) && endX == startX - 2))
                     {
                         return true;
                     }
@@ -522,19 +526,19 @@ namespace chess_game
             // Checks for knights that aren't at the limits
             else
             {
-                if (endX == startY - 2 && (endY == startX - 1 || endY == startX + 1))
+                if (endY == startY - 2 && (endX == startX - 1 || endX == startX + 1))
                 {
                     return true;
                 }
-                else if (endX == startY + 2 && (endY == startX - 1 || endY == startX + 1))
+                else if (endY == startY + 2 && (endX == startX - 1 || endX == startX + 1))
                 {
                     return true;
                 }
-                else if (endX == startY - 1 && (endY == startX - 2 || endY == startX + 2))
+                else if (endY == startY - 1 && (endX == startX - 2 || endX == startX + 2))
                 {
                     return true;
                 }
-                else if (endX == startY + 1 && (endY == startX - 2 || endY == startX + 2))
+                else if (endY == startY + 1 && (endX == startX - 2 || endX == startX + 2))
                 {
                     return true;
                 }
@@ -546,30 +550,65 @@ namespace chess_game
 
             return true;
         }
-
+        
         /// <summary>
         /// Checks the legality of a move made by a bishop
         /// </summary>
         /// <param name="startY">starting x position</param>
         /// <param name="startX">starting y position</param>
-        /// <param name="endX">ending x position</param>
-        /// <param name="endY">ending y position</param>
+        /// <param name="endY">ending x position</param>
+        /// <param name="endX">ending y position</param>
         /// <returns>if the move is legal</returns>
         static bool Bishops(int startX, int startY, int endX, int endY)
         {
             // Checks if the move is legal
-            if (startY + startX == endX + endY || startY - startX == endX - endY)
+            if (startY + startX == endY + endX || startY - startX == endY - endX)
             {
-                // Checks if there is a piece between 
-                for (int i = 1;
-                     i <= Math.Sqrt(((endX - startY) * (endX - startY)) + ((endY - startX) * (endY - startX)));
-                     i++)
+                if (endX > startX && endY > startY)
                 {
-                    if (board[startY + i, startX + i] != _)
+                    // Checks if there is a piece between bottom right
+                    for (int i = 1; i < Math.Sqrt(((endY - startY) * (endY - startY)) + ((endX - startX) * (endX - startX))); i++)
                     {
-                        return false;
+                        if (board[startY + i, startX + i] != _)
+                        {
+                            return false;
+                        }
                     }
                 }
+                else if (endX < startX && endY > startY)
+                {
+                    // Checks if there is a piece between bottom left
+                    for (int i = 1; i < Math.Sqrt(((endY - startY) * (endY - startY)) + ((endX - startX) * (endX - startX))); i++)
+                    {
+                        if (board[startY + i, startX - i] != _)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else if (endX > startX && endY < startY)
+                {
+                    // Checks if there is a piece between top right
+                    for (int i = 1; i < Math.Sqrt(((endY - startY) * (endY - startY)) + ((endX - startX) * (endX - startX))); i++)
+                    {
+                        if (board[startY - i, startX + i] != _)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else if (endX < startX && endY < startY)
+                {
+                    // Checks if there is a piece between top left
+                    for (int i = 1; i < Math.Sqrt(((endY - startY) * (endY - startY)) + ((endX - startX) * (endX - startX))); i++)
+                    {
+                        if (board[startY - i, startX - i] != _)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                    
             }
             else
             {
@@ -584,31 +623,60 @@ namespace chess_game
         /// </summary>
         /// <param name="startY">starting x position</param>
         /// <param name="startX">starting y position</param>
-        /// <param name="endX">ending x position</param>
-        /// <param name="endY">ending y position</param>
+        /// <param name="endY">ending x position</param>
+        /// <param name="endX">ending y position</param>
         /// <returns>if the move is legal</returns>
         static bool Rooks(int startX, int startY, int endX, int endY)
         {
-            //Checks if the move is legal
-            if (startY == endX && startX != endY)
+            //Checks if the move is legal horizzontally
+            if (startY == endY && startX != endX)
             {
-                //Checks if there is a piece between 
-                for (int i = 1; i <= endY - startX; i++)
+                if (endX < startX)
                 {
-                    if (board[endX, i] != 0)
+                    //Checks if there's a piece in between (backward)
+                    for (int i = endX; i < startX; i++)
                     {
-                        return false;
+                        if (board[endY, i] != 0)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    //Checks if there is a piece between (forward)
+                    for (int i = startX; i < endX; i++)
+                    {
+                        if (board[endY, i] != 0)
+                        {
+                            return false;
+                        }
                     }
                 }
             }
-            else if (startY != endX && startX == endY)
+            //Vertically
+            else if (startY != endY && startX == endX)
             {
-                //Checks if there is a piece between 
-                for (int i = 1; i <= endX - startY; i++)
+                if (endY < startY)
                 {
-                    if (board[i, endY] != 0)
+                    //Checks if there's a piece in between (backward)
+                    for (int i = endY; i < startY; i++)
                     {
-                        return false;
+                        if (board[i, endX] != 0)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    //Checks if there is a piece between (forward)
+                    for (int i = startY; i < endY; i++)
+                    {
+                        if (board[i, endX] != 0)
+                        {
+                            return false;
+                        }
                     }
                 }
             }
@@ -625,13 +693,12 @@ namespace chess_game
         /// </summary>
         /// <param name="startY">starting x position</param>
         /// <param name="startX">starting y position</param>
-        /// <param name="endX">ending x position</param>
-        /// <param name="endY">ending y position</param>
+        /// <param name="endY">ending x position</param>
+        /// <param name="endX">ending y position</param>
         /// <returns>if the move is legal</returns>
         static bool Queens(int startX, int startY, int endX, int endY)
         {
-            if ((startY + startX == endX + endY || startY - startX == endX - endY) ||
-                (startY == endX && startX != endY) || (startY != endX && startX == endY))
+            if(Bishops(startX,startY,endX,endY) || Rooks(startX,startY,endX,endY))
             {
                 return true;
             }
@@ -646,12 +713,12 @@ namespace chess_game
         /// </summary>
         /// <param name="startY">starting x position</param>
         /// <param name="startX">starting y position</param>
-        /// <param name="endX">ending x position</param>
-        /// <param name="endY">ending y position</param>
+        /// <param name="endY">ending x position</param>
+        /// <param name="endX">ending y position</param>
         /// <returns>if the move is legal</returns>
         static bool Kings(int startX, int startY, int endX, int endY)
         {
-            if (Math.Abs(endX - startY) > 1 || Math.Abs(endY - startX) > 1)
+            if (Math.Abs(endY - startY) > 1 || Math.Abs(endX - startX) > 1)
             {
                 return false;
             }
