@@ -91,7 +91,7 @@ namespace chess_game
                     } while (!Program.Move(startX, startY, endX, endY, blackWhite));
                 }
 
-                // Check if the game has ended
+                //Check if the game has ended
                 if (Program.Checkmate(!playerWhite, ref draw))
                 {
                     break;
@@ -100,12 +100,14 @@ namespace chess_game
                 {
                     break;
                 }
+                
 
-                /*
+                
                 Console.Clear();
                 GetPosition();
 
-                 Turn of the computer
+                
+                /*Turn of the computer
                 Program.Minimax(2, ref bestStartX, ref bestStartY, ref bestEndX, ref bestEndY);
                 Program.Move(bestStartX, bestStartY, bestEndX, bestEndY, blackWhite);
                 */

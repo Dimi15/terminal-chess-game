@@ -44,6 +44,7 @@ namespace chess_game
             // GENERAL CONTROLS
             // Finds the king
             FindKing(ref kingX, ref kingY, blackWhite);
+
             // Simulates the move to check if the king would be in check after the move
             reversMove = board[endX, endY];
             board[endX, endY] = board[startY, startX];
@@ -554,26 +555,54 @@ namespace chess_game
         /// <returns>if the move is legal</returns>
         static bool Rooks(int startX, int startY, int endX, int endY)
         {
-            //Checks if the move is legal
+            //Checks if the move is legal horizzontally
             if (startY == endY && startX != endX)
             {
-                //Checks if there is a piece between 
-                for (int i = 1; i <= endX - startX; i++)
+                if (endX < startX)
                 {
-                    if (board[endY, i] != 0)
+                    //Checks if there's a piece in between (backward)
+                    for(int i = startX - endX; i > 0; i--)
                     {
-                        return false;
+                        if (board[i, endX] != 0)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    //Checks if there is a piece between (forward)
+                    for (int i = 1; i <= endX - startX; i++)
+                    {
+                        if (board[i, endX] != 0)
+                        {
+                            return false;
+                        }
                     }
                 }
             }
+            //Vertically
             else if (startY != endY && startX == endX)
             {
-                //Checks if there is a piece between 
-                for (int i = 1; i <= endY - startY; i++)
+                if (endY < startY)
                 {
-                    if (board[i, endX] != 0)
+                    for(int i = startY; i > startY - endY; i--)
                     {
-                        return false;
+                        if (board[endX,i] != 0)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    //Checks if there is a piece between 
+                    for (int i = 1; i <= endY - startY; i++)
+                    {
+                        if (board[endY, i] != 0)
+                        {
+                            return false;
+                        }
                     }
                 }
             }
