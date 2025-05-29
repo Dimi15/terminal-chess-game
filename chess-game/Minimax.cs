@@ -117,7 +117,7 @@ namespace chess_game
                                 int capturedPiece = board[k, l];
 
                                 // Try the move; proceed if it's valid
-                                if (Move(i, j, k, l, currentPlayerIsWhite))
+                                if (Move(j, i, l, k, currentPlayerIsWhite))
                                 {
                                     int tempStartX = 0, tempStartY = 0, tempEndX = 0, tempEndY = 0;
 
@@ -127,7 +127,7 @@ namespace chess_game
                                         !isMaximizing, playerWhite);
 
                                     // Undo the move to restore original board state
-                                    UndoMove(i, j, k, l, capturedPiece);
+                                    UndoMove(j, i, l, k, capturedPiece);
 
                                     // If this is a maximizing step, choose the max score
                                     if (isMaximizing)
@@ -135,10 +135,10 @@ namespace chess_game
                                         if (currentEvaluation > bestEvaluation)
                                         {
                                             bestEvaluation = currentEvaluation;
-                                            bestStartX = i;
-                                            bestStartY = j;
-                                            bestEndX = k;
-                                            bestEndY = l;
+                                            bestStartX = j;
+                                            bestStartY = i;
+                                            bestEndX = l;
+                                            bestEndY = k;
                                         }
 
                                         if (bestEvaluation > alpha)
@@ -148,13 +148,13 @@ namespace chess_game
                                     }
                                     else // Minimizing step
                                     {
-                                        if (currentEvaluation < bestEvaluation)
+                                        if (currentEvaluation > bestEvaluation)
                                         {
                                             bestEvaluation = currentEvaluation;
-                                            bestStartX = i;
-                                            bestStartY = j;
-                                            bestEndX = k;
-                                            bestEndY = l;
+                                            bestStartX = j;
+                                            bestStartY = i;
+                                            bestEndX = l;
+                                            bestEndY = k;
                                         }
 
                                         if (bestEvaluation < beta)

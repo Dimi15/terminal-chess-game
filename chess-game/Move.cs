@@ -63,8 +63,8 @@ namespace chess_game
         /// <param name="capturedPiece">The piece that was captured (or empty) to restore</param>
         static void UndoMove(int startX, int startY, int endX, int endY, int capturedPiece)
         {
-            board[startX, startY] = board[endX, endY];
-            board[endX, endY] = capturedPiece;
+            board[startY, startX] = board[endY, endX];
+            board[endY, endX] = capturedPiece;
         }
 
         /// <summary>
@@ -136,21 +136,19 @@ namespace chess_game
 
             // Checks if the moved piece is capturing a piece of the same color
             // Checks for white pieces if the ending square contains a white piece
-            if (board[startY, startX] == WP || board[startY, startX] == WN || board[startY, startX] == WB ||
-                board[startY, startX] == WR || board[startY, startX] == WQ || board[startY, startX] == WK)
+            if (blackWhite)
             {
-                if (board[endY, endX] == WP && board[endY, endX] == WN && board[endY, endX] == WB &&
-                    board[endY, endX] == WR && board[endY, endX] == WQ && board[endY, endX] == WK)
+                if (board[endY, endX] == WP || board[endY, endX] == WN || board[endY, endX] == WB ||
+                    board[endY, endX] == WR || board[endY, endX] == WQ || board[endY, endX] == WK)
                 {
                     return false;
                 }
             }
             // Checks for black pieces if the ending square contains a black piece
-            else if (board[startY, startX] == BP || board[startY, startX] == BN || board[startY, startX] == BB ||
-                     board[startY, startX] == BR || board[startY, startX] == BQ || board[startY, startX] == BK)
+            else if (!blackWhite)
             {
-                if (board[endY, endX] == BP && board[endY, endX] == BN && board[endY, endX] == BB &&
-                    board[endY, endX] == BR && board[endY, endX] == BQ && board[endY, endX] == BK)
+                if (board[endY, endX] == BP || board[endY, endX] == BN || board[endY, endX] == BB ||
+                    board[endY, endX] == BR || board[endY, endX] == BQ || board[endY, endX] == BK)
                 {
                     return false;
                 }
@@ -548,7 +546,7 @@ namespace chess_game
                 }
             }
 
-            return true;
+            return false;
         }
         
         /// <summary>
@@ -567,46 +565,78 @@ namespace chess_game
                 if (endX > startX && endY > startY)
                 {
                     // Checks if there is a piece between bottom right
-                    for (int i = 1; i < Math.Sqrt(((endY - startY) * (endY - startY)) + ((endX - startX) * (endX - startX))); i++)
+                    int x = startX, y = startY;
+
+                    do
                     {
-                        if (board[startY + i, startX + i] != _)
+                        x++;
+                        y++;
+
+                        if (x == endX && y == endY)
                         {
-                            return false;
+                            return true;
                         }
-                    }
+
+                    } while (board[y, x] == _);
+
+                    return false;
                 }
                 else if (endX < startX && endY > startY)
                 {
                     // Checks if there is a piece between bottom left
-                    for (int i = 1; i < Math.Sqrt(((endY - startY) * (endY - startY)) + ((endX - startX) * (endX - startX))); i++)
+                    int x = startX, y = startY;
+
+                    do
                     {
-                        if (board[startY + i, startX - i] != _)
+                        x--;
+                        y++;
+
+                        if (x == endX && y == endY)
                         {
-                            return false;
+                            return true;
                         }
-                    }
+
+                    } while (board[y, x] == _);
+
+                    return false;
                 }
                 else if (endX > startX && endY < startY)
                 {
                     // Checks if there is a piece between top right
-                    for (int i = 1; i < Math.Sqrt(((endY - startY) * (endY - startY)) + ((endX - startX) * (endX - startX))); i++)
+                    int x = startX, y = startY;
+
+                    do
                     {
-                        if (board[startY - i, startX + i] != _)
+                        x++;
+                        y--;
+
+                        if (x == endX && y == endY)
                         {
-                            return false;
+                            return true;
                         }
-                    }
+
+                    } while (board[y, x] == _);
+
+                    return false;
                 }
                 else if (endX < startX && endY < startY)
                 {
                     // Checks if there is a piece between top left
-                    for (int i = 1; i < Math.Sqrt(((endY - startY) * (endY - startY)) + ((endX - startX) * (endX - startX))); i++)
+                    int x = startX, y = startY;
+
+                    do
                     {
-                        if (board[startY - i, startX - i] != _)
+                        x--;
+                        y--;
+
+                        if (x == endX && y == endY)
                         {
-                            return false;
+                            return true;
                         }
-                    }
+
+                    } while (board[y, x] == _);
+
+                    return false;
                 }
                     
             }
