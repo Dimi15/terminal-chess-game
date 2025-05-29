@@ -44,8 +44,8 @@ namespace chess_game
             // Handle Normal move
             if (LegalMove(startX, startY, endX, endY, blackWhite))
             {
-                board[endX, endY] = board[startX, startY];
-                board[startX, startY] = _;
+                board[endY, endX] = board[startY, startX];
+                board[startY, startX] = _;
                 return true;
             }
 
@@ -85,8 +85,8 @@ namespace chess_game
             // Finds the king
             FindKing(ref kingX, ref kingY, blackWhite);
             // Simulates the move to check if the king would be in check after the move
-            reversMove = board[endX, endY];
-            board[endX, endY] = board[startY, startX];
+            reversMove = board[endY, endX];
+            board[endY, endX] = board[startY, startX];
             board[startY, startX] = _;
 
             if (blackWhite == false)
@@ -104,8 +104,8 @@ namespace chess_game
                 }
             }
 
-            board[startY, startX] = board[endX, endY];
-            board[endX, endY] = reversMove;
+            board[startY, startX] = board[endY, endX];
+            board[endY, endX] = reversMove;
 
             // Checks if the piece moved is the right color
             if (!blackWhite && (board[startY, startX] == WP || board[startY, startX] == WN ||
@@ -136,8 +136,8 @@ namespace chess_game
 
             // Checks if the moved piece is capturing a piece of the same color
             // Checks for white pieces if the ending square contains a white piece
-            if (board[startY, startY] == WP || board[startY, startY] == WN || board[startY, startY] == WB ||
-                board[startY, startY] == WR || board[startY, startY] == WQ || board[startY, startY] == WK)
+            if (board[startY, startX] == WP || board[startY, startX] == WN || board[startY, startX] == WB ||
+                board[startY, startX] == WR || board[startY, startX] == WQ || board[startY, startX] == WK)
             {
                 if (board[endY, endX] == WP && board[endY, endX] == WN && board[endY, endX] == WB &&
                     board[endY, endX] == WR && board[endY, endX] == WQ && board[endY, endX] == WK)
@@ -146,8 +146,8 @@ namespace chess_game
                 }
             }
             // Checks for black pieces if the ending square contains a black piece
-            else if (board[startY, startY] == BP || board[startY, startY] == BN || board[startY, startY] == BB ||
-                     board[startY, startY] == BR || board[startY, startY] == BQ || board[startY, startY] == BK)
+            else if (board[startY, startX] == BP || board[startY, startX] == BN || board[startY, startX] == BB ||
+                     board[startY, startX] == BR || board[startY, startX] == BQ || board[startY, startX] == BK)
             {
                 if (board[endY, endX] == BP && board[endY, endX] == BN && board[endY, endX] == BB &&
                     board[endY, endX] == BR && board[endY, endX] == BQ && board[endY, endX] == BK)
