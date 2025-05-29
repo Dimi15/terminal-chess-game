@@ -76,7 +76,7 @@ namespace chess_game
                     do
                     {
                         Console.Clear();
-                        GetPosition(true);
+                        GetPosition(playerWhite);
 
                         Console.WriteLine("Piece to move:\nRow:");
                         startY = Convert.ToInt32(Console.ReadLine());
@@ -88,36 +88,46 @@ namespace chess_game
                         Console.WriteLine("Column:");
                         endX = Convert.ToInt32(Console.ReadLine());
 
-                    } while (!Program.Move(startX, startY, endX, endY, blackWhite));
+                    } while (!Program.Move(startX, startY, endX, endY, playerWhite));
                 }
 
                 //Check if the game has ended
                 if (Program.Checkmate(!playerWhite, ref draw))
                 {
+                    Console.WriteLine("You won!");
                     break;
                 }
                 else if (draw)
                 {
+                    Console.WriteLine("Tie!");
                     break;
                 }
                 
 
                 Console.Clear();
-                GetPosition(true);
+                GetPosition(playerWhite);
 
                 // Turn of the computer
-                Minimax(2, double.NegativeInfinity, double.PositiveInfinity, ref bestStartX, ref bestStartY, ref bestEndX, ref bestEndY, true, playerWhite);
-                Move(bestStartX, bestStartY, bestEndX, bestEndY, blackWhite);
+                //Minimax(2, double.NegativeInfinity, double.PositiveInfinity, ref bestStartX, ref bestStartY, ref bestEndX, ref bestEndY, true, playerWhite);
+                //Move(bestStartX, bestStartY, bestEndX, bestEndY, blackWhite);
 
                 // Checks if Pawn Promotion is available
-                CheckPromotion(endX, endY, playerWhite, blackWhite);
+                //CheckPromotion(endX, endY, playerWhite, blackWhite);
 
                 // Checks if the game has ended
-                if (Checkmate(!playerWhite, ref draw)) break;
-                if (draw) break;
+                if (Checkmate(!playerWhite, ref draw))
+                {
+                    Console.WriteLine("You lost!");
+                    break;
+                }
+                if (draw)
+                {
+                    Console.WriteLine("Tie!");
+                    break;
+                }
 
                 Console.Clear();
-                GetPosition(true);
+                GetPosition(playerWhite);
             } while (true);
 
             Console.ReadKey();
@@ -274,7 +284,7 @@ namespace chess_game
 
                 Console.Write(' ');
 
-                for (int i = 0; i < 8; i++)
+                for (int i = 7; i >= 0; i--)
                 {
                     Console.Write(Convert.ToString(i) + ' ');
                 }
