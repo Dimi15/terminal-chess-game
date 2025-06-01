@@ -33,6 +33,9 @@ namespace chess_game
             int startY = 0;
             int endX = 0;
             int endY = 0;
+
+            int playerPromoteTo = _, computerPromoteTo = _;
+
             int bestStartX = 0;
             int bestStartY = 0;
             int bestEndX = 0;
@@ -59,11 +62,22 @@ namespace chess_game
             if (pickedColor == 'w')
             {
                 playerWhite = true;
+                playerPromoteTo = WQ;
+                computerPromoteTo = BQ;
+            }
+            else
+            {
+                playerPromoteTo = BQ;
+                computerPromoteTo = WQ;
             }
 
             // Shows starting board depending on the color of the player
             SetupStartPosition();
-            GetPosition(playerWhite);
+            //GetPosition(playerWhite);
+
+            Move(4, 6, 4, 4, true, _);
+            Move(4, 4, 4, 3, true, _);
+            Move(3, 1, 3, 3, false, _);
 
             // Exits the loop when the game ends
             do
@@ -88,7 +102,7 @@ namespace chess_game
                         Console.WriteLine("Column:");
                         endX = Convert.ToInt32(Console.ReadLine());
 
-                    } while (!Program.Move(startX, startY, endX, endY, playerWhite));
+                    } while (!Program.Move(startX, startY, endX, endY, playerWhite, playerPromoteTo));
                 }
 
                 //Check if the game has ended
@@ -102,20 +116,21 @@ namespace chess_game
                     Console.WriteLine("Tie!");
                     break;
                 }
-                
 
-                Console.Clear();
-                GetPosition(playerWhite);
+                //Console.Clear();
+                //GetPosition(playerWhite);
+
+                blackWhite = !blackWhite;
 
                 // Turn of the computer
-                //Minimax(2, double.NegativeInfinity, double.PositiveInfinity, ref bestStartX, ref bestStartY, ref bestEndX, ref bestEndY, true, playerWhite);
-                //Move(bestStartX, bestStartY, bestEndX, bestEndY, blackWhite);
+                Minimax(5, double.NegativeInfinity, double.PositiveInfinity, ref bestStartX, ref bestStartY, ref bestEndX, ref bestEndY, true, playerWhite);
+                Move(bestStartX, bestStartY, bestEndX, bestEndY, !playerWhite, computerPromoteTo);
 
                 // Checks if Pawn Promotion is available
                 //CheckPromotion(endX, endY, playerWhite, blackWhite);
 
                 // Checks if the game has ended
-                if (Checkmate(!playerWhite, ref draw))
+                if (Checkmate(playerWhite, ref draw))
                 {
                     Console.WriteLine("You lost!");
                     break;
@@ -126,8 +141,8 @@ namespace chess_game
                     break;
                 }
 
-                Console.Clear();
-                GetPosition(playerWhite);
+                //Console.Clear();
+                //GetPosition(playerWhite);
             } while (true);
 
             Console.ReadKey();
