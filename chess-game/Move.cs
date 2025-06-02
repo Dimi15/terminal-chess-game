@@ -212,7 +212,7 @@ namespace chess_game
                         board[endY + 1, endX] = BP;
                     }
                     break;
-
+                
                 case BP:
                     if (endX == oldEnPassantX && endY == oldEnPassantY) //captured with en passant
                     {
@@ -396,15 +396,6 @@ namespace chess_game
             return false;
         }
 
-        /// <summary>
-        /// Given a pawn move checks its legality
-        /// </summary>
-        /// <param name="startY">starting x position</param>
-        /// <param name="startX">starting y position</param>
-        /// <param name="endX">ending x position</param>
-        /// <param name="endY">ending y position</param>
-        /// <param name="isWhiteTurn">False if the current move is made by black and True if it is made by white</param>
-        /// <returns>if the move is legal</returns>
         static bool LegalPawnMove(int startX, int startY, int endX, int endY, bool isWhiteTurn)
         {
             if (isWhiteTurn)
@@ -415,9 +406,6 @@ namespace chess_game
                     {
                         if (board[startY - 1, startX] == _ && board[endY, endX] == _)
                         {
-                            enPassantX = startX;
-                            enPassantY = startY - 1;
-
                             return true;
                         }
                     }
@@ -440,11 +428,7 @@ namespace chess_game
                     }
                     else if(endX == enPassantX && endY == enPassantY && (startX == endX - 1 || startX == endX + 1) && startY - endY == 1)
                     {
-                        enPassantX = -1;
-                        enPassantY = -1;
-
                         board[endY + 1, endX] = _;
-
                         return true;
                     }
                 }
@@ -457,9 +441,6 @@ namespace chess_game
                     {
                         if (board[startY + 1, startX] == _ && board[endY, endX] == _)
                         {
-                            enPassantX = startX;
-                            enPassantY = startY + 1;
-
                             return true;
                         }
                     }
@@ -482,11 +463,7 @@ namespace chess_game
                     }
                     else if (endX == enPassantX && endY == enPassantY && (startX == endX - 1 || startX == endX + 1) && startY - endY == -1)
                     {
-                        enPassantX = -1;
-                        enPassantY = -1;
-
                         board[endY - 1, endX] = _;
-
                         return true;
                     }
                 }
@@ -495,20 +472,11 @@ namespace chess_game
             return false;
         }
 
-        /// <summary>
-        /// Given a knight move checks its legality
-        /// </summary>
-        /// <param name="startY">starting x position</param>
-        /// <param name="startX">starting y position</param>
-        /// <param name="endX">ending x position</param>
-        /// <param name="endY">ending y position</param>
-        /// <returns>if the move is legal</returns>
         static bool LegalKnightMove(int startX, int startY, int endX, int endY)
         {
             int diffX = startX - endX;
             int diffY = startY - endY;
 
-            //makes the differences positive
             if (diffX < 0)
             {
                 diffX = -diffX;
@@ -530,15 +498,6 @@ namespace chess_game
             return false;
         }
 
-        /// <summary>
-        /// Given a castle move checks its legality
-        /// </summary>
-        /// <param name="startY">starting x position</param>
-        /// <param name="startX">starting y position</param>
-        /// <param name="endX">ending x position</param>
-        /// <param name="endY">ending y position</param>
-        /// <param name="isWhiteTurn">False if the current move is made by black and True if it is made by white</param>
-        /// <returns>if the move is legal</returns>
         static bool LegalCastle(int startX, int startY, int endX, int endY, bool isWhiteTurn)
         {
             int x = startX, y = startY;
@@ -660,22 +619,12 @@ namespace chess_game
             return true;
         }
 
-        /// <summary>
-        /// Given a king move checks its legality
-        /// </summary>
-        /// <param name="startY">starting x position</param>
-        /// <param name="startX">starting y position</param>
-        /// <param name="endX">ending x position</param>
-        /// <param name="endY">ending y position</param>
-        /// <param name="isWhiteTurn">False if the current move is made by black and True if it is made by white</param>
-        /// <returns>if the move is legal</returns>
         static bool LegalKingMove(int startX, int startY, int endX, int endY, bool isWhiteTurn)
         {
 
             int diffX = startX - endX;
             int diffY = startY - endY;
 
-            //makes the differences positive
             if (diffX < 0)
             {
                 diffX = -diffX;
@@ -709,20 +658,11 @@ namespace chess_game
             return false;
         }
 
-        /// <summary>
-        /// Given a sliding move checks its legality
-        /// </summary>
-        /// <param name="startY">starting x position</param>
-        /// <param name="startX">starting y position</param>
-        /// <param name="endX">ending x position</param>
-        /// <param name="endY">ending y position</param>
-        /// <param name="isWhiteTurn">False if the current move is made by black and True if it is made by white</param>
-        /// <returns>if the move is legal</returns>
-        static bool LegalSlidingMove(int startX, int startY, int endX, int endY, bool isWhiteTurn)
+        static bool LegalSlidingMove(int startX, int startY, int endX, int endY, bool white)
         {
             int x = startX, y = startY;
 
-            if (isWhiteTurn)
+            if (white)
             {
                 if (board[startY, startX] != WR && board[startY, startX] != WQ)
                 {
@@ -799,15 +739,6 @@ namespace chess_game
             return false;
         }
 
-        /// <summary>
-        /// Given a diagonal move checks its legality
-        /// </summary>
-        /// <param name="startY">starting x position</param>
-        /// <param name="startX">starting y position</param>
-        /// <param name="endX">ending x position</param>
-        /// <param name="endY">ending y position</param>
-        /// <param name="isWhiteTurn">False if the current move is made by black and True if it is made by white</param>
-        /// <returns>if the move is legal</returns>
         static bool LegalDiagonalMove(int startX, int startY, int endX, int endY, bool isWhiteTurn)
         {
             int x = startX, y = startY;
@@ -815,7 +746,6 @@ namespace chess_game
             int diffX = startX - endX;
             int diffY = startY - endY;
 
-            //makes the differences positive
             if (diffX < 0)
             {
                 diffX = -diffX;
@@ -849,7 +779,6 @@ namespace chess_game
             {
                 if (startX < endX)
                 {
-                    //bottom right
                     do
                     {
                         y++;
@@ -864,7 +793,6 @@ namespace chess_game
                 }
                 else
                 {
-                    //bottom left
                     do
                     {
                         y++;
@@ -882,7 +810,6 @@ namespace chess_game
             {
                 if (startX < endX)
                 {
-                    //top right
                     do
                     {
                         y--;
@@ -897,7 +824,6 @@ namespace chess_game
                 }
                 else
                 {
-                    //top left
                     do
                     {
                         y--;
