@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -109,8 +109,16 @@ namespace chess_game
                 else
                 {
                     // Turn of the computer
-                    Minimax(computerDepth, double.NegativeInfinity, double.PositiveInfinity, ref bestStartX,
-                        ref bestStartY, ref bestEndX, ref bestEndY, !playerWhite, playerWhite);
+                    if (!playerWhite)
+                    {
+                        Minimax(computerDepth, double.NegativeInfinity, double.PositiveInfinity, ref bestStartX,
+                            ref bestStartY, ref bestEndX, ref bestEndY, true, playerWhite);
+                    }
+                    else
+                    {
+                        Minimax(computerDepth, double.NegativeInfinity, double.PositiveInfinity, ref bestStartX,
+                            ref bestStartY, ref bestEndX, ref bestEndY, false, playerWhite);
+                    }
                     
                     Move(bestStartX, bestStartY, bestEndX, bestEndY, !playerWhite, computerPromoteTo);
                     
