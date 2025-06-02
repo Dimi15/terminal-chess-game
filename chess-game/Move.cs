@@ -491,6 +491,7 @@ namespace chess_game
             int diffX = startX - endX;
             int diffY = startY - endY;
 
+            //makes the differences positive
             if (diffX < 0)
             {
                 diffX = -diffX;
