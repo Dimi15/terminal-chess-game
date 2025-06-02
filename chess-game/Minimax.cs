@@ -31,7 +31,7 @@ namespace chess_game
         {
             bool draw = false;
 
-            // Terminal condition: if depth is 0, evaluate current board state
+            // Terminal condition: if depth is 0, evaluate the current board state
             if (depth == 0)
             {
                 return Evaluation();
@@ -142,11 +142,7 @@ namespace chess_game
                                         ref tempStartX, ref tempStartY, ref tempEndX, ref tempEndY,
                                         !isMaximizing, playerWhite);
 
-                                    /*Console.Clear();
-                                    GetPosition(playerWhite);
-                                    Console.ReadKey();*/
-
-                                    // Undo the move to restore original board state
+                                    // Undo the move to restore the original board state
                                     UndoMove(j, i, l, k, piece, capturedPiece, oldWhiteCastleKing, oldWhiteCastleQueen, oldBlackCastleKing, oldBlackCastleQueen, oldEnPassantX, oldEnPassantY);
 
                                     // If this is a maximizing step, choose the max score

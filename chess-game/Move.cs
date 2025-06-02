@@ -27,11 +27,11 @@ namespace chess_game
         /// <param name="startY">Start column</param>
         /// <param name="endX">End row</param>
         /// <param name="endY">End column</param>
-        /// <param name="white">True if white's turn, false if black's</param>
+        /// <param name="isWhiteTurn">True if white's turn, false if black's</param>
         /// <returns>True if the move is legal and performed</returns>
-        public static bool Move(int startX, int startY, int endX, int endY, bool white, int promoteTo)
+        public static bool Move(int startX, int startY, int endX, int endY, bool isWhiteTurn, int promoteTo)
         {
-            if (LegalMove(startX, startY, endX, endY, white))
+            if (LegalMove(startX, startY, endX, endY, isWhiteTurn))
             {
                 int startPiece = board[startY, startX];
                 int endPiece = board[endY, endX];
@@ -267,9 +267,9 @@ namespace chess_game
         /// <param name="startX">starting y position</param>
         /// <param name="endX">ending x position</param>
         /// <param name="endY">ending y position</param>
-        /// <param name="white">False if the current move is made by black and True if it is made by white</param>
+        /// <param name="isWhiteTurn">False if the current move is made by black and True if it is made by white</param>
         /// <returns>if the move is legal</returns>
-        static bool LegalMove(int startX, int startY, int endX, int endY, bool white)
+        static bool LegalMove(int startX, int startY, int endX, int endY, bool isWhiteTurn)
         {
             if (startX < 0 || startY < 0 || startX > 7 || startY > 7)    //start square is not inside the board
             {
@@ -279,7 +279,7 @@ namespace chess_game
             {
                 return false;
             }
-
+            
             if (startX == endX && startY == endY)    //the piece remeins on the same square
             {
                 return false;
@@ -298,7 +298,7 @@ namespace chess_game
                 return false;
             }
 
-            if (white)   //the piece is of the color that needs to play
+            if (isWhiteTurn)   //the piece is of the color that needs to play
             {
                 if (startPiece >= BP)
                 {
@@ -324,7 +324,7 @@ namespace chess_game
 
             if (endPiece != _)  //end piece can be captured
             {
-                if (white)
+                if (isWhiteTurn)
                 {
                     if (endPiece < BP)
                     {
@@ -343,21 +343,21 @@ namespace chess_game
             //check if it is a valid move for the type of piece
             if (startPiece == WP || startPiece == BP)
             {
-                if (!LegalPawnMove(startX, startY, endX, endY, white))
+                if (!LegalPawnMove(startX, startY, endX, endY, isWhiteTurn))
                 {
                     return false;
                 }
             }
             else if (startPiece == WN || startPiece == BN)
             {
-                if (!LegalKnightMove(startX, startY, endX, endY, white))
+                if (!LegalKnightMove(startX, startY, endX, endY))
                 {
                     return false;
                 }
             }
             else if (startPiece == WK || startPiece == BK)
             {
-                if (!LegalKingMove(startX, startY, endX, endY, white))
+                if (!LegalKingMove(startX, startY, endX, endY, isWhiteTurn))
                 {
                     return false;
                 }
@@ -366,14 +366,14 @@ namespace chess_game
             {
                 if (startX == endX || startY == endY)    //sliding move
                 {
-                    if (!LegalSlidingMove(startX, startY, endX, endY, white))
+                    if (!LegalSlidingMove(startX, startY, endX, endY, isWhiteTurn))
                     {
                         return false;
                     }
                 }
                 else
                 {
-                    if (!LegalDiagonalMove(startX, startY, endX, endY, white))
+                    if (!LegalDiagonalMove(startX, startY, endX, endY, isWhiteTurn))
                     {
                         return false;
                     }
@@ -384,7 +384,7 @@ namespace chess_game
             board[startY, startX] = _;
             board[endY, endX] = startPiece;
 
-            bool causesCheck = UnderCheck(white);
+            bool causesCheck = UnderCheck(isWhiteTurn);
 
             UndoMove(startX, startY, endX, endY, startPiece, endPiece, oldWhiteCastleKing, oldWhiteCastleQueen, oldBlackCastleKing, oldBlackCastleQueen, oldEnPassantX, oldEnPassantY);
 
@@ -396,9 +396,9 @@ namespace chess_game
             return false;
         }
 
-        static bool LegalPawnMove(int startX, int startY, int endX, int endY, bool white)
+        static bool LegalPawnMove(int startX, int startY, int endX, int endY, bool isWhiteTurn)
         {
-            if (white)
+            if (isWhiteTurn)
             {
                 if (startX == endX)
                 {
@@ -486,7 +486,7 @@ namespace chess_game
             return false;
         }
 
-        static bool LegalKnightMove(int startX, int startY, int endX, int endY, bool white)
+        static bool LegalKnightMove(int startX, int startY, int endX, int endY)
         {
             int diffX = startX - endX;
             int diffY = startY - endY;
@@ -512,16 +512,16 @@ namespace chess_game
             return false;
         }
 
-        static bool LegalCastle(int startX, int startY, int endX, int endY, bool white)
+        static bool LegalCastle(int startX, int startY, int endX, int endY, bool isWhiteTurn)
         {
             int x = startX, y = startY;
 
-            if (AttackedBy(startX, startY, !white))
+            if (AttackedBy(startX, startY, !isWhiteTurn))
             {
                 return false;
             }
 
-            if (white)
+            if (isWhiteTurn)
             {
                 if (board[startY, startX] != WK)
                 {
@@ -541,7 +541,7 @@ namespace chess_game
                     {
                         x--;
 
-                        if (board[y, x] != _ || AttackedBy(x, y, !white))
+                        if (board[y, x] != _ || AttackedBy(x, y, !isWhiteTurn))
                         {
                             return false;
                         }
@@ -563,7 +563,7 @@ namespace chess_game
                     {
                         x++;
 
-                        if (board[y, x] != _ || AttackedBy(x, y, !white))
+                        if (board[y, x] != _ || AttackedBy(x, y, !isWhiteTurn))
                         {
                             return false;
                         }
@@ -595,7 +595,7 @@ namespace chess_game
                     {
                         x--;
 
-                        if (board[y, x] != _ || AttackedBy(x, y, !white))
+                        if (board[y, x] != _ || AttackedBy(x, y, !isWhiteTurn))
                         {
                             return false;
                         }
@@ -617,7 +617,7 @@ namespace chess_game
                     {
                         x++;
 
-                        if (board[y, x] != _ || AttackedBy(x, y, !white))
+                        if (board[y, x] != _ || AttackedBy(x, y, !isWhiteTurn))
                         {
                             return false;
                         }
@@ -633,7 +633,7 @@ namespace chess_game
             return true;
         }
 
-        static bool LegalKingMove(int startX, int startY, int endX, int endY, bool white)
+        static bool LegalKingMove(int startX, int startY, int endX, int endY, bool isWhiteTurn)
         {
 
             int diffX = startX - endX;
@@ -650,12 +650,12 @@ namespace chess_game
 
             if (diffX == 2 && diffY == 0)    //castle move
             {
-                return LegalCastle(startX, startY, endX, endY, white);
+                return LegalCastle(startX, startY, endX, endY, isWhiteTurn);
             }
 
             if ((diffX == 0 || diffX == 1) && (diffY == 0 || diffY == 1))
             {
-                if (white)
+                if (isWhiteTurn)
                 {
                     whiteCastleKing = false;
                     whiteCastleQueen = false;
@@ -753,7 +753,7 @@ namespace chess_game
             return false;
         }
 
-        static bool LegalDiagonalMove(int startX, int startY, int endX, int endY, bool white)
+        static bool LegalDiagonalMove(int startX, int startY, int endX, int endY, bool isWhiteTurn)
         {
             int x = startX, y = startY;
 
@@ -774,7 +774,7 @@ namespace chess_game
                 return false;
             }
 
-            if (white)
+            if (isWhiteTurn)
             {
                 if (board[startY, startX] != WB && board[startY, startX] != WQ)
                 {
