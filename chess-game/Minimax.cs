@@ -113,7 +113,8 @@ namespace chess_game
                     int oldEnPassantX = enPassantX, oldEnPassantY = enPassantY;
 
                     int promoteTo = _;
-
+                    
+                    // Promotes only queen to simplify the algorithm
                     if(currentPlayerIsWhite)
                     {
                         promoteTo = WQ;
