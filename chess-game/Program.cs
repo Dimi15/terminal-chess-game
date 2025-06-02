@@ -64,29 +64,29 @@ namespace chess_game
                 playerWhite = true;
                 playerPromoteTo = WQ;
                 computerPromoteTo = BQ;
+
+                blackWhite = true;
             }
             else
             {
+                playerWhite = false;
                 playerPromoteTo = BQ;
                 computerPromoteTo = WQ;
+
+                blackWhite = false;
             }
 
             // Shows starting board depending on the color of the player
             SetupStartPosition();
             //GetPosition(playerWhite);
 
-            Move(4, 6, 4, 4, true, _);
-            Move(4, 4, 4, 3, true, _);
-            Move(3, 1, 3, 3, false, _);
-
             // Exits the loop when the game ends
             do
             {
-                blackWhite = !blackWhite;
-
                 // Iterates until the player hasn't chosen a legal move
                 if (blackWhite)
                 {
+                    blackWhite = !blackWhite;
                     do
                     {
                         Console.Clear();
@@ -123,7 +123,7 @@ namespace chess_game
                 blackWhite = !blackWhite;
 
                 // Turn of the computer
-                Minimax(5, double.NegativeInfinity, double.PositiveInfinity, ref bestStartX, ref bestStartY, ref bestEndX, ref bestEndY, true, playerWhite);
+                Minimax(2, double.NegativeInfinity, double.PositiveInfinity, ref bestStartX, ref bestStartY, ref bestEndX, ref bestEndY, true, playerWhite);
                 Move(bestStartX, bestStartY, bestEndX, bestEndY, !playerWhite, computerPromoteTo);
 
                 // Checks if Pawn Promotion is available

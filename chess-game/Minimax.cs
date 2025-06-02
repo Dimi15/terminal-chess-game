@@ -107,6 +107,22 @@ namespace chess_game
                         skipSquare = true;
                     }
 
+                    bool oldWhiteCastleKing = whiteCastleKing, oldWhiteCastleQueen = whiteCastleQueen;
+                    bool oldBlackCastleKing = blackCastleKing, oldBlackCastleQueen = blackCastleQueen;
+
+                    int oldEnPassantX = enPassantX, oldEnPassantY = enPassantY;
+
+                    int promoteTo = _;
+
+                    if(currentPlayerIsWhite)
+                    {
+                        promoteTo = WQ;
+                    }
+                    else
+                    {
+                        promoteTo = BQ;
+                    }
+
                     // Only process valid pieces
                     if (!skipSquare)
                     {
@@ -117,7 +133,7 @@ namespace chess_game
                                 int capturedPiece = board[k, l];
 
                                 // Try the move; proceed if it's valid
-                                if (Move(j, i, l, k, currentPlayerIsWhite))
+                                if (Move(j, i, l, k, currentPlayerIsWhite, promoteTo))
                                 {
                                     int tempStartX = 0, tempStartY = 0, tempEndX = 0, tempEndY = 0;
 
@@ -126,8 +142,12 @@ namespace chess_game
                                         ref tempStartX, ref tempStartY, ref tempEndX, ref tempEndY,
                                         !isMaximizing, playerWhite);
 
+                                    /*Console.Clear();
+                                    GetPosition(playerWhite);
+                                    Console.ReadKey();*/
+
                                     // Undo the move to restore original board state
-                                    UndoMove(j, i, l, k, capturedPiece);
+                                    UndoMove(j, i, l, k, piece, capturedPiece, oldWhiteCastleKing, oldWhiteCastleQueen, oldBlackCastleKing, oldBlackCastleQueen, oldEnPassantX, oldEnPassantY);
 
                                     // If this is a maximizing step, choose the max score
                                     if (isMaximizing)
@@ -148,13 +168,13 @@ namespace chess_game
                                     }
                                     else // Minimizing step
                                     {
-                                        if (currentEvaluation > bestEvaluation)
+                                        if (currentEvaluation < bestEvaluation)
                                         {
                                             bestEvaluation = currentEvaluation;
-                                            bestStartX = j;
+                                            /*bestStartX = j;
                                             bestStartY = i;
                                             bestEndX = l;
-                                            bestEndY = k;
+                                            bestEndY = k;*/
                                         }
 
                                         if (bestEvaluation < beta)

@@ -412,7 +412,7 @@ namespace chess_game
                             return true;
                         }
                     }
-                    else if (startY - endY == 1)
+                    else if (startY - endY == 1 && board[endY, endX] == _)
                     {
                         return true;
                     }
@@ -429,7 +429,7 @@ namespace chess_game
                             }
                         }
                     }
-                    else if(endX == enPassantX && endY == enPassantY && (startX == endX - 1 || startX == endX + 1))
+                    else if(endX == enPassantX && endY == enPassantY && (startX == endX - 1 || startX == endX + 1) && startY - endY == 1)
                     {
                         enPassantX = -1;
                         enPassantY = -1;
@@ -454,7 +454,7 @@ namespace chess_game
                             return true;
                         }
                     }
-                    else if (startY - endY == -1)
+                    else if (startY - endY == -1 && board[endY, endX] == _)
                     {
                         return true;
                     }
@@ -471,7 +471,7 @@ namespace chess_game
                             }
                         }
                     }
-                    else if (endX == enPassantX && endY == enPassantY && (startX == endX - 1 || startX == endX + 1))
+                    else if (endX == enPassantX && endY == enPassantY && (startX == endX - 1 || startX == endX + 1) && startY - endY == -1)
                     {
                         enPassantX = -1;
                         enPassantY = -1;
