@@ -44,11 +44,11 @@ namespace chess_game
             bool currentPlayerIsWhite;
             if (isMaximizing)
             {
-                currentPlayerIsWhite = isComputerWhite;
+                currentPlayerIsWhite = true;
             }
             else
             {
-                currentPlayerIsWhite = playerWhite;
+                currentPlayerIsWhite = false;
             }
 
             // Check if the game is over for the current player
@@ -107,15 +107,16 @@ namespace chess_game
                         skipSquare = true;
                     }
 
+
                     bool oldWhiteCastleKing = whiteCastleKing, oldWhiteCastleQueen = whiteCastleQueen;
                     bool oldBlackCastleKing = blackCastleKing, oldBlackCastleQueen = blackCastleQueen;
 
                     int oldEnPassantX = enPassantX, oldEnPassantY = enPassantY;
 
                     int promoteTo = _;
-                    
+
                     // Promotes only queen to simplify the algorithm
-                    if(currentPlayerIsWhite)
+                    if (currentPlayerIsWhite)
                     {
                         promoteTo = WQ;
                     }
@@ -168,6 +169,10 @@ namespace chess_game
                                         if (currentEvaluation < bestEvaluation)
                                         {
                                             bestEvaluation = currentEvaluation;
+                                            bestStartX = j;
+                                            bestStartY = i;
+                                            bestEndX = l;
+                                            bestEndY = k;
                                         }
 
                                         if (bestEvaluation < beta)
