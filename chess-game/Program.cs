@@ -225,7 +225,7 @@ namespace chess_game
                         GetPosition(playerWhite);
 
                         Console.WriteLine();
-                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.ForegroundColor = ConsoleColor.Black;
                         Console.BackgroundColor = ConsoleColor.Gray;
 
                         Console.Write("\x1b[1mDRAW!\u001b[0m\n");
@@ -289,7 +289,7 @@ namespace chess_game
                         GetPosition(playerWhite);
 
                         Console.WriteLine();
-                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.ForegroundColor = ConsoleColor.Black;
                         Console.BackgroundColor = ConsoleColor.Gray;
 
                         Console.Write("\x1b[1mDRAW!\u001b[0m\n");

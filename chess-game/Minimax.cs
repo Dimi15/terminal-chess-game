@@ -113,6 +113,8 @@ namespace chess_game
 
                     int oldEnPassantX = enPassantX, oldEnPassantY = enPassantY;
 
+                    int oldMovesDone = movesDone;
+
                     int promoteTo = _;
 
                     // Promotes only queen to simplify the algorithm
@@ -145,7 +147,7 @@ namespace chess_game
                                         !isMaximizing, playerWhite);
 
                                     // Undo the move to restore the original board state
-                                    UndoMove(j, i, l, k, piece, capturedPiece, oldWhiteCastleKing, oldWhiteCastleQueen, oldBlackCastleKing, oldBlackCastleQueen, oldEnPassantX, oldEnPassantY);
+                                    UndoMove(j, i, l, k, piece, capturedPiece, oldWhiteCastleKing, oldWhiteCastleQueen, oldBlackCastleKing, oldBlackCastleQueen, oldEnPassantX, oldEnPassantY, oldMovesDone);
 
                                     // If this is a maximizing step, choose the max score
                                     if (isMaximizing)

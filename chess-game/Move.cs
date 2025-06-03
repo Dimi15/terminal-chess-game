@@ -20,6 +20,8 @@ namespace chess_game
         static int enPassantX = -1; //where can a pawn capture with en passant
         static int enPassantY = -1;
 
+        static int movesDone = 0;   //used for the 50-move rule
+
         /// <summary>
         /// Moves a piece from the start square to the end square, including handling en passant.
         /// </summary>
@@ -37,6 +39,11 @@ namespace chess_game
                 int endPiece = board[endY, endX];
 
                 bool changedEnPassant = false;
+
+                if (endPiece == _)
+                {
+                    movesDone++;
+                }
 
                 int diffX = startX - endX;
                 int diffY = startY - endY;
@@ -64,6 +71,9 @@ namespace chess_game
 
                             startPiece = promoteTo;
                         }
+
+                        movesDone = 0;  //after a pawn move it is reset
+
                         break;
 
                     case BP:
@@ -87,6 +97,9 @@ namespace chess_game
 
                             startPiece = promoteTo;
                         }
+
+                        movesDone = 0;  //after a pawn move it is reseted
+
                         break;
 
                     case WK:
@@ -200,7 +213,7 @@ namespace chess_game
             return false;
         }
 
-        static void UndoMove(int startX, int startY, int endX, int endY, int startPiece, int endPiece, bool oldWhiteCastleKing, bool oldWhiteCastleQueen, bool oldBlackCastleKing, bool oldBlackCastleQueen, int oldEnPassantX, int oldEnPassantY)
+        static void UndoMove(int startX, int startY, int endX, int endY, int startPiece, int endPiece, bool oldWhiteCastleKing, bool oldWhiteCastleQueen, bool oldBlackCastleKing, bool oldBlackCastleQueen, int oldEnPassantX, int oldEnPassantY, int oldMovesDone)
         {
             int diffX = startX - endX;
 
@@ -256,6 +269,8 @@ namespace chess_game
             enPassantX = oldEnPassantX;
             enPassantY = oldEnPassantY;
 
+            movesDone = oldMovesDone;
+
             board[startY, startX] = startPiece;
             board[endY, endX] = endPiece;
         }
@@ -292,6 +307,8 @@ namespace chess_game
             bool oldBlackCastleKing = blackCastleKing, oldBlackCastleQueen = blackCastleQueen;
 
             int oldEnPassantX = enPassantX, oldEnPassantY = enPassantY;
+
+            int oldMovesDone = movesDone;
 
             if (startPiece == _) //a piece is beeing moved
             {
@@ -386,7 +403,7 @@ namespace chess_game
 
             bool causesCheck = UnderCheck(isWhiteTurn);
 
-            UndoMove(startX, startY, endX, endY, startPiece, endPiece, oldWhiteCastleKing, oldWhiteCastleQueen, oldBlackCastleKing, oldBlackCastleQueen, oldEnPassantX, oldEnPassantY);
+            UndoMove(startX, startY, endX, endY, startPiece, endPiece, oldWhiteCastleKing, oldWhiteCastleQueen, oldBlackCastleKing, oldBlackCastleQueen, oldEnPassantX, oldEnPassantY, oldMovesDone);
 
             if (!causesCheck)
             {
