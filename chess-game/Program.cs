@@ -38,6 +38,7 @@ namespace chess_game
             int endY = 0;
 
             bool validInput = true;
+            bool validColor = false;
 
             int playerPromoteTo = _;
             int computerPromoteTo = _;
@@ -46,7 +47,7 @@ namespace chess_game
             int bestStartY = 0;
             int bestEndX = 0;
             int bestEndY = 0;
-            int computerDepth = 5;
+            int computerDepth = 0;
 
             bool isWhiteTurn = true;
             bool playerWhite = false;
@@ -56,14 +57,73 @@ namespace chess_game
 
             ConsoleColor defaulBackground = Console.BackgroundColor;
             ConsoleColor defaulForeground = Console.ForegroundColor;
+            Console.Clear();
+
+            // Asks the depth of the computer
+            do
+            {
+                Console.WriteLine("Choose The Depth For The Computer:\n(We Recommend a Value Between 1-5)");
+
+                try
+                {
+                    computerDepth = Convert.ToInt32(Console.ReadLine());
+                    if (computerDepth > 0)
+                    {
+                        validInput = true;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("\nPlease enter a number greater than 0.\n");
+                        Console.ForegroundColor = defaulForeground;
+                        validInput = false;
+                    }
+                }
+                catch (FormatException)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("\nInvalid input. Please enter a valid integer.\n");
+                    Console.ForegroundColor = defaulForeground;
+                    validInput = false;
+                }
+                catch (OverflowException)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("\nThe number is too large. Please enter a smaller integer.\n");
+                    Console.ForegroundColor = defaulForeground;
+                    validInput = false;
+                }
+            } while (!validInput);
 
             // Asks the color of the player
             do
             {
                 Console.WriteLine("Do You Want To Play Black or White? (B/W)");
-                pickedColor = Convert.ToChar(Console.ReadLine().ToLower());
-            } while (pickedColor != 'w' && pickedColor != 'b');
 
+                try
+                {
+                    string input = Console.ReadLine().Trim().ToLower();
+
+                    if (input == "w" || input == "b")
+                    {
+                        pickedColor = Convert.ToChar(input);
+                        validColor = true;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("\nInvalid input. Please enter 'B' for Black or 'W' for White.\n");
+                        Console.ForegroundColor = defaulForeground;
+                    }
+                }
+                catch (Exception)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("\nSomething went wrong. Please enter 'B' or 'W'.\n");
+                    Console.ForegroundColor = defaulForeground;
+                }
+            } while (!validColor);
+            
             if (pickedColor == 'w')
             {
                 playerWhite = true;
@@ -76,10 +136,10 @@ namespace chess_game
                 playerPromoteTo = BQ;
                 computerPromoteTo = WQ;
             }
-            
+
             // Shows starting board depending on the color of the player
             SetupStartPosition();
-            
+
             // Exits the loop when the game ends
             do
             {
@@ -105,7 +165,8 @@ namespace chess_game
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.BackgroundColor = ConsoleColor.Red;
 
-                            Console.Write("\n\x1b[1mInvalid Move!\x1b[0m\n\n"); //"\x1b[1m" + ... + "\x1b[0m\n" == bold text
+                            Console.Write(
+                                "\n\x1b[1mInvalid Move!\x1b[0m\n\n"); //"\x1b[1m" + ... + "\x1b[0m\n" == bold text
 
                             Console.ForegroundColor = defaulForeground;
                             Console.BackgroundColor = defaulBackground;
@@ -117,7 +178,7 @@ namespace chess_game
                         Console.WriteLine("Start Square: (Es: e2)");
                         startSquare = Console.ReadLine();
 
-                        if(!GetCoordinates(startSquare, ref startX, ref startY))
+                        if (!GetCoordinates(startSquare, ref startX, ref startY))
                         {
                             validInput = false;
                         }
@@ -126,23 +187,26 @@ namespace chess_game
                         Console.WriteLine("End Square: (Es: e4)");
                         endSquare = Console.ReadLine();
 
-                        if(!GetCoordinates(endSquare, ref endX, ref endY))
+                        if (!GetCoordinates(endSquare, ref endX, ref endY))
                         {
                             validInput = false;
                         }
 
                         //check move
-                        if(!Program.Move(startX, startY, endX, endY, playerWhite, playerPromoteTo))
+                        if (!Program.Move(startX, startY, endX, endY, playerWhite, playerPromoteTo))
                         {
                             validInput = false;
                         }
                     } while (!validInput);
-                    
+
                     //Check if the game has ended
                     if (Program.Checkmate(!playerWhite, ref draw))
                     {
-                        Console.WriteLine();
+                        Console.Clear();
+                        Console.WriteLine("\n");
+                        GetPosition(playerWhite);
 
+                        Console.WriteLine();
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.BackgroundColor = ConsoleColor.DarkGreen;
 
@@ -150,15 +214,17 @@ namespace chess_game
 
                         Console.ForegroundColor = defaulForeground;
                         Console.BackgroundColor = defaulBackground;
-
                         Console.WriteLine();
 
                         break;
                     }
                     else if (draw)
                     {
-                        Console.WriteLine();
+                        Console.Clear();
+                        Console.WriteLine("\n");
+                        GetPosition(playerWhite);
 
+                        Console.WriteLine();
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.BackgroundColor = ConsoleColor.Gray;
 
@@ -166,7 +232,6 @@ namespace chess_game
 
                         Console.ForegroundColor = defaulForeground;
                         Console.BackgroundColor = defaulBackground;
-
                         Console.WriteLine();
 
                         break;
@@ -195,14 +260,17 @@ namespace chess_game
                         Minimax(computerDepth, double.NegativeInfinity, double.PositiveInfinity, ref bestStartX,
                             ref bestStartY, ref bestEndX, ref bestEndY, false, playerWhite);
                     }
-                    
+
                     Move(bestStartX, bestStartY, bestEndX, bestEndY, !playerWhite, computerPromoteTo);
-                    
+
                     // Checks if the game has ended
                     if (Checkmate(playerWhite, ref draw))
                     {
-                        Console.WriteLine();
+                        Console.Clear();
+                        Console.WriteLine("\n");
+                        GetPosition(playerWhite);
 
+                        Console.WriteLine();
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.BackgroundColor = ConsoleColor.Red;
 
@@ -210,15 +278,17 @@ namespace chess_game
 
                         Console.ForegroundColor = defaulForeground;
                         Console.BackgroundColor = defaulBackground;
-
                         Console.WriteLine();
 
                         break;
                     }
-                     else if (draw)
+                    else if (draw)
                     {
-                        Console.WriteLine();
+                        Console.Clear();
+                        Console.WriteLine("\n");
+                        GetPosition(playerWhite);
 
+                        Console.WriteLine();
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.BackgroundColor = ConsoleColor.Gray;
 
@@ -226,15 +296,13 @@ namespace chess_game
 
                         Console.ForegroundColor = defaulForeground;
                         Console.BackgroundColor = defaulBackground;
-
                         Console.WriteLine();
 
                         break;
                     }
                 }
-                
+
                 isWhiteTurn = !isWhiteTurn;
-                
             } while (true);
 
             Console.ReadKey();
@@ -292,7 +360,7 @@ namespace chess_game
         static bool GetCoordinates(string input, ref int x, ref int y)
         {
             //NOTE: sparare un elicottero non è una buaona idea
-            if(input.Length != 2)
+            if (input.Length != 2)
             {
                 return false;
             }
@@ -300,7 +368,7 @@ namespace chess_game
             y = '8' - input[1];
             x = input[0] - 'a';
 
-            if(x < 0 || x > 7)
+            if (x < 0 || x > 7)
             {
                 return false;
             }
