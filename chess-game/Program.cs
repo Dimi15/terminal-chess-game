@@ -29,10 +29,15 @@ namespace chess_game
         {
             Console.OutputEncoding = Encoding.UTF8; // Needed to display the pieces
 
+            string startSquare = "";
             int startX = 0;
             int startY = 0;
+
+            string endSquare = "";
             int endX = 0;
             int endY = 0;
+
+            bool validInput = true;
 
             int playerPromoteTo = _;
             int computerPromoteTo = _;
@@ -49,10 +54,13 @@ namespace chess_game
 
             char pickedColor = ' ';
 
+            ConsoleColor defaulBackground = Console.BackgroundColor;
+            ConsoleColor defaulForeground = Console.ForegroundColor;
+
             // Asks the color of the player
             do
             {
-                Console.WriteLine("Do you want to play Black or White? (B/W)");
+                Console.WriteLine("Do You Want To Play Black or White? (B/W)");
                 pickedColor = Convert.ToChar(Console.ReadLine().ToLower());
             } while (pickedColor != 'w' && pickedColor != 'b');
 
@@ -81,33 +89,101 @@ namespace chess_game
                     do
                     {
                         Console.Clear();
+                        Console.WriteLine("\n");
                         GetPosition(playerWhite);
 
-                        Console.WriteLine("Piece to move:\nRow:");
-                        startY = Convert.ToInt32(Console.ReadLine());
-                        Console.WriteLine("Column:");
-                        startX = Convert.ToInt32(Console.ReadLine());
+                        if (validInput)
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
 
-                        Console.WriteLine("Square to move:\nRow:");
-                        endY = Convert.ToInt32(Console.ReadLine());
-                        Console.WriteLine("Column:");
-                        endX = Convert.ToInt32(Console.ReadLine());
-                    } while (!Program.Move(startX, startY, endX, endY, playerWhite, playerPromoteTo));
+                            Console.WriteLine("\nMake a Move:\n");
+
+                            Console.ForegroundColor = defaulForeground;
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.BackgroundColor = ConsoleColor.Red;
+
+                            Console.Write("\n\x1b[1mInvalid Move!\x1b[0m\n\n"); //"\x1b[1m" + ... + "\x1b[0m\n" == bold text
+
+                            Console.ForegroundColor = defaulForeground;
+                            Console.BackgroundColor = defaulBackground;
+                        }
+
+                        validInput = true;
+
+                        //start square
+                        Console.WriteLine("Start Square: (Es: e2)");
+                        startSquare = Console.ReadLine();
+
+                        if(!GetCoordinates(startSquare, ref startX, ref startY))
+                        {
+                            validInput = false;
+                        }
+
+                        //end square
+                        Console.WriteLine("End Square: (Es: e4)");
+                        endSquare = Console.ReadLine();
+
+                        if(!GetCoordinates(endSquare, ref endX, ref endY))
+                        {
+                            validInput = false;
+                        }
+
+                        //check move
+                        if(!Program.Move(startX, startY, endX, endY, playerWhite, playerPromoteTo))
+                        {
+                            validInput = false;
+                        }
+                    } while (!validInput);
                     
                     //Check if the game has ended
                     if (Program.Checkmate(!playerWhite, ref draw))
                     {
-                        Console.WriteLine("You won!");
+                        Console.WriteLine();
+
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.BackgroundColor = ConsoleColor.DarkGreen;
+
+                        Console.Write("\x1b[1mYOU WON\u001b[0m\n");
+
+                        Console.ForegroundColor = defaulForeground;
+                        Console.BackgroundColor = defaulBackground;
+
+                        Console.WriteLine();
+
                         break;
                     }
                     else if (draw)
                     {
-                        Console.WriteLine("Draw!");
+                        Console.WriteLine();
+
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.BackgroundColor = ConsoleColor.Gray;
+
+                        Console.Write("\x1b[1mDRAW!\u001b[0m\n");
+
+                        Console.ForegroundColor = defaulForeground;
+                        Console.BackgroundColor = defaulBackground;
+
+                        Console.WriteLine();
+
                         break;
                     }
                 }
                 else
                 {
+                    Console.Clear();
+                    Console.WriteLine("\n");
+                    GetPosition(playerWhite);
+
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+
+                    Console.WriteLine("\nThe Compure is Thinking...\n");
+
+                    Console.ForegroundColor = defaulForeground;
+
                     // Turn of the computer
                     if (!playerWhite)
                     {
@@ -125,12 +201,34 @@ namespace chess_game
                     // Checks if the game has ended
                     if (Checkmate(playerWhite, ref draw))
                     {
-                        Console.WriteLine("You lost!");
+                        Console.WriteLine();
+
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.BackgroundColor = ConsoleColor.Red;
+
+                        Console.Write("\x1b[1mYOU LOST!\u001b[0m\n");
+
+                        Console.ForegroundColor = defaulForeground;
+                        Console.BackgroundColor = defaulBackground;
+
+                        Console.WriteLine();
+
                         break;
                     }
                      else if (draw)
                     {
-                        Console.WriteLine("Draw!");
+                        Console.WriteLine();
+
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.BackgroundColor = ConsoleColor.Gray;
+
+                        Console.Write("\x1b[1mDRAW!\u001b[0m\n");
+
+                        Console.ForegroundColor = defaulForeground;
+                        Console.BackgroundColor = defaulBackground;
+
+                        Console.WriteLine();
+
                         break;
                     }
                 }
@@ -180,6 +278,39 @@ namespace chess_game
             {
                 board[6, i] = WP;
             }
+        }
+
+        /// <summary>
+        /// Moves a piece from the start square to the end square, including handling en passant.
+        /// </summary>
+        /// <param name="input">String that contains the square in the format letter-number (es: "e4")</param>
+        /// <param name="startY">Start column</param>
+        /// <param name="endX">End row</param>
+        /// <param name="endY">End column</param>
+        /// <param name="isWhiteTurn">True if white's turn, false if black's</param>
+        /// <returns>Valid input</returns>
+        static bool GetCoordinates(string input, ref int x, ref int y)
+        {
+            //NOTE: sparare un elicottero non è una buaona idea
+            if(input.Length != 2)
+            {
+                return false;
+            }
+
+            y = '8' - input[1];
+            x = input[0] - 'a';
+
+            if(x < 0 || x > 7)
+            {
+                return false;
+            }
+
+            if (y < 0 || y > 7)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -248,7 +379,7 @@ namespace chess_game
                 // Iterates through rows
                 for (int i = 0; i < 8; i++)
                 {
-                    Console.Write(i);
+                    Console.Write(8 - i);
 
                     // Iterates through columns
                     for (int j = 0; j < 8; j++)
@@ -267,7 +398,7 @@ namespace chess_game
 
                 for (int i = 0; i < 8; i++)
                 {
-                    Console.Write(Convert.ToString(i) + ' ');
+                    Console.Write(Convert.ToChar(i + 'a') + " ");
                 }
 
                 Console.Write("\n");
@@ -277,7 +408,7 @@ namespace chess_game
                 // Iterates through rows
                 for (int i = 7; i >= 0; i--)
                 {
-                    Console.Write(i);
+                    Console.Write(8 - i);
 
                     // Iterates through columns
                     for (int j = 7; j >= 0; j--)
@@ -296,7 +427,7 @@ namespace chess_game
 
                 for (int i = 7; i >= 0; i--)
                 {
-                    Console.Write(Convert.ToString(i) + ' ');
+                    Console.Write(Convert.ToChar(i + 'a') + " ");
                 }
 
                 Console.Write("\n");
