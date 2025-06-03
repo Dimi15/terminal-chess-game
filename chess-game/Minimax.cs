@@ -168,10 +168,6 @@ namespace chess_game
                                         if (currentEvaluation < bestEvaluation)
                                         {
                                             bestEvaluation = currentEvaluation;
-                                            /*bestStartX = j;
-                                            bestStartY = i;
-                                            bestEndX = l;
-                                            bestEndY = k;*/
                                         }
 
                                         if (bestEvaluation < beta)
