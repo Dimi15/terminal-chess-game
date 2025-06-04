@@ -59,7 +59,7 @@ Here's how you typically change the font in common terminals:
 
 For a comprehensive guide on how the program is structured, please download our project documentation (written in italian):
 
-* [**Download Game Documentation (PDF)**](https://github.com/Dimi15/terminal-chess-game/blob/master/docs/documentation.pdf)
+* [**Download Game Documentation (PDF)**](https://github.com/Dimi15/terminal-chess-game/docs/documentation.pdf)
 
 
 ---
