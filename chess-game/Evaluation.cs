@@ -232,7 +232,27 @@ namespace chess_game
         static bool Checkmate(bool white, ref bool draw)
         {
             draw = false;
-            bool correctPlayer = false;
+            bool correctPlayer = false, canMakeMove = false;
+
+            //count the pieces found
+
+            //white
+            int WPsFound = 0;
+            int WNsFound = 0;
+            int WBsFoundLightSquares = 0;
+            int WBsFoundDarkSquares = 0;
+            int WRsFound = 0;
+            int WQsFound = 0;
+            int WKsFound = 0;
+
+            //black
+            int BPsFound = 0;
+            int BNsFound = 0;
+            int BBsFoundLightSquares = 0;
+            int BBsFoundDarkSquares = 0;
+            int BRsFound = 0;
+            int BQsFound = 0;
+            int BKsFound = 0;
 
             for (int i = 0; i < 8; i++)
             {
@@ -240,6 +260,72 @@ namespace chess_game
                 {
                     if (board[i, j] != _)
                     {
+                        switch(board[i, j])
+                        {
+                            //white pieces
+                            case WP: WPsFound++; break;
+                            case WN: WNsFound++; break;
+                            case WB:
+                                if (i % 2 == 0)
+                                {
+                                    if (j % 2 == 0)
+                                    {
+                                        WBsFoundLightSquares++;
+                                    }
+                                    else
+                                    {
+                                        WBsFoundDarkSquares++;
+                                    }
+                                }
+                                else
+                                {
+                                    if (j % 2 == 0)
+                                    {
+                                        WBsFoundDarkSquares++;
+                                    }
+                                    else
+                                    {
+                                        WBsFoundLightSquares++;
+                                    }
+                                }
+                                break;
+
+                            case WR: WRsFound++; break;
+                            case WQ: WQsFound++; break;
+                            case WK: WKsFound++; break;
+
+                            //black pieces
+                            case BP: BPsFound++; break;
+                            case BN: BNsFound++; break;
+                            case BB:
+                                if (i % 2 == 0)
+                                {
+                                    if (j % 2 == 0)
+                                    {
+                                        BBsFoundLightSquares++;
+                                    }
+                                    else
+                                    {
+                                        BBsFoundDarkSquares++;
+                                    }
+                                }
+                                else
+                                {
+                                    if (j % 2 == 0)
+                                    {
+                                        BBsFoundDarkSquares++;
+                                    }
+                                    else
+                                    {
+                                        BBsFoundLightSquares++;
+                                    }
+                                }
+                                break;
+                            case BR: BRsFound++; break;
+                            case BQ: BQsFound++; break;
+                            case BK: BKsFound++; break;
+                        }
+
                         correctPlayer = false;
 
                         if (white)
@@ -257,7 +343,7 @@ namespace chess_game
                             }
                         }
 
-                        if (correctPlayer)
+                        if (!canMakeMove && correctPlayer)
                         {
                             for (int k = 0; k < 8; k++)
                             {
@@ -265,7 +351,7 @@ namespace chess_game
                                 {
                                     if (LegalMove(j, i, l, k, white))
                                     {
-                                        return false;
+                                        canMakeMove = true;
                                     }
                                 }
                             }
@@ -274,13 +360,58 @@ namespace chess_game
                 }
             }
 
-            if (UnderCheck(white))
+            if (!canMakeMove)
             {
-                return true;
+                if (UnderCheck(white))
+                {
+                    return true;
+                }
+                else
+                {
+                    draw = true;
+                    return false;
+                }
             }
             else
             {
-                draw = true;
+                //check for insufficient material draws
+
+                //white king VS black king
+                if(WPsFound == 0 && WNsFound == 0 && WBsFoundLightSquares == 0 && WBsFoundDarkSquares == 0 && WRsFound == 0 && WQsFound == 0 && WKsFound == 1 && BPsFound == 0 && BNsFound == 0 && BBsFoundLightSquares == 0 && BBsFoundDarkSquares == 0 && BRsFound == 0 && BQsFound == 0 && BKsFound == 1)
+                {
+                    draw = true;
+                }
+                //white king and knight VS black king
+                else if(WPsFound == 0 && WNsFound == 1 && WBsFoundLightSquares == 0 && WBsFoundDarkSquares == 0 && WRsFound == 0 && WQsFound == 0 && WKsFound == 1 && BPsFound == 0 && BNsFound == 0 && BBsFoundLightSquares == 0 && BBsFoundDarkSquares == 0 && BRsFound == 0 && BQsFound == 0 && BKsFound == 1)
+                {
+                    draw = true;
+                }
+                //white king VS black king and knight
+                else if (WPsFound == 0 && WNsFound == 0 && WBsFoundLightSquares == 0 && WBsFoundDarkSquares == 0 && WRsFound == 0 && WQsFound == 0 && WKsFound == 1 && BPsFound == 0 && BNsFound == 1 && BBsFoundLightSquares == 0 && BBsFoundDarkSquares == 0 && BRsFound == 0 && BQsFound == 0 && BKsFound == 1)
+                {
+                    draw = true;
+                }
+                //white king and bishops VS black king
+                else if (WPsFound == 0 && WNsFound == 0 && ((WBsFoundLightSquares == 1 && WBsFoundDarkSquares == 0) || (WBsFoundLightSquares == 0 && WBsFoundDarkSquares == 1)) && WRsFound == 0 && WQsFound == 0 && WKsFound == 1 && BPsFound == 0 && BNsFound == 0 && BBsFoundLightSquares == 0 && BBsFoundDarkSquares == 0 && BRsFound == 0 && BQsFound == 0 && BKsFound == 1)
+                {
+                    draw = true;
+                }
+                //white king VS black king and bishops
+                else if (WPsFound == 0 && WNsFound == 0 && WBsFoundLightSquares == 0 && WBsFoundDarkSquares == 0 && WRsFound == 0 && WQsFound == 0 && WKsFound == 1 && BPsFound == 0 && BNsFound == 0 && ((BBsFoundLightSquares == 1 && BBsFoundDarkSquares == 0) || (BBsFoundLightSquares == 0 && BBsFoundDarkSquares == 1)) && BRsFound == 0 && BQsFound == 0 && BKsFound == 1)
+                {
+                    draw = true;
+                }
+                //white king and light squares bishops VS black king and light squares bishops
+                else if (WPsFound == 0 && WNsFound == 0 && WBsFoundLightSquares == 1 && WBsFoundDarkSquares == 0 && WRsFound == 0 && WQsFound == 0 && WKsFound == 1 && BPsFound == 0 && BNsFound == 0 && BBsFoundLightSquares == 1 && BBsFoundDarkSquares == 0 && BRsFound == 0 && BQsFound == 0 && BKsFound == 1)
+                {
+                    draw = true;
+                }
+                //white king and dark squares bishops VS black king and dark squares bishops
+                else if (WPsFound == 0 && WNsFound == 0 && WBsFoundLightSquares == 0 && WBsFoundDarkSquares == 1 && WRsFound == 0 && WQsFound == 0 && WKsFound == 1 && BPsFound == 0 && BNsFound == 0 && BBsFoundLightSquares == 0 && BBsFoundDarkSquares == 1 && BRsFound == 0 && BQsFound == 0 && BKsFound == 1)
+                {
+                    draw = true;
+                }
+
                 return false;
             }
         }

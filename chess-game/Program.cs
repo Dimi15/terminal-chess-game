@@ -346,6 +346,13 @@ namespace chess_game
             {
                 board[6, i] = WP;
             }
+
+            //allow castiling
+            whiteCastleKing = true;
+            whiteCastleQueen = true;
+
+            blackCastleKing = true;
+            blackCastleQueen = true;
         }
 
         /// <summary>
