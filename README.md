@@ -64,6 +64,13 @@ For a comprehensive guide on how the program is structured, please download our 
 
 ---
 
+<p align="center">
+  <img src="img/img1.png" alt="Screenshot of the chess board during gameplay" width="450px"/>
+  <img src="img/img2.png" alt="Another screenshot showing a different game state" width="450px"/>
+</p>
+
+---
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
