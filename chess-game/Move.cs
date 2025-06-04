@@ -10,12 +10,12 @@ namespace chess_game
     public partial class Program
     {
         //white can castle
-        static bool whiteCastleKing = true;
-        static bool whiteCastleQueen = true;
+        static bool whiteCastleKing = false;
+        static bool whiteCastleQueen = false;
 
         //black can castle
-        static bool blackCastleKing = true;
-        static bool blackCastleQueen = true;
+        static bool blackCastleKing = false;
+        static bool blackCastleQueen = false;
 
         static int enPassantX = -1; //where can a pawn capture with en passant
         static int enPassantY = -1;
