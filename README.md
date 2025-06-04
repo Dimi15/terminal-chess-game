@@ -6,7 +6,7 @@ A terminal-based chess game developed in C#. This project was an 11th grade, hig
 
 ## Features
 
-* **Player vs. Computer AI:** Challenge a computer opponent powered by the Minimax algorithm.
+* **Player vs Computer AI:** Challenge a computer opponent powered by the Minimax algorithm.
 * **Standard chess rules:** All the familiar moves, captures, and special rules (castling, en passant, pawn promotion) are implemented.
 * **Clear terminal interface:** Easy-to-read board and game state, even in a console window.
 
@@ -14,29 +14,29 @@ A terminal-based chess game developed in C#. This project was an 11th grade, hig
 
 ## How to Run
 
-The easiest way to play is by using our pre-built executable. You won't need Visual Studio or even to install the .NET SDK!
+The easiest way to play is by using the pre-built executable. You won't need Visual Studio or even to install the .NET SDK!
 
 ### 1. Download the Game
 
-* Go to the [**Releases**](https://github.com/YOUR_USERNAME/YOUR_REPOSITORY/releases) section of this repository.
-* Download the `.zip` file suitable for your operating system (e.g., `chess-game-win-x64.zip` for Windows, `chess-game-linux-x64.tar.gz` for Linux, `chess-game-osx-x64.tar.gz` for macOS).
+* Go to the [**Releases**](https://github.com/Dimi15/terminal-chess-game/releases) section of this repository.
+* Download the `.zip` file suitable for your operating system (e.g., `chess-game-win64.zip` for Windows, `chess-game-linux64.zip` for Linux, `chess-game-osx64.zip` for macOS).
 
 ### 2. Extract and Play!
 
 * **Windows:**
     * Unzip the downloaded file.
     * Navigate into the extracted folder.
-    * **Double-click** `YourGameAppName.exe` to start the game.
+    * **Double-click** `chess_game.exe` to start the game.
 * **Linux/macOS:**
-    * Unpack the downloaded archive (e.g., `tar -xzf chess-game-linux-x64.tar.gz`).
+    * Unpack the downloaded archive (e.g., `chess-game-osx64.zip`).
     * Open your terminal, navigate to the extracted folder.
     * First, give execute permissions:
         ```bash
-        chmod +x YourGameAppName
+        chmod +x chess_game
         ```
     * Then, run the game:
         ```bash
-        ./YourGameAppName
+        ./chess_game
         ```
 
 ---
@@ -50,7 +50,7 @@ To fix this, you'll need to change your terminal's font to one that supports a w
 Here's how you typically change the font in common terminals:
 
 * **Windows Terminal (Recommended for Windows):** Open Settings (`Ctrl + ,`), navigate to "Profiles" -> "Defaults," and under "Text" -> "Font face," select a suitable font.
-* **Windows Command Prompt/PowerShell:** Right-click the title bar, select "Properties," go to the "Font" tab, and choose a Unicode-supporting font like "DejaVu Sans Mono" or "Consolas" (if it works for you).
+* **Windows Command Prompt/PowerShell:** Right-click the title bar, select "Properties," go to the "Font" tab, and choose a Unicode-supporting font like "DejaVu Sans Mono".
 * **Linux/macOS Terminals (e.g., GNOME Terminal, iTerm2, Kitty):** Look for "Preferences" or "Settings" in your terminal application's menu, find the "Profiles" or "Appearance" section, and change the font there.
 
 ---
@@ -59,7 +59,7 @@ Here's how you typically change the font in common terminals:
 
 For a comprehensive guide on how the program is structured, please download our project documentation (written in italian):
 
-* [**Download Game Documentation (PDF)**](https://github.com/YOUR_USERNAME/YOUR_REPOSITORY/raw/main/docs/ChessGameDocumentation.pdf)
+* [**Download Game Documentation (PDF)**](https://github.com/Dimi15/terminal-chess-game/blob/master/docs/documentation.pdf)
 
 
 ---
