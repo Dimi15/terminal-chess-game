@@ -374,6 +374,13 @@ namespace chess_game
             }
             else
             {
+                //check for 50-move rule
+                if(movesDone >= 50)
+                {
+                    draw = true;
+                    return false;
+                }
+
                 //check for insufficient material draws
 
                 //white king VS black king
