@@ -31,22 +31,19 @@ namespace chess_game
         {
             bool draw = false;
 
-            // Terminal condition: if depth is 0, evaluate the current board state
+            // If depth is 0, evaluates the current board state
             if (depth == 0)
             {
                 return Evaluation();
             }
 
-            // The computer's color is the opposite of the player's
-            bool isComputerWhite = !isPlayerWhite;
-
-            // Determine the current player's color in this recursion step
+            // Determine the current computer's color
             bool currentPlayerIsWhite;
-            if (isMaximizing)
+            if (isMaximizing) // If maximizing the computer is playing white
             {
                 currentPlayerIsWhite = true;
             }
-            else
+            else // If minimizing the computer is playing black
             {
                 currentPlayerIsWhite = false;
             }
@@ -72,7 +69,7 @@ namespace chess_game
                 }
             }
 
-            // Initialize the best evaluation value based on whether we are maximizing or minimizing
+            // Initialize the best evaluation value based on whether it is maximizing or minimizing
             double bestEvaluation;
             if (isMaximizing)
             {
@@ -107,14 +104,11 @@ namespace chess_game
                         skipSquare = true;
                     }
 
-
+                    // Variables needed to track castling, en passant and promotion
                     bool oldWhiteCastleKing = whiteCastleKing, oldWhiteCastleQueen = whiteCastleQueen;
                     bool oldBlackCastleKing = blackCastleKing, oldBlackCastleQueen = blackCastleQueen;
-
                     int oldEnPassantX = enPassantX, oldEnPassantY = enPassantY;
-
                     int oldMovesDone = movesDone;
-
                     int promoteTo = _;
 
                     // Promotes only queen to simplify the algorithm
@@ -130,13 +124,13 @@ namespace chess_game
                     // Only process valid pieces
                     if (!skipSquare)
                     {
-                        for (int k = 0; k < 8; k++) // destination row
+                        for (int k = 0; k < 8; k++) // Destination row
                         {
-                            for (int l = 0; l < 8; l++) // destination column
+                            for (int l = 0; l < 8; l++) // Destination column
                             {
                                 int capturedPiece = board[k, l];
 
-                                // Try the move; proceed if it's valid
+                                // Tries the move and continues if it is valid
                                 if (Move(j, i, l, k, currentPlayerIsWhite, promoteTo))
                                 {
                                     int tempStartX = 0, tempStartY = 0, tempEndX = 0, tempEndY = 0;
@@ -183,7 +177,7 @@ namespace chess_game
                                         }
                                     }
 
-                                    // Alpha-beta pruning: cut off unnecessary branches
+                                    // Cuts off unnecessary branches
                                     if (beta <= alpha)
                                     {
                                         k = 8; // Exit inner loop

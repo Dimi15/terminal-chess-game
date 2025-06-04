@@ -24,37 +24,34 @@ namespace chess_game
         public const int BK = 12; // Black King
 
         public static int[,] board = new int[8, 8];
-
+        
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8; // Needed to display the pieces
 
-            string startSquare = "";
             int startX = -1;
             int startY = -1;
-
-            string endSquare = "";
             int endX = -1;
             int endY = -1;
-
-            bool validInput = true;
-            bool validColor = false;
-
-            int playerPromoteTo = _;
-            int computerPromoteTo = _;
-
             int bestStartX = -1;
             int bestStartY = -1;
             int bestEndX = -1;
             int bestEndY = -1;
-            int computerDepth = 0;
-
+            int computerDepth = 1;
+            int playerPromoteTo = _;
+            int computerPromoteTo = _;
+            
+            bool validInput = true;
+            bool validColor = false;
             bool isWhiteTurn = true;
             bool playerWhite = false;
             bool draw = false;
-
+            
+            string startSquare = "";
+            string endSquare = "";
+            
             char pickedColor = ' ';
-
+            
             ConsoleColor defaulBackground = Console.BackgroundColor;
             ConsoleColor defaulForeground = Console.ForegroundColor;
             Console.Clear();
@@ -152,6 +149,15 @@ namespace chess_game
                         Console.WriteLine("\n");
                         GetPosition(playerWhite, bestStartX, bestStartY, bestEndX, bestEndY);
 
+                        if (UnderCheck(playerWhite))
+                        {
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            
+                            Console.Write("\n\x1b[1mCHECK!\x1b[0m\n");
+                            
+                            Console.ForegroundColor = defaulForeground;
+                        }
+
                         if (validInput)
                         {
                             Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -165,8 +171,7 @@ namespace chess_game
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.BackgroundColor = ConsoleColor.Red;
 
-                            Console.Write(
-                                "\n\x1b[1mInvalid Move!\x1b[0m\n\n"); //"\x1b[1m" + ... + "\x1b[0m\n" == bold text
+                            Console.Write("\n\x1b[1mInvalid Move!\x1b[0m\n\n"); //"\x1b[1m" + ... + "\x1b[0m\n" == bold text
 
                             Console.ForegroundColor = defaulForeground;
                             Console.BackgroundColor = defaulBackground;
@@ -174,7 +179,7 @@ namespace chess_game
 
                         validInput = true;
 
-                        //start square
+                        // Asks the user the start square
                         Console.WriteLine("Start Square: (Es: e2)");
                         startSquare = Console.ReadLine();
 
@@ -183,7 +188,7 @@ namespace chess_game
                             validInput = false;
                         }
 
-                        //end square
+                        // Asks the user the end square
                         Console.WriteLine("End Square: (Es: e4)");
                         endSquare = Console.ReadLine();
 
@@ -192,15 +197,15 @@ namespace chess_game
                             validInput = false;
                         }
 
-                        //check move
-                        if (!Program.Move(startX, startY, endX, endY, playerWhite, playerPromoteTo))
+                        // Checks the move
+                        if (!Move(startX, startY, endX, endY, playerWhite, playerPromoteTo))
                         {
                             validInput = false;
                         }
                     } while (!validInput);
 
-                    //Check if the game has ended
-                    if (Program.Checkmate(!playerWhite, ref draw))
+                    // Checks if the game has ended
+                    if (Checkmate(!playerWhite, ref draw))
                     {
                         Console.Clear();
                         Console.WriteLine("\n");
@@ -309,7 +314,7 @@ namespace chess_game
         }
 
         /// <summary>
-        /// Assigns the variables to the matrix for the start position
+        /// Assigns the variables to the matrix for the starting position
         /// </summary>
         static void SetupStartPosition()
         {
@@ -330,7 +335,7 @@ namespace chess_game
                 board[1, i] = BP;
             }
 
-            //MIDDLE EMPTY SQUARES
+            // Mid empty squares
             for(int i = 2; i < 6; i++)
             {
                 for(int j = 0; j < 8; j++)
@@ -356,7 +361,7 @@ namespace chess_game
                 board[6, i] = WP;
             }
 
-            //allow castiling
+            // Setting the variables to allow Castling
             whiteCastleKing = true;
             whiteCastleQueen = true;
 
@@ -368,14 +373,11 @@ namespace chess_game
         /// Moves a piece from the start square to the end square, including handling en passant.
         /// </summary>
         /// <param name="input">String that contains the square in the format letter-number (es: "e4")</param>
-        /// <param name="startY">Start column</param>
-        /// <param name="endX">End row</param>
-        /// <param name="endY">End column</param>
-        /// <param name="isWhiteTurn">True if white's turn, false if black's</param>
+        /// <param name="x">Column</param>
+        /// <param name="y">Row</param>
         /// <returns>Valid input</returns>
         static bool GetCoordinates(string input, ref int x, ref int y)
         {
-            //NOTE: sparare un elicottero non è una buaona idea
             if (input.Length != 2)
             {
                 return false;
@@ -402,69 +404,40 @@ namespace chess_game
         /// </summary>
         /// <param name="x">Column</param>
         /// <param name="y">Row</param>
-        static void WriteSquare(int x, int y)
+        /// <param name="highlight">True if needs to highlight the square for the last move</param>
+        static void WriteSquare(int x, int y, bool highlight)
         {
-            // Condition to alternate the background of the squares
-            if (y % 2 == 0)
+            if (highlight)
             {
-                if (x % 2 == 0)
-                {
-                    Console.BackgroundColor = ConsoleColor.Gray;
-                }
-                else
-                {
-                    Console.BackgroundColor = ConsoleColor.DarkGreen;
-                }
+                Console.BackgroundColor = ConsoleColor.Yellow;
             }
             else
             {
-                if (x % 2 == 0)
+                // Condition to alternate the background of the squares
+                if (y % 2 == 0)
                 {
-                    Console.BackgroundColor = ConsoleColor.DarkGreen;
+                    if (x % 2 == 0)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                    }
+                    else
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkGreen;
+                    }
                 }
                 else
                 {
-                    Console.BackgroundColor = ConsoleColor.Gray;
+                    if (x % 2 == 0)
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkGreen;
+                    }
+                    else
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                    }
                 }
             }
-
-            // Matching the correct piece for each number in the matrix
-            switch (board[y, x])
-            {
-                // White pieces
-                case WP: Console.Write("♙"); break;
-                case WN: Console.Write("♘"); break;
-                case WB: Console.Write("♗"); break;
-                case WR: Console.Write("♖"); break;
-                case WQ: Console.Write("♕"); break;
-                case WK: Console.Write("♔"); break;
-
-                // Black pieces
-                case BP: Console.Write("♟"); break;
-                case BN: Console.Write("♞"); break;
-                case BB: Console.Write("♝"); break;
-                case BR: Console.Write("♜"); break;
-                case BQ: Console.Write("♛"); break;
-                case BK: Console.Write("♚"); break;
-                case _: Console.Write(" "); break;
-            }
-
-            Console.Write(' ');
-        }
-
-        /// <summary>
-        /// Prints one square of the current board and colors a square for the last move
-        /// </summary>
-        /// <param name="x">Column</param>
-        /// <param name="y">Row</param>
-        /// <param name="startX">Starting column</param>
-        /// <param name="startY">Starting row</param>
-        /// <param name="endX">Ending column</param>
-        /// <param name="endY">Ending column</param>
-        static void WriteSquare(int x, int y, int startX, int startY, int endX, int endY)
-        {
-            Console.BackgroundColor = ConsoleColor.DarkYellow;
-
+            
             // Matching the correct piece for each number in the matrix
             switch (board[y, x])
             {
@@ -492,7 +465,7 @@ namespace chess_game
         /// <summary>
         /// Prints the current board
         /// </summary>
-        /// <param name="white">If true the board is displayed from the direction of white</param>
+        /// <param name="white">If true, the board is displayed from the direction of white</param>
         /// <param name="startX">Starting column</param>
         /// <param name="startY">Starting row</param>
         /// <param name="endX">Ending column</param>
@@ -517,11 +490,11 @@ namespace chess_game
                         // Condition to color the last move in a different color
                         if ((startX == j && startY == i) || (endX == j && endY == i))
                         {
-                            WriteSquare(j, i, startX, startY, endX, endY);
+                            WriteSquare(j, i, true);
                         }
                         else
                         {
-                            WriteSquare(j, i);
+                            WriteSquare(j, i, false);
                         }
                     }
 
@@ -554,11 +527,11 @@ namespace chess_game
                         // Condition to color the last move in a different color
                         if ((startX == j && startY == i) || (endX == j && endY == i))
                         {
-                            WriteSquare(j, i, startX, startY, endX, endY);
+                            WriteSquare(j, i, true);
                         }
                         else
                         {
-                            WriteSquare(j, i);
+                            WriteSquare(j, i, false);
                         }
                     }
 

@@ -9,27 +9,27 @@ namespace chess_game
 {
     public partial class Program
     {
-        //white can castle
+        // Castling variables
         static bool whiteCastleKing = false;
         static bool whiteCastleQueen = false;
-
-        //black can castle
         static bool blackCastleKing = false;
         static bool blackCastleQueen = false;
 
-        static int enPassantX = -1; //where can a pawn capture with en passant
+        // Coordinates where a pawn can capture with en passant
+        static int enPassantX = -1;
         static int enPassantY = -1;
 
-        static int movesDone = 0;   //used for the 50-move rule
+        static int movesDone = 0;   // Used to track the 50-move rule
 
         /// <summary>
-        /// Moves a piece from the start square to the end square, including handling en passant.
+        /// Moves a piece from the start square to the end square, handles en passant too.
         /// </summary>
         /// <param name="startX">Start row</param>
         /// <param name="startY">Start column</param>
         /// <param name="endX">End row</param>
         /// <param name="endY">End column</param>
-        /// <param name="isWhiteTurn">True if white's turn, false if black's</param>
+        /// <param name="isWhiteTurn">True if it is white's turn</param>
+        /// <param name="promoteTo">Piece to promote to</param>
         /// <returns>True if the move is legal and performed</returns>
         public static bool Move(int startX, int startY, int endX, int endY, bool isWhiteTurn, int promoteTo)
         {
@@ -58,11 +58,11 @@ namespace chess_game
 
                             changedEnPassant = true;
                         }
-                        else if(startX != endX && endPiece == _)    //captured with en passant
+                        else if(startX != endX && endPiece == _) // Capture with en passant
                         {
                             board[endY + 1, endX] = _;
                         }
-                        else if(endY == 0)  //promotion
+                        else if(endY == 0) // Promotion
                         {
                             if(promoteTo >= BP)
                             {
@@ -72,7 +72,7 @@ namespace chess_game
                             startPiece = promoteTo;
                         }
 
-                        movesDone = 0;  //after a pawn move it is reset
+                        movesDone = 0; // Reset after pawn move
 
                         break;
 
@@ -84,7 +84,7 @@ namespace chess_game
 
                             changedEnPassant = true;
                         }
-                        else if (startX != endX && endPiece == _)    //captured with en passant
+                        else if (startX != endX && endPiece == _) // Capture with en passant
                         {
                             board[endY - 1, endX] = _;
                         }
@@ -98,20 +98,20 @@ namespace chess_game
                             startPiece = promoteTo;
                         }
 
-                        movesDone = 0;  //after a pawn move it is reseted
+                        movesDone = 0; // Reset after pawn move
 
                         break;
 
                     case WK:
-                        if (diffX == 2)  //queen side castle
+                        if (diffX == 2) // Queen side castle
                         {
-                            //move rook
+                            // Moves the rook
                             board[endY, endX - 2] = _;
                             board[startY, startX - 1] = WR;
                         }
-                        else if (diffX == -2)    //king side castle
+                        else if (diffX == -2) // King side castle
                         {
-                            //move rook
+                            // Moves the rook
                             board[endY, endX + 1] = _;
                             board[startY, startX + 1] = WR;
                         }
@@ -121,15 +121,15 @@ namespace chess_game
                         break;
 
                     case BK:
-                        if (diffX == 2)  //queen side castle
+                        if (diffX == 2) // Queen side castle
                         {
-                            //move rook
+                            // Moves the rook
                             board[endY, endX - 2] = _;
                             board[startY, startX - 1] = BR;
                         }
-                        else if (diffX == -2)    //king side castel
+                        else if (diffX == -2) // King side castle
                         {
-                            //move rook
+                            // Moves the rook
                             board[endY, endX + 1] = _;
                             board[startY, startX + 1] = BR;
                         }
@@ -139,13 +139,13 @@ namespace chess_game
                         break;
 
                     case WR:
-                        if (startY == 7)    //rook on start row
+                        if (startY == 7) // If the rook is on starting row
                         {
-                            if (startX == 0)  //queen side rook
+                            if (startX == 0) // Queen side rook
                             {
                                 whiteCastleQueen = false;
                             }
-                            else if (startX == 7)   //king side rook
+                            else if (startX == 7) // King side rook
                             {
                                 whiteCastleKing = false;
                             }
@@ -153,13 +153,13 @@ namespace chess_game
                         break;
 
                     case BR:
-                        if (startY == 0)    //rook on start row
+                        if (startY == 0) // If the rook is on starting row
                         {
-                            if (startX == 0)  //queen or king side rook
+                            if (startX == 0) // Queen side rook
                             {
                                 blackCastleQueen = false;
                             }
-                            else if (startX == 7)   //king side rook
+                            else if (startX == 7) // King side rook
                             {
                                 blackCastleKing = false;
                             }
@@ -170,13 +170,13 @@ namespace chess_game
                 switch (endPiece)
                 {
                     case WR:
-                        if (endY == 7) //rook on start row
+                        if (endY == 7) // If the rook is on starting row
                         {
-                            if (endX == 0)  //queen side rook
+                            if (endX == 0) // Queen side rook
                             {
                                 whiteCastleQueen = false;
                             }
-                            else if (endX == 7) //king side rook
+                            else if (endX == 7) // King side rook
                             {
                                 whiteCastleKing = false;
                             }
@@ -184,13 +184,13 @@ namespace chess_game
                         break;
 
                     case BR:
-                        if (endY == 0) //rook on start row
+                        if (endY == 0) // If the rook is on starting row
                         {
-                            if (endX == 0)  //queen side rook
+                            if (endX == 0) // Queen side rook
                             {
                                 blackCastleQueen = false;
                             }
-                            else if (endX == 7)  //king side rook
+                            else if (endX == 7) // King side rook
                             {
                                 blackCastleKing = false;
                             }
@@ -213,6 +213,22 @@ namespace chess_game
             return false;
         }
 
+        /// <summary>
+        /// Undoes a move given the coordinates
+        /// </summary>
+        /// <param name="startX">Start row</param>
+        /// <param name="startY">Start column</param>
+        /// <param name="endX">End row</param>
+        /// <param name="endY">End column</param>
+        /// <param name="startPiece">Piece that was on coordinate startX</param>
+        /// <param name="endPiece">Piece that was on coordinate endX</param>
+        /// <param name="oldWhiteCastleKing">State of white castle king side before the move</param>
+        /// <param name="oldWhiteCastleQueen">State of white castle queen side before the move</param>
+        /// <param name="oldBlackCastleKing">State of white castle king side before the move</param>
+        /// <param name="oldBlackCastleQueen">State of white castle queen side before the move</param>
+        /// <param name="oldEnPassantX">State of en passant coordinate X before the move</param>
+        /// <param name="oldEnPassantY">State of en passant coordinate Y before the move</param>
+        /// <param name="oldMovesDone">Needed for 50-move rule</param>
         static void UndoMove(int startX, int startY, int endX, int endY, int startPiece, int endPiece, bool oldWhiteCastleKing, bool oldWhiteCastleQueen, bool oldBlackCastleKing, bool oldBlackCastleQueen, int oldEnPassantX, int oldEnPassantY, int oldMovesDone)
         {
             int diffX = startX - endX;
@@ -220,26 +236,26 @@ namespace chess_game
             switch (startPiece)
             {
                 case WP:
-                    if(endX == oldEnPassantX && endY == oldEnPassantY) //captured with en passant
+                    if(endX == oldEnPassantX && endY == oldEnPassantY) // Captured with en passant
                     {
                         board[endY + 1, endX] = BP;
                     }
                     break;
                 
                 case BP:
-                    if (endX == oldEnPassantX && endY == oldEnPassantY) //captured with en passant
+                    if (endX == oldEnPassantX && endY == oldEnPassantY) // Captured with en passant
                     {
                         board[endY - 1, endX] = WP;
                     }
                     break;
 
                 case WK:
-                    if (diffX == 2)  //queen side castle
+                    if (diffX == 2) // Castle queen side
                     {
                         board[endY, endX - 2] = WR;
                         board[startY, startX - 1] = _;
                     }
-                    else if (diffX == -2)    //king side castel
+                    else if (diffX == -2) // Castle king side
                     {
                         board[endY, endX + 1] = WR;
                         board[startY, startX + 1] = _;
@@ -247,12 +263,12 @@ namespace chess_game
                     break;
 
                 case BK:
-                    if (diffX == 2)  //queen side castle
+                    if (diffX == 2) // Castle queen side
                     {
                         board[endY, endX - 2] = BR;
                         board[startY, startX - 1] = _;
                     }
-                    else if (diffX == -2)    //king side castel
+                    else if (diffX == -2) // Castle king side
                     {
                         board[endY, endX + 1] = BR;
                         board[startY, startX + 1] = _;
@@ -260,6 +276,7 @@ namespace chess_game
                     break;
             }
 
+            // Updating variables and board state
             whiteCastleKing = oldWhiteCastleKing;
             whiteCastleQueen = oldWhiteCastleQueen;
 
@@ -278,24 +295,24 @@ namespace chess_game
         /// <summary>
         /// Given a move checks its legality
         /// </summary>
-        /// <param name="startY">starting x position</param>
-        /// <param name="startX">starting y position</param>
-        /// <param name="endX">ending x position</param>
-        /// <param name="endY">ending y position</param>
-        /// <param name="isWhiteTurn">False if the current move is made by black and True if it is made by white</param>
-        /// <returns>if the move is legal</returns>
+        /// <param name="startX">Start column</param>
+        /// <param name="startY">Start row</param>
+        /// <param name="endX">End column</param>
+        /// <param name="endY">End row</param>
+        /// <param name="isWhiteTurn">True if white is making the move</param>
+        /// <returns>If the move is legal</returns>
         static bool LegalMove(int startX, int startY, int endX, int endY, bool isWhiteTurn)
         {
-            if (startX < 0 || startY < 0 || startX > 7 || startY > 7)    //start square is not inside the board
+            if (startX < 0 || startY < 0 || startX > 7 || startY > 7) // Checks if the start square is not inside the board
             {
                 return false;
             }
-            if (endX < 0 || endY < 0 || endX > 7 || endY > 7)   //end square is not inside the 
+            if (endX < 0 || endY < 0 || endX > 7 || endY > 7) // Checks if the end square is not inside the matrix
             {
                 return false;
             }
             
-            if (startX == endX && startY == endY)    //the piece remeins on the same square
+            if (startX == endX && startY == endY) // Checks if the piece remains on the same square
             {
                 return false;
             }
@@ -310,12 +327,12 @@ namespace chess_game
 
             int oldMovesDone = movesDone;
 
-            if (startPiece == _) //a piece is beeing moved
+            if (startPiece == _) // Checks if a piece is being moved
             {
                 return false;
             }
 
-            if (isWhiteTurn)   //the piece is of the color that needs to play
+            if (isWhiteTurn) // Checks if the piece is of the color that needs to play
             {
                 if (startPiece >= BP)
                 {
@@ -330,16 +347,16 @@ namespace chess_game
                 }
             }
 
-            if (startPiece < _ && startPiece > BK)  //piece to move doesn't exist
+            if (startPiece < _ && startPiece > BK) // Checks if the piece to move doesn't exist
             {
                 return false;
             }
-            if (endPiece < _ && endPiece > BK)  //piece to move into doesn't exist
+            if (endPiece < _ && endPiece > BK) // Checks if the piece to move to doesn't exist
             {
                 return false;
             }
 
-            if (endPiece != _)  //end piece can be captured
+            if (endPiece != _) // Checks if the end piece can be captured
             {
                 if (isWhiteTurn)
                 {
@@ -357,7 +374,7 @@ namespace chess_game
                 }
             }
 
-            //check if it is a valid move for the type of piece
+            // Checks if it is a valid move for the type of piece
             if (startPiece == WP || startPiece == BP)
             {
                 if (!LegalPawnMove(startX, startY, endX, endY, isWhiteTurn))
@@ -381,7 +398,7 @@ namespace chess_game
             }
             else
             {
-                if (startX == endX || startY == endY)    //sliding move
+                if (startX == endX || startY == endY) // Checks if it is a sliding move
                 {
                     if (!LegalSlidingMove(startX, startY, endX, endY, isWhiteTurn))
                     {
@@ -397,7 +414,7 @@ namespace chess_game
                 }
             }
 
-            //check if the move causes check to the king of the current playing color
+            // Checks if the move checks the king of the current playing color
             board[startY, startX] = _;
             board[endY, endX] = startPiece;
 
@@ -413,37 +430,46 @@ namespace chess_game
             return false;
         }
 
+        /// <summary>
+        /// Given a move checks its legality
+        /// </summary>
+        /// <param name="startX">Start column</param>
+        /// <param name="startY">Start row</param>
+        /// <param name="endX">End column</param>
+        /// <param name="endY">End row</param>
+        /// <param name="isWhiteTurn">True if white is making the move</param>
+        /// <returns>If the move is legal</returns>
         static bool LegalPawnMove(int startX, int startY, int endX, int endY, bool isWhiteTurn)
         {
             if (isWhiteTurn)
             {
-                if (startX == endX)
+                if (startX == endX) // Checks if it is moving vertically
                 {
-                    if (startY == 6 && endY == 4)
+                    if (startY == 6 && endY == 4) // Checks if it is the first row and if the pawn moves of 2 squares
                     {
-                        if (board[startY - 1, startX] == _ && board[endY, endX] == _)
+                        if (board[startY - 1, startX] == _ && board[endY, endX] == _) // Checks if 2 squares in front of the pawn are empty
                         {
                             return true;
                         }
                     }
-                    else if (startY - endY == 1 && board[endY, endX] == _)
+                    else if (startY - endY == 1 && board[endY, endX] == _) // Checks if the pawn moves of at least 1 square and the ending square is empty
                     {
                         return true;
                     }
                 }
                 else
                 {
-                    if (board[endY, endX] != _)
+                    if (board[endY, endX] != _) // Checks if the ending square is not empty
                     {
-                        if (startX == endX - 1 || startX == endX + 1)
+                        if (startX == endX - 1 || startX == endX + 1) // Checks if the pawn is moving right or left
                         {
-                            if (startY - endY == 1)
+                            if (startY - endY == 1) // Checks if the pawn is moving just of 1 square
                             {
                                 return true;
                             }
                         }
                     }
-                    else if(endX == enPassantX && endY == enPassantY && (startX == endX - 1 || startX == endX + 1) && startY - endY == 1)
+                    else if(endX == enPassantX && endY == enPassantY && (startX == endX - 1 || startX == endX + 1) && startY - endY == 1) // Checks if the pawn is moving to an en passant square
                     {
                         board[endY + 1, endX] = _;
                         return true;
@@ -452,33 +478,33 @@ namespace chess_game
             }
             else
             {
-                if (startX == endX)
+                if (startX == endX) // Checks if it is moving vertically
                 {
-                    if (startY == 1 && endY == 3)
+                    if (startY == 1 && endY == 3) // Checks if it is the first row and if the pawn moves of 2 squares
                     {
-                        if (board[startY + 1, startX] == _ && board[endY, endX] == _)
+                        if (board[startY + 1, startX] == _ && board[endY, endX] == _) // Checks if 2 squares in front of the pawn are empty
                         {
                             return true;
                         }
                     }
-                    else if (startY - endY == -1 && board[endY, endX] == _)
+                    else if (startY - endY == -1 && board[endY, endX] == _) // Checks if the pawn moves of at least 1 square and the ending square is empty
                     {
                         return true;
                     }
                 }
                 else
                 {
-                    if (board[endY, endX] != _)
+                    if (board[endY, endX] != _) // Checks if the ending square is not empty
                     {
-                        if (startX == endX - 1 || startX == endX + 1)
+                        if (startX == endX - 1 || startX == endX + 1) // Checks if the pawn is moving right or left
                         {
-                            if (startY - endY == -1)
+                            if (startY - endY == -1) // Checks if the pawn is moving just of 1 square
                             {
                                 return true;
                             }
                         }
                     }
-                    else if (endX == enPassantX && endY == enPassantY && (startX == endX - 1 || startX == endX + 1) && startY - endY == -1)
+                    else if (endX == enPassantX && endY == enPassantY && (startX == endX - 1 || startX == endX + 1) && startY - endY == -1) // Checks if the pawn is moving to an en passant square
                     {
                         board[endY - 1, endX] = _;
                         return true;
@@ -489,8 +515,18 @@ namespace chess_game
             return false;
         }
 
+        /// <summary>
+        /// Given a move checks its legality
+        /// </summary>
+        /// <param name="startX">Start column</param>
+        /// <param name="startY">Start row</param>
+        /// <param name="endX">End column</param>
+        /// <param name="endY">End row</param>
+        /// <returns>If the move is legal</returns>
         static bool LegalKnightMove(int startX, int startY, int endX, int endY)
         {
+            /* Calculates the difference between the coordinates X and Y, and does the absolute value of that,
+               and then checks if it is moving in a direction of 2 squares and in the other of 1 square */
             int diffX = startX - endX;
             int diffY = startY - endY;
 
@@ -515,10 +551,19 @@ namespace chess_game
             return false;
         }
 
+        /// <summary>
+        /// Given a move checks its legality
+        /// </summary>
+        /// <param name="startX">Start column</param>
+        /// <param name="startY">Start row</param>
+        /// <param name="endX">End column</param>
+        /// <param name="endY">End row</param>
+        /// <param name="isWhiteTurn">True if white is making the move</param>
+        /// <returns>If the move is legal</returns>
         static bool LegalCastle(int startX, int startY, int endX, int endY, bool isWhiteTurn)
         {
             int x = startX, y = startY;
-
+            
             if (AttackedBy(startX, startY, !isWhiteTurn))
             {
                 return false;
@@ -526,14 +571,19 @@ namespace chess_game
 
             if (isWhiteTurn)
             {
-                if (board[startY, startX] != WK)
+                if (startX != 4 || startY != 7) // Checks if it is not in its starting position
+                {
+                    return false;
+                }
+                
+                if (board[startY, startX] != WK) // Checks if it is not a king
                 {
                     return false;
                 }
 
                 int diffX = startX - endX;
 
-                if (diffX > 0)   //queen side castle
+                if (diffX > 0) // Castle queen side
                 {
                     if (!whiteCastleQueen)
                     {
@@ -551,11 +601,11 @@ namespace chess_game
 
                     } while (x != endX);
 
-                    //move rook
+                    // Moves the rook
                     board[endY, endX - 2] = _;
                     board[startY, startX - 1] = WR;
                 }
-                else    //king side castle
+                else // Castle king side
                 {
                     if (!whiteCastleKing)
                     {
@@ -573,21 +623,26 @@ namespace chess_game
 
                     } while (x != endX);
 
-                    //move rook
+                    // Moves the rook
                     board[endY, endX + 1] = _;
                     board[startY, startX + 1] = WR;
                 }
             }
             else
             {
-                if (board[startY, startX] != BK)
+                if (startX != 4 || startY != 0) // Checks if it is not in its starting position
+                {
+                    return false;
+                }
+                
+                if (board[startY, startX] != BK) // Checks if it is not a king
                 {
                     return false;
                 }
 
                 int diffX = startX - endX;
 
-                if (diffX > 0)   //queen side castle
+                if (diffX > 0) // Castle queen side
                 {
                     if (!blackCastleQueen)
                     {
@@ -605,11 +660,11 @@ namespace chess_game
 
                     } while (x != endX);
 
-                    //move rook
+                    // Moves the rook
                     board[endY, endX - 2] = _;
                     board[startY, startX - 1] = BR;
                 }
-                else    //king side castle
+                else // Castle king side
                 {
                     if (!blackCastleKing)
                     {
@@ -627,7 +682,7 @@ namespace chess_game
 
                     } while (x != endX);
 
-                    //move rook
+                    // Moves the rook
                     board[endY, endX + 1] = _;
                     board[startY, startX + 1] = BR;
                 }
@@ -636,9 +691,21 @@ namespace chess_game
             return true;
         }
 
+        /// <summary>
+        /// Given a move checks its legality
+        /// </summary>
+        /// <param name="startX">Start column</param>
+        /// <param name="startY">Start row</param>
+        /// <param name="endX">End column</param>
+        /// <param name="endY">End row</param>
+        /// <param name="isWhiteTurn">True if white is making the move</param>
+        /// <returns>If the move is legal</returns>
         static bool LegalKingMove(int startX, int startY, int endX, int endY, bool isWhiteTurn)
         {
-
+            /* Calculates the difference between the coordinates X and Y, and does the absolute value of that,
+               and then checks if it is moving in a direction of 2 squares and in the other of 0 squares (in case of castling),
+               or if it moves in any direction of 1 square the move is legal */
+            
             int diffX = startX - endX;
             int diffY = startY - endY;
 
@@ -651,7 +718,7 @@ namespace chess_game
                 diffY = -diffY;
             }
 
-            if (diffX == 2 && diffY == 0)    //castle move
+            if (diffX == 2 && diffY == 0)
             {
                 return LegalCastle(startX, startY, endX, endY, isWhiteTurn);
             }
@@ -675,29 +742,40 @@ namespace chess_game
             return false;
         }
 
-        static bool LegalSlidingMove(int startX, int startY, int endX, int endY, bool white)
+        /// <summary>
+        /// Given a move checks its legality
+        /// </summary>
+        /// <param name="startX">Start column</param>
+        /// <param name="startY">Start row</param>
+        /// <param name="endX">End column</param>
+        /// <param name="endY">End row</param>
+        /// <param name="isWhiteTurn">True if white is making the move</param>
+        /// <returns>If the move is legal</returns>
+        static bool LegalSlidingMove(int startX, int startY, int endX, int endY, bool isWhiteTurn)
         {
-            int x = startX, y = startY;
+            int x = startX;
+            int y = startY;
 
-            if (white)
+            if (isWhiteTurn)
             {
-                if (board[startY, startX] != WR && board[startY, startX] != WQ)
+                if (board[startY, startX] != WR && board[startY, startX] != WQ) // Checks if the white piece can move both vertically and horizontally
                 {
                     return false;
                 }
             }
             else
             {
-                if (board[startY, startX] != BR && board[startY, startX] != BQ)
+                if (board[startY, startX] != BR && board[startY, startX] != BQ) // Checks if the black piece can move both vertically and horizontally
                 {
                     return false;
                 }
             }
 
-            if (startX == endX)
+            if (startX == endX) // Checks if the piece is moving vertically
             {
-                if (startY < endY)
+                if (startY < endY) // Checks if the piece is moving downwards
                 {
+                    // Continues until the piece arrives to the destination square or until it finds a piece
                     do
                     {
                         y++;
@@ -709,8 +787,9 @@ namespace chess_game
 
                     } while (board[y, x] == _);
                 }
-                else
+                else // Checks if the piece is moving upwards
                 {
+                    // Continues until the piece arrives to the destination square or until it finds a piece
                     do
                     {
                         y--;
@@ -725,8 +804,9 @@ namespace chess_game
             }
             else
             {
-                if (startX < endX)
+                if (startX < endX) // Checks if the piece is moving towards the right
                 {
+                    // Continues until the piece arrives to the destination square or until it finds a piece
                     do
                     {
                         x++;
@@ -738,8 +818,9 @@ namespace chess_game
 
                     } while (board[y, x] == _);
                 }
-                else
+                else  // Checks if the piece is moving towards the left
                 {
+                    // Continues until the piece arrives to the destination square or until it finds a piece
                     do
                     {
                         x--;
@@ -756,13 +837,23 @@ namespace chess_game
             return false;
         }
 
+        /// <summary>
+        /// Given a move checks its legality
+        /// </summary>
+        /// <param name="startX">Start column</param>
+        /// <param name="startY">Start row</param>
+        /// <param name="endX">End column</param>
+        /// <param name="endY">End row</param>
+        /// <param name="isWhiteTurn">True if white is making the move</param>
+        /// <returns>If the move is legal</returns>
         static bool LegalDiagonalMove(int startX, int startY, int endX, int endY, bool isWhiteTurn)
         {
             int x = startX, y = startY;
 
+            // Calculates the differene and does the absolute value
             int diffX = startX - endX;
             int diffY = startY - endY;
-
+            
             if (diffX < 0)
             {
                 diffX = -diffX;
@@ -772,30 +863,31 @@ namespace chess_game
                 diffY = -diffY;
             }
 
-            if (diffX != diffY)  //not a diagonal move
+            if (diffX != diffY) // Not a diagonal move
             {
                 return false;
             }
 
             if (isWhiteTurn)
             {
-                if (board[startY, startX] != WB && board[startY, startX] != WQ)
+                if (board[startY, startX] != WB && board[startY, startX] != WQ) // Checks if the white piece can move diagonally
                 {
                     return false;
                 }
             }
             else
             {
-                if (board[startY, startX] != BB && board[startY, startX] != BQ)
+                if (board[startY, startX] != BB && board[startY, startX] != BQ) // Checks if the black piece can move diagonally
                 {
                     return false;
                 }
             }
 
-            if (startY < endY)
+            if (startY < endY)  // Checks if the piece is moving downwards
             {
-                if (startX < endX)
+                if (startX < endX) // Checks if the piece is moving towards the right
                 {
+                    // Continues until the piece arrives to the destination square or until it finds a piece
                     do
                     {
                         y++;
@@ -808,8 +900,9 @@ namespace chess_game
 
                     } while (board[y, x] == _);
                 }
-                else
+                else // Checks if the piece is moving towards the left
                 {
+                    // Continues until the piece arrives to the destination square or until it finds a piece
                     do
                     {
                         y++;
@@ -823,10 +916,11 @@ namespace chess_game
                     } while (board[y, x] == _);
                 }
             }
-            else
+            else // Checks if the piece is moving upwards
             {
-                if (startX < endX)
+                if (startX < endX) // Checks if the piece is moving towards the right
                 {
+                    // Continues until the piece arrives to the destination square or until it finds a piece
                     do
                     {
                         y--;
@@ -839,8 +933,9 @@ namespace chess_game
 
                     } while (board[y, x] == _);
                 }
-                else
+                else // Checks if the piece is moving towards the left
                 {
+                    // Continues until the piece arrives to the destination square or until it finds a piece
                     do
                     {
                         y--;
