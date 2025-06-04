@@ -330,6 +330,15 @@ namespace chess_game
                 board[1, i] = BP;
             }
 
+            //MIDDLE EMPTY SQUARES
+            for(int i = 2; i < 6; i++)
+            {
+                for(int j = 0; j < 8; j++)
+                {
+                    board[i, j] = _;
+                }
+            }
+
             // CASE FOR WHITE:
             // Assigning to each square the appropriate piece
             board[7, 0] = WR;
