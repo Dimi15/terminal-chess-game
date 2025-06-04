@@ -30,12 +30,12 @@ namespace chess_game
             Console.OutputEncoding = Encoding.UTF8; // Needed to display the pieces
 
             string startSquare = "";
-            int startX = 0;
-            int startY = 0;
+            int startX = -1;
+            int startY = -1;
 
             string endSquare = "";
-            int endX = 0;
-            int endY = 0;
+            int endX = -1;
+            int endY = -1;
 
             bool validInput = true;
             bool validColor = false;
@@ -43,10 +43,10 @@ namespace chess_game
             int playerPromoteTo = _;
             int computerPromoteTo = _;
 
-            int bestStartX = 0;
-            int bestStartY = 0;
-            int bestEndX = 0;
-            int bestEndY = 0;
+            int bestStartX = -1;
+            int bestStartY = -1;
+            int bestEndX = -1;
+            int bestEndY = -1;
             int computerDepth = 0;
 
             bool isWhiteTurn = true;
@@ -123,7 +123,7 @@ namespace chess_game
                     Console.ForegroundColor = defaulForeground;
                 }
             } while (!validColor);
-            
+
             if (pickedColor == 'w')
             {
                 playerWhite = true;
@@ -150,7 +150,7 @@ namespace chess_game
                     {
                         Console.Clear();
                         Console.WriteLine("\n");
-                        GetPosition(playerWhite);
+                        GetPosition(playerWhite, bestStartX, bestStartY, bestEndX, bestEndY);
 
                         if (validInput)
                         {
@@ -204,7 +204,7 @@ namespace chess_game
                     {
                         Console.Clear();
                         Console.WriteLine("\n");
-                        GetPosition(playerWhite);
+                        GetPosition(playerWhite, startX, startY, endX, endY);
 
                         Console.WriteLine();
                         Console.ForegroundColor = ConsoleColor.White;
@@ -222,7 +222,7 @@ namespace chess_game
                     {
                         Console.Clear();
                         Console.WriteLine("\n");
-                        GetPosition(playerWhite);
+                        GetPosition(playerWhite, startX, startY, endX, endY);
 
                         Console.WriteLine();
                         Console.ForegroundColor = ConsoleColor.Black;
@@ -241,7 +241,7 @@ namespace chess_game
                 {
                     Console.Clear();
                     Console.WriteLine("\n");
-                    GetPosition(playerWhite);
+                    GetPosition(playerWhite, startX, startY, endX, endY);
 
                     Console.ForegroundColor = ConsoleColor.Cyan;
 
@@ -268,7 +268,7 @@ namespace chess_game
                     {
                         Console.Clear();
                         Console.WriteLine("\n");
-                        GetPosition(playerWhite);
+                        GetPosition(playerWhite, bestStartX, bestStartY, bestEndX, bestEndY);
 
                         Console.WriteLine();
                         Console.ForegroundColor = ConsoleColor.White;
@@ -286,7 +286,7 @@ namespace chess_game
                     {
                         Console.Clear();
                         Console.WriteLine("\n");
-                        GetPosition(playerWhite);
+                        GetPosition(playerWhite, bestStartX, bestStartY, bestEndX, bestEndY);
 
                         Console.WriteLine();
                         Console.ForegroundColor = ConsoleColor.Black;
@@ -384,6 +384,8 @@ namespace chess_game
         /// <summary>
         /// Prints one square of the current board
         /// </summary>
+        /// <param name="x">Column</param>
+        /// <param name="y">Row</param>
         static void WriteSquare(int x, int y)
         {
             // Condition to alternate the background of the squares
@@ -435,9 +437,51 @@ namespace chess_game
         }
 
         /// <summary>
+        /// Prints one square of the current board and colors a square for the last move
+        /// </summary>
+        /// <param name="x">Column</param>
+        /// <param name="y">Row</param>
+        /// <param name="startX">Starting column</param>
+        /// <param name="startY">Starting row</param>
+        /// <param name="endX">Ending column</param>
+        /// <param name="endY">Ending column</param>
+        static void WriteSquare(int x, int y, int startX, int startY, int endX, int endY)
+        {
+            Console.BackgroundColor = ConsoleColor.DarkYellow;
+
+            // Matching the correct piece for each number in the matrix
+            switch (board[y, x])
+            {
+                // White pieces
+                case WP: Console.Write("♙"); break;
+                case WN: Console.Write("♘"); break;
+                case WB: Console.Write("♗"); break;
+                case WR: Console.Write("♖"); break;
+                case WQ: Console.Write("♕"); break;
+                case WK: Console.Write("♔"); break;
+
+                // Black pieces
+                case BP: Console.Write("♟"); break;
+                case BN: Console.Write("♞"); break;
+                case BB: Console.Write("♝"); break;
+                case BR: Console.Write("♜"); break;
+                case BQ: Console.Write("♛"); break;
+                case BK: Console.Write("♚"); break;
+                case _: Console.Write(" "); break;
+            }
+
+            Console.Write(' ');
+        }
+
+        /// <summary>
         /// Prints the current board
         /// </summary>
-        static void GetPosition(bool white)
+        /// <param name="white">If true the board is displayed from the direction of white</param>
+        /// <param name="startX">Starting column</param>
+        /// <param name="startY">Starting row</param>
+        /// <param name="endX">Ending column</param>
+        /// <param name="endY">Ending column</param>
+        static void GetPosition(bool white, int startX, int startY, int endX, int endY)
         {
             ConsoleColor defaulBackground = Console.BackgroundColor;
             ConsoleColor defaulForeground = Console.ForegroundColor;
@@ -454,7 +498,15 @@ namespace chess_game
                     {
                         Console.ForegroundColor = ConsoleColor.Black;
 
-                        WriteSquare(j, i);
+                        // Condition to color the last move in a different color
+                        if ((startX == j && startY == i) || (endX == j && endY == i))
+                        {
+                            WriteSquare(j, i, startX, startY, endX, endY);
+                        }
+                        else
+                        {
+                            WriteSquare(j, i);
+                        }
                     }
 
                     Console.ForegroundColor = defaulForeground;
@@ -483,7 +535,15 @@ namespace chess_game
                     {
                         Console.ForegroundColor = ConsoleColor.Black;
 
-                        WriteSquare(j, i);
+                        // Condition to color the last move in a different color
+                        if ((startX == j && startY == i) || (endX == j && endY == i))
+                        {
+                            WriteSquare(j, i, startX, startY, endX, endY);
+                        }
+                        else
+                        {
+                            WriteSquare(j, i);
+                        }
                     }
 
                     Console.ForegroundColor = defaulForeground;

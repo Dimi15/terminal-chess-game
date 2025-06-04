@@ -9,25 +9,25 @@ namespace chess_game
     public partial class Program
     {
         /// <summary>
-        /// Minimax algorithm with alpha-beta pruning to find the best move for the computer.
+        /// Minimax algorithm with alpha-beta pruning to find the best move for the computer
         /// </summary>
-        /// <param name="depth">Maximum depth of the search tree.</param>
-        /// <param name="alpha">Alpha value for pruning.</param>
-        /// <param name="beta">Beta value for pruning.</param>
-        /// <param name="bestStartX">Outputs the starting row of the best move found.</param>
-        /// <param name="bestStartY">Outputs the starting column of the best move found.</param>
-        /// <param name="bestEndX">Outputs the ending row of the best move found.</param>
-        /// <param name="bestEndY">Outputs the ending column of the best move found.</param>
+        /// <param name="depth">Maximum depth of the search tree</param>
+        /// <param name="alpha">Alpha value for pruning</param>
+        /// <param name="beta">Beta value for pruning</param>
+        /// <param name="bestStartX">Starting column of the best move found</param>
+        /// <param name="bestStartY">Starting row of the best move found</param>
+        /// <param name="bestEndX">Ending column of the best move found</param>
+        /// <param name="bestEndY">Ending row of the best move found</param>
         /// <param name="isMaximizing">
-        /// True if it's the maximizing player's turn (AI), who tries to maximize the evaluation score; 
+        /// True if it's the maximizing player's turn (AI), who tries to maximize the evaluation score;
         /// false if it's the minimizing player's turn (opponent), who tries to minimize the score. 
         /// The condition alternates each recursion to simulate both players' moves.
         /// </param>
-        /// <param name="playerWhite">True if the player is playing white. The computer will play the opposite color.</param>
-        /// <returns>The evaluation score of the best move found.</returns>
+        /// <param name="isPlayerWhite">True if the player is playing white</param>
+        /// <returns>The evaluation score of the best move found</returns>
         public static double Minimax(int depth, double alpha, double beta,
             ref int bestStartX, ref int bestStartY, ref int bestEndX, ref int bestEndY,
-            bool isMaximizing, bool playerWhite)
+            bool isMaximizing, bool isPlayerWhite)
         {
             bool draw = false;
 
@@ -38,7 +38,7 @@ namespace chess_game
             }
 
             // The computer's color is the opposite of the player's
-            bool isComputerWhite = !playerWhite;
+            bool isComputerWhite = !isPlayerWhite;
 
             // Determine the current player's color in this recursion step
             bool currentPlayerIsWhite;
@@ -144,7 +144,7 @@ namespace chess_game
                                     // Recurse to evaluate this move
                                     double currentEvaluation = Minimax(depth - 1, alpha, beta,
                                         ref tempStartX, ref tempStartY, ref tempEndX, ref tempEndY,
-                                        !isMaximizing, playerWhite);
+                                        !isMaximizing, isPlayerWhite);
 
                                     // Undo the move to restore the original board state
                                     UndoMove(j, i, l, k, piece, capturedPiece, oldWhiteCastleKing, oldWhiteCastleQueen, oldBlackCastleKing, oldBlackCastleQueen, oldEnPassantX, oldEnPassantY, oldMovesDone);
