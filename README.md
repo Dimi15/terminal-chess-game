@@ -69,13 +69,13 @@ For a comprehensive guide on how the program is structured, please download our 
 ---
 
 <p align="center">
-  <img src="img/img1.png" alt="Chess game screenshot 1" width="250px"/>
-  <img src="img/img2.png" alt="Chess game screenshot 2" width="250px"/>
-  <img src="img/img3.png" alt="Chess game screenshot 3" width="250px"/>
+  <img src="img/img1.png" alt="Chess game screenshot 1" width="300px"/>
+  <img src="img/img2.png" alt="Chess game screenshot 2" width="300px"/>
+  <img src="img/img3.png" alt="Chess game screenshot 3" width="300px"/>
 </p>
 <p align="center">
-  <img src="img/img4.png" alt="Chess game screenshot 4" width="250px"/>
-  <img src="img/img5.png" alt="Chess game screenshot 5" width="250px"/>
+  <img src="img/img4.png" alt="Chess game screenshot 4" width="300px"/>
+  <img src="img/img5.png" alt="Chess game screenshot 5" width="300px"/>
 </p>
 
 ---
