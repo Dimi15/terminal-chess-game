@@ -153,7 +153,7 @@ namespace chess_game
                         {
                             Console.ForegroundColor = ConsoleColor.Cyan;
                             
-                            Console.Write("\n\x1b[1mCHECK!\x1b[0m\n");
+                            Console.Write("\nCHECK!\n");
                             
                             Console.ForegroundColor = defaulForeground;
                         }
@@ -171,7 +171,7 @@ namespace chess_game
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.BackgroundColor = ConsoleColor.Red;
 
-                            Console.Write("\n\x1b[1mInvalid Move!\x1b[0m\n\n"); //"\x1b[1m" + ... + "\x1b[0m\n" == bold text
+                            Console.Write("\nInvalid Move!");
 
                             Console.ForegroundColor = defaulForeground;
                             Console.BackgroundColor = defaulBackground;
@@ -215,7 +215,7 @@ namespace chess_game
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.BackgroundColor = ConsoleColor.DarkGreen;
 
-                        Console.Write("\x1b[1mYOU WON\u001b[0m\n");
+                        Console.Write("YOU WON!");
 
                         Console.ForegroundColor = defaulForeground;
                         Console.BackgroundColor = defaulBackground;
@@ -233,7 +233,7 @@ namespace chess_game
                         Console.ForegroundColor = ConsoleColor.Black;
                         Console.BackgroundColor = ConsoleColor.Gray;
 
-                        Console.Write("\x1b[1mDRAW!\u001b[0m\n");
+                        Console.Write("DRAW!");
 
                         Console.ForegroundColor = defaulForeground;
                         Console.BackgroundColor = defaulBackground;
@@ -250,7 +250,7 @@ namespace chess_game
 
                     Console.ForegroundColor = ConsoleColor.Cyan;
 
-                    Console.WriteLine("\nThe Compure is Thinking...\n");
+                    Console.WriteLine("\nThe Computer is Thinking...\n");
 
                     Console.ForegroundColor = defaulForeground;
 
@@ -279,7 +279,7 @@ namespace chess_game
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.BackgroundColor = ConsoleColor.Red;
 
-                        Console.Write("\x1b[1mYOU LOST!\u001b[0m\n");
+                        Console.Write("YOU LOST!");
 
                         Console.ForegroundColor = defaulForeground;
                         Console.BackgroundColor = defaulBackground;
@@ -297,7 +297,7 @@ namespace chess_game
                         Console.ForegroundColor = ConsoleColor.Black;
                         Console.BackgroundColor = ConsoleColor.Gray;
 
-                        Console.Write("\x1b[1mDRAW!\u001b[0m\n");
+                        Console.Write("DRAW!");
 
                         Console.ForegroundColor = defaulForeground;
                         Console.BackgroundColor = defaulBackground;
