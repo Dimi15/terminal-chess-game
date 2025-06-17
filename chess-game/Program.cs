@@ -171,7 +171,7 @@ namespace chess_game
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.BackgroundColor = ConsoleColor.Red;
 
-                            Console.Write("\nInvalid Move!");
+                            Console.Write("\nInvalid Move!\n\n");
 
                             Console.ForegroundColor = defaulForeground;
                             Console.BackgroundColor = defaulBackground;
