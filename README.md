@@ -19,7 +19,11 @@ The easiest way to play is by using the pre-built executable. You won't need Vis
 ### 1. Download the Game
 
 * Go to the [**Releases**](https://github.com/Dimi15/terminal-chess-game/releases) section of this repository.
-* Download the `.zip` file suitable for your operating system (e.g., `chess-game-win64.zip` for Windows, `chess-game-linux64.zip` for Linux, `chess-game-osx64.zip` for macOS).
+* Download the `.zip` or `.tar.gz` file for your operating system:
+  - `win-x64.zip` for Windows
+  - `linux-x64.tar.gz` or `linux-musl-x64.tar.gz` for Linux
+  - `osx-x64.zip` for macOS (Intel)
+  - `osx-arm64.zip` for macOS (Apple Silicon)
 
 ### 2. Extract and Play!
 
@@ -28,7 +32,7 @@ The easiest way to play is by using the pre-built executable. You won't need Vis
     * Navigate into the extracted folder.
     * **Double-click** `chess_game.exe` to start the game.
 * **Linux/macOS:**
-    * Unpack the downloaded archive (e.g., `chess-game-osx64.zip`).
+    * Unpack the downloaded archive (e.g., `osx-64.zip`).
     * Open your terminal, navigate to the extracted folder.
     * First, give execute permissions:
         ```bash
@@ -59,14 +63,19 @@ Here's how you typically change the font in common terminals:
 
 For a comprehensive guide on how the program is structured, please download our project documentation (written in italian):
 
-* [**Download Game Documentation (PDF)**](https://github.com/Dimi15/terminal-chess-game/blob/80c0fb133316b23169fab5690ba1fad4a8b5a5f5/docs/documentation.pdf)
+* [**Download Documentation (PDF)**](https://github.com/Dimi15/terminal-chess-game/blob/80c0fb133316b23169fab5690ba1fad4a8b5a5f5/docs/documentation.pdf)
 
 
 ---
 
 <p align="center">
-  <img src="img/img1.png" alt="Screenshot of the chess board during gameplay" width="450px"/>
-  <img src="img/img2.png" alt="Another screenshot showing a different game state" width="450px"/>
+  <img src="img/img1.png" alt="Chess game screenshot 1" width="250px"/>
+  <img src="img/img2.png" alt="Chess game screenshot 2" width="250px"/>
+  <img src="img/img3.png" alt="Chess game screenshot 3" width="250px"/>
+</p>
+<p align="center">
+  <img src="img/img4.png" alt="Chess game screenshot 4" width="250px"/>
+  <img src="img/img5.png" alt="Chess game screenshot 5" width="250px"/>
 </p>
 
 ---
